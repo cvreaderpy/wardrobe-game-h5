@@ -10,7 +10,7 @@
  */
 'use strict';
 
-var CACHE_VERSION = 'wardrobe-game-c61f631118a8';
+var CACHE_VERSION = 'wardrobe-game-4b24b0f60d20';
 var PRECACHE = [
   "./",
   "./index.html",

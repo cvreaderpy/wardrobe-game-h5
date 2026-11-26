@@ -5661,6 +5661,65 @@ body.prep-active .debug-panel {
   background: transparent;
 }
 
+/* 等距舞台：季节/天气/傍晚色调 + 纸纹 */
+.iso-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 246, 221, .48), rgba(255, 246, 221, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .035) 0 1px, transparent 1px 3px);
+  mix-blend-mode: soft-light;
+  opacity: .5;
+}
+
+.stage-root[data-season="spring"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 232, 220, .46), rgba(255, 232, 220, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .032) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="summer"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 238, 190, .5), rgba(255, 238, 190, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .03) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="autumn"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(226, 146, 92, .42), rgba(226, 146, 92, 0) 60%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .04) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="winter"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(205, 226, 238, .42), rgba(205, 226, 238, 0) 60%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .03) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-evening="1"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 196, 128, .5), rgba(255, 196, 128, 0) 58%),
+    linear-gradient(180deg, rgba(255, 213, 166, .08), rgba(91, 70, 54, .12)),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .04) 0 1px, transparent 1px 3px);
+  opacity: .7;
+}
+
+/* 评分环：从 0 开始填充 */
+.score-ring .score-progress {
+  animation: scoreFill .9s .18s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@keyframes scoreFill {
+  from { stroke-dashoffset: var(--dash); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score-ring .score-progress { animation: none; }
+  .iso-tint { transition: none; }
+}
+
 </style>
   <!-- 单文件离线版：CSS/JS/图标全部内联，不注册 Service Worker（file:// 不支持） -->
 </head>
@@ -15147,7 +15206,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       '<linearGradient id="outWinSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + (evening ? '#EDC3A0' : sp.sky1) + '"/><stop offset="1" stop-color="' + (evening ? '#F6DCC6' : sp.sky2) + '"/></linearGradient>' +
       '<linearGradient id="rGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8F3F5"/><stop offset=".55" stop-color="#CFE4E8"/><stop offset="1" stop-color="#F7FBFA"/></linearGradient>' +
       '<linearGradient id="rCurtain" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + sp.curtainDark + '"/><stop offset=".45" stop-color="' + sp.curtain + '"/><stop offset="1" stop-color="' + sp.curtainDark + '"/></linearGradient>' +
-      '<linearGradient id="rFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sp.floor[0] + '"/><stop offset="1" stop-color="' + sp.floor[3] + '"/></linearGradient>';
+      '<linearGradient id="rFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sp.floor[0] + '"/><stop offset="1" stop-color="' + sp.floor[3] + '"/></linearGradient>' +
+      '<linearGradient id="rAoWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B4636" stop-opacity="0"/><stop offset=".7" stop-color="#5B4636" stop-opacity=".03"/><stop offset="1" stop-color="#5B4636" stop-opacity=".13"/></linearGradient>';
 
     var s = '';
 
@@ -15179,6 +15239,12 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       s += line(p(0, i, 3), p(0, i, 27), { sw: 1, opacity: 0.3, stroke: '#C9A57E' });
       s += line(p(i, 0, 3), p(i, 0, 27), { sw: 1, opacity: 0.3, stroke: '#C9A57E' });
     }
+
+    // 墙脚环境遮蔽 + 地板靠墙暗部
+    s += poly([p(0, 0, 0), p(0, N, 0), p(0, N, 14), p(0, 0, 14)], 'url(#rAoWall)', { stroke: null, opacity: 0.85 });
+    s += poly([p(0, 0, 0), p(N, 0, 0), p(N, 0, 14), p(0, 0, 14)], 'url(#rAoWall)', { stroke: null, opacity: 0.62 });
+    s += poly([p(0, 0, 0), p(0, N, 0), p(1.1, N, 0), p(1.1, 0, 0)], '#5B4636', { stroke: null, opacity: 0.032 });
+    s += poly([p(0, 0, 0), p(N, 0, 0), p(N, 1.0, 0), p(0, 1.0, 0)], '#5B4636', { stroke: null, opacity: 0.04 });
 
     // 顶角线 / 踢脚
     s += poly([p(0, 0, 104), p(0, N, 104), p(0, N, 110), p(0, 0, 110)], '#E7D5BE', { sw: 1.2 });
@@ -15294,8 +15360,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
 
     // 窗光
-    s += poly([p(0, wy1, 0), p(0, wy2, 0), p(3.4, wy2 + 1.2, 0), p(3.4, wy1 + 1.2, 0)], sp.light, { opacity: 0.14, stroke: null });
-    s += poly([p(0, wy1 + 0.5, 0), p(0, wy2 - 1.0, 0), p(2.6, wy2 - 0.1, 0), p(2.6, wy1 + 0.7, 0)], sp.light, { opacity: 0.1, stroke: null });
+    s += poly([p(0, wy1, 0), p(0, wy2, 0), p(3.4, wy2 + 1.2, 0), p(3.4, wy1 + 1.2, 0)], sp.light, { opacity: 0.22, stroke: null });
+    s += poly([p(0, wy1 + 0.5, 0), p(0, wy2 - 1.0, 0), p(2.6, wy2 - 0.1, 0), p(2.6, wy1 + 0.7, 0)], sp.light, { opacity: 0.16, stroke: null });
 
     if (evening) {
       s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#C97B63" opacity=".1"/>';
@@ -18343,8 +18409,25 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     function pts(list) {
       return list.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
     }
-    var body = '<polygon points="' + pts(outer) + '" fill="#FFF3CE" opacity=".42"/>' +
-      '<polygon points="' + pts(inner) + '" fill="#FFF9EF" opacity=".3"/>';
+    function line(a, b) {
+      return '<path d="M' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) + 'L' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + '" stroke="#8A6A52" stroke-width="2.2" opacity=".11"/>';
+    }
+    var mull = '';
+    var g1 = y1 + (y2 - y1) / 3;
+    var g2 = y1 + (y2 - y1) * 2 / 3;
+    mull += line(Iso.P(0, g1, 0), Iso.P(3.4, g1 + 1.2, 0));
+    mull += line(Iso.P(0, g2, 0), Iso.P(3.4, g2 + 1.2, 0));
+    mull += line(Iso.P(0, y1, 0), Iso.P(3.4, y1 + 1.2, 0));
+    mull += line(Iso.P(0, y2, 0), Iso.P(3.4, y2 + 1.2, 0));
+    var body = '<defs><linearGradient id="ambBeam" x1="0" y1="0" x2="1" y2="0">' +
+      '<stop offset="0" stop-color="#FFF3CE" stop-opacity=".82"/>' +
+      '<stop offset=".55" stop-color="#FFF3CE" stop-opacity=".44"/>' +
+      '<stop offset="1" stop-color="#FFF3CE" stop-opacity=".06"/>' +
+      '</linearGradient>' +
+      '<filter id="ambSoft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4"/></filter>' +
+      '</defs>' +
+      '<polygon points="' + pts(outer) + '" fill="url(#ambBeam)" filter="url(#ambSoft)"/>' +
+      '<polygon points="' + pts(inner) + '" fill="#FFF9EF" opacity=".34"/>' + mull;
     return { vb: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, body: body };
   }
 
@@ -18377,6 +18460,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     state.lamps = [];
     state.clock = null;
     state.light = null;
+    state.lightBase = null;
+    state.evening = !!opts.evening;
     state.phase = Math.random() * 6.28;
     var win = Iso.cfg.WIN || { y1: 2.2, y2: 7.4, z1: 42, z2: 96 };
 
@@ -18398,8 +18483,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       sp.width = vb.w;
       sp.height = vb.h;
       sp.alpha = 0.9;
+      sp.tint = opts.evening ? 0xFFD2A8 : (opts.season === 'winter' ? 0xEAF3FF : 0xFFF3CE);
       back.addChild(sp);
       state.light = sp;
+      state.lightBase = { x: vb.x, y: vb.y };
     });
 
     // 浮尘
@@ -18658,9 +18745,13 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       lp.sp.scale.set(sc);
     }
 
-    // 窗光呼吸
+    // 窗光呼吸 + 极慢漂移
     if (state.light) {
-      state.light.alpha = 0.78 + Math.sin(t * 0.55) * 0.14 * slow;
+      state.light.alpha = (state.evening ? 0.62 : 0.78) + Math.sin(t * 0.55) * 0.14 * slow;
+      if (state.lightBase) {
+        state.light.x = state.lightBase.x + Math.sin(t * 0.11 + state.phase) * 2.2;
+        state.light.y = state.lightBase.y + Math.cos(t * 0.09 + state.phase) * 1.4;
+      }
     }
   };
 
@@ -19204,6 +19295,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     evening: false,
     fx: null,
     fxTex: {},
+    camKick: 0,
     fxParts: [],
     burstKey: ''
   };
@@ -19355,7 +19447,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
     // 对话 / 服务 / 结果：镜头推近顾客；其他页面显示整间店
     var focusRig = rig && (key === 'chat' || key === 'service' || key === 'result' || key === 'fitting');
-    var base = key === 'chat' ? 1.32 : key === 'service' ? 1.28 : key === 'result' ? 1.22 : key === 'fitting' ? 1.24 : 1;
+    var base = key === 'chat' ? 1.5 : key === 'service' ? 1.45 : key === 'result' ? 1.34 : key === 'fitting' ? 1.4 : 1;
     if (!focusRig) { base = 1; }
     var zoom = Math.max(0.8, Math.min(2.4, st.zoom)) * base;
     var scale = st.fit * zoom;
@@ -19467,6 +19559,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     if (st.ready) {
       if (!st.app.canvas.parentNode) {
         root.appendChild(st.app.canvas);
+        if (st.tint) { root.appendChild(st.tint); }
         if (st.tags) { root.appendChild(st.tags); }
         if (st.hot) { root.appendChild(st.hot); }
         if (st.hint) { root.appendChild(st.hint); }
@@ -19478,6 +19571,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       if (st.root !== root) {
         if (st.app.canvas.parentNode) { st.app.canvas.parentNode.removeChild(st.app.canvas); }
         root.appendChild(st.app.canvas);
+        if (st.tint) { root.appendChild(st.tint); }
         if (st.tags) { root.appendChild(st.tags); }
         if (st.hot) { root.appendChild(st.hot); }
         if (st.hint) { root.appendChild(st.hint); }
@@ -19525,6 +19619,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       st.camera.addChild(st.floor);
       st.camera.addChild(st.world);
       st.camera.addChild(st.fx);
+
+      st.tint = document.createElement('div');
+      st.tint.className = 'iso-tint';
+      root.appendChild(st.tint);
 
       st.hot = document.createElement('div');
       st.hot.className = 'iso-hotspot';
@@ -19942,6 +20040,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       shp.anchor.set(0.5, 0.5);
       shp.scale.set(base);
       shp.y = 1;
+      shp._baseScale = base;
+      rig._shadow = shp;
       rig.addChild(shp);
     }
     var avatar = new PIXI.Container();
@@ -19964,6 +20064,18 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     head.y = -88 * S;
     avatar.addChild(head);
     return { avatar: avatar, body: body, head: head };
+  }
+
+  function updateShadow(rig) {
+    var sh = rig && rig._shadow;
+    if (!sh) { return; }
+    var dir = 1;
+    sh.x = 2.4 * dir;
+    sh.y = 1.2;
+    sh.rotation = 0.035 * dir;
+    var base = sh._baseScale || 0.5;
+    sh.scale.x = base * (st.evening ? 1.2 : 1.1);
+    sh.scale.y = base * 0.96;
   }
 
   Iso.setState = function (s, key) {
@@ -19991,6 +20103,11 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     st.season = season;
     st.weather = weather;
     st.evening = evening;
+    if (st.root) {
+      st.root.dataset.season = season;
+      st.root.dataset.weather = weather;
+      st.root.dataset.evening = evening ? '1' : '0';
+    }
     var rk = [season, weather, evening ? 1 : 0, items.map(function (i) { return i.id; }).join(','), marketing].join('|');
     if (rk !== st.roomKey) {
       st.roomKey = rk;
@@ -20198,6 +20315,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
           z: targetZ,
           dest: pos
         };
+        if (window.Scene && Scene.play) { Scene.play('footstep'); }
         if (st.greetedCustomerId !== customer.id) {
           st.greetedCustomerId = customer.id;
           st.greetPlaced = placed;
@@ -20219,6 +20337,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
               if (st.char && st.char.rig === rr) {
                 Iso.burst('confetti', rr.x, rr.y - 118, 22);
                 Iso.burst('spark', rr.x, rr.y - 96, 6);
+                Iso.camPulse(0.03);
               }
             }, 460);
           })(rig);
@@ -20630,7 +20749,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     st.cam.scale += (tg.scale - st.cam.scale) * k;
     st.cam.x += (tg.x - st.cam.x) * k;
     st.cam.y += (tg.y - st.cam.y) * k;
-    st.camera.scale.set(st.cam.scale);
+    st.camKick = (st.camKick || 0) * 0.9;
+    st.camera.scale.set(st.cam.scale + st.camKick);
     st.camera.x = st.cam.x;
     st.camera.y = st.cam.y;
 
@@ -20737,6 +20857,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       r.head.rotation = tilt;
       r.head.y = headY;
       r.head.x = (r._lookDir || 0) * 1.1 * lookW;
+      updateShadow(r);
     }
 
     for (var sri = 0; sri < st.staffList.length; sri++) {
@@ -20835,6 +20956,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       var staffLook = 0;
       if (st.char && st.char.rig) { staffLook = st.char.rig.x >= sr.x ? 0.04 : -0.04; }
       sr.head.rotation = Math.sin(t * 0.6 + sp0) * 0.02 + staffLook + taskNod;
+      updateShadow(sr);
     }
 
     // 排队中的顾客：轻微呼吸 / 眨眼 / 看当前顾客
@@ -20866,6 +20988,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         }
       }
       qr.head.rotation = Math.sin(t * 0.8 + qp) * 0.02 + qLook;
+      updateShadow(qr);
     }
 
     // 店猫
@@ -21014,10 +21137,16 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     r._talkUntil = now + (ms || 1000);
   };
 
+  Iso.camPulse = function (amount) {
+    if (Iso.reducedMotion) { return; }
+    st.camKick = Math.max(st.camKick || 0, amount || 0.02);
+  };
+
   Iso.pulse = function (name) {
     var r = st.char && st.char.rig;
     if (!r) { return; }
     var now = nowMs();
+    if (name === 'happy') { Iso.camPulse(0.018); }
     if (name === 'reach') {
       r._reachUntil = now + 900;
       Iso.burst('spark', r.x, r.y - 78, 5);
@@ -21052,6 +21181,24 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
   var soundOn = true;
   var audioCtx = null;
   var SOUND_KEY = 'yijian_xiaorizi_sound';
+  var audio = {
+    unlocked: false,
+    musicPlaying: false,
+    musicTimer: null,
+    nextBeat: 0,
+    beat: 0,
+    mood: 'day',
+    bus: null,
+    filter: null,
+    noiseBuf: null,
+    vinyl: null,
+    ambienceNodes: [],
+    ambienceKey: '',
+    sceneWeather: 'sunny',
+    sceneSeason: 'spring',
+    birdTimer: null,
+    hidden: false
+  };
 
   try {
     soundOn = localStorage.getItem(SOUND_KEY) !== '0';
@@ -21124,22 +21271,61 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
   }
 
-  function tone(freq, duration, type, volume, delay) {
+  function toneAt(freq, duration, type, volume, start, dest, attack) {
     var ctx = getCtx();
     if (!ctx) { return; }
     try {
-      var start = ctx.currentTime + (delay || 0);
+      var at = Math.max(ctx.currentTime, start || 0);
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
       osc.type = type || 'sine';
-      osc.frequency.setValueAtTime(freq, start);
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(volume || 0.04, start + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      osc.frequency.setValueAtTime(freq, at);
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.04, at + (attack || 0.012));
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
       osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(start);
-      osc.stop(start + duration + 0.02);
+      gain.connect(dest || ctx.destination);
+      osc.start(at);
+      osc.stop(at + duration + 0.02);
+    } catch (e) {}
+  }
+
+  function tone(freq, duration, type, volume, delay) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    toneAt(freq, duration, type, volume, ctx.currentTime + (delay || 0));
+  }
+
+  function noiseBuffer(ctx) {
+    if (audio.noiseBuf && audio.noiseBuf.sampleRate === ctx.sampleRate) { return audio.noiseBuf; }
+    var len = Math.floor(ctx.sampleRate * 2);
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) { data[i] = Math.random() * 2 - 1; }
+    audio.noiseBuf = buf;
+    return buf;
+  }
+
+  function noiseAt(duration, volume, start, type, freq, dest) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    try {
+      var at = Math.max(ctx.currentTime, start || 0);
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      var f = ctx.createBiquadFilter();
+      f.type = type || 'bandpass';
+      f.frequency.value = freq || 1200;
+      f.Q.value = 0.7;
+      var gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.012, at + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+      src.connect(f);
+      f.connect(gain);
+      gain.connect(dest || ctx.destination);
+      src.start(at);
+      src.stop(at + duration + 0.03);
     } catch (e) {}
   }
 
@@ -21174,15 +21360,320 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       tone(96, 0.32, 'triangle', 0.018, 0);
       tone(120, 0.26, 'triangle', 0.014, 0.12);
       tone(88, 0.3, 'sine', 0.012, 0.24);
+    } else if (name === 'hanger') {
+      tone(1220, 0.055, 'triangle', 0.016, 0);
+      tone(1760, 0.045, 'sine', 0.011, 0.025);
+      noiseAt(0.045, 0.005, 0, 'highpass', 3200);
+    } else if (name === 'curtain') {
+      noiseAt(0.28, 0.010, 0, 'bandpass', 760);
+      tone(220, 0.2, 'sine', 0.008, 0);
+      tone(330, 0.16, 'sine', 0.005, 0.06);
+    } else if (name === 'receipt') {
+      noiseAt(0.08, 0.008, 0, 'highpass', 2400);
+      noiseAt(0.07, 0.006, 0.11, 'highpass', 2800);
+      tone(940, 0.04, 'triangle', 0.008, 0.02);
+    } else if (name === 'footstep') {
+      tone(118, 0.075, 'sine', 0.014, 0);
+      tone(96, 0.09, 'sine', 0.010, 0.085);
+    } else if (name === 'chime') {
+      tone(1046, 0.16, 'sine', 0.018, 0);
+      tone(1568, 0.22, 'sine', 0.012, 0.07);
+    } else if (name === 'paper') {
+      noiseAt(0.1, 0.006, 0, 'bandpass', 1800);
     }
   };
+
+
+  /* ---------------- 程序化 BGM / 环境声 ---------------- */
+
+  var MUSIC_BPM = 72;
+  var MUSIC_BEAT = 60 / MUSIC_BPM;
+  var MUSIC_PROG = [
+    { bass: 38, pad: [50, 54, 57, 61] }, // Dmaj7
+    { bass: 35, pad: [47, 50, 54, 57] }, // Bm7
+    { bass: 31, pad: [43, 47, 50, 54] }, // Gmaj7
+    { bass: 33, pad: [45, 49, 52, 55] }  // A7
+  ];
+  var MUSIC_PENT = [62, 64, 66, 69, 71, 74, 76, 78];
+  var MUSIC_MEL = [
+    [0, 2, 4, 2], [1, 3, 1, 0], [2, 4, 3, 2], [0, 1, 2, 3],
+    [4, 2, 1, 2], [3, 1, 0, 1], [2, 3, 4, 2], [1, 0, 2, 1]
+  ];
+
+  function midiToFreq(n) {
+    return 440 * Math.pow(2, (n - 69) / 12);
+  }
+
+  function ensureMusicBus() {
+    var ctx = getCtx();
+    if (!ctx) { return null; }
+    if (!audio.bus) {
+      audio.bus = ctx.createGain();
+      audio.bus.gain.value = 0.0001;
+      audio.filter = ctx.createBiquadFilter();
+      audio.filter.type = 'lowpass';
+      audio.filter.frequency.value = 2600;
+      audio.bus.connect(audio.filter);
+      audio.filter.connect(ctx.destination);
+    }
+    return { ctx: ctx, bus: audio.bus };
+  }
+
+  function startVinyl(ctx, bus) {
+    if (audio.vinyl) { return; }
+    try {
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      src.loop = true;
+      var f = ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = 1700;
+      var g = ctx.createGain();
+      g.gain.value = 0.0022;
+      src.connect(f);
+      f.connect(g);
+      g.connect(bus);
+      src.start();
+      audio.vinyl = { src: src, gain: g };
+    } catch (e) {}
+  }
+
+  function stopVinyl() {
+    if (!audio.vinyl) { return; }
+    try { audio.vinyl.src.stop(); } catch (e) {}
+    try { audio.vinyl.src.disconnect(); } catch (e) {}
+    audio.vinyl = null;
+  }
+
+  function musicBeat(step, when) {
+    var ctx = getCtx();
+    if (!ctx || !audio.bus) { return; }
+    var bar = Math.floor(step / 4) % 8;
+    var beat = step % 4;
+    var chord = MUSIC_PROG[bar % MUSIC_PROG.length];
+
+    if (beat === 0) {
+      for (var i = 0; i < chord.pad.length; i++) {
+        toneAt(midiToFreq(chord.pad[i]), MUSIC_BEAT * 3.65, 'sine', 0.010, when, audio.bus, 0.5);
+      }
+      toneAt(midiToFreq(chord.bass), MUSIC_BEAT * 3.4, 'sine', 0.016, when, audio.bus, 0.06);
+    }
+
+    var idx = MUSIC_MEL[bar][beat];
+    if (idx >= 0) {
+      var freq = midiToFreq(MUSIC_PENT[idx]);
+      toneAt(freq, MUSIC_BEAT * 0.48, 'triangle', audio.mood === 'chat' ? 0.009 : 0.013, when, audio.bus, 0.012);
+      if (beat === 2 && bar % 2 === 0) {
+        toneAt(freq * 2, MUSIC_BEAT * 0.34, 'sine', 0.0045, when + 0.04, audio.bus, 0.01);
+      }
+    }
+    if (beat % 2 === 1 && audio.mood !== 'evening') {
+      noiseAt(0.045, 0.0035, when, 'highpass', 5200, audio.bus);
+    }
+  }
+
+  function scheduleMusic() {
+    if (!audio.musicPlaying) { return; }
+    var ctx = getCtx();
+    if (!ctx) { audio.musicPlaying = false; return; }
+    if (audio.nextBeat < ctx.currentTime - 0.15) {
+      audio.nextBeat = ctx.currentTime + 0.12;
+      audio.beat = 0;
+    }
+    while (audio.nextBeat < ctx.currentTime + 0.9) {
+      musicBeat(audio.beat, audio.nextBeat);
+      audio.beat = (audio.beat + 1) % 32;
+      audio.nextBeat += MUSIC_BEAT;
+    }
+    audio.musicTimer = setTimeout(scheduleMusic, 240);
+  }
+
+  Scene.startMusic = function () {
+    if (!soundOn || audio.hidden) { return false; }
+    var m = ensureMusicBus();
+    if (!m) { return false; }
+    m.bus.gain.cancelScheduledValues(m.ctx.currentTime);
+    m.bus.gain.setTargetAtTime(audio.mood === 'chat' ? 0.55 : 0.9, m.ctx.currentTime, 0.6);
+    if (audio.musicPlaying) { return true; }
+    audio.musicPlaying = true;
+    audio.beat = 0;
+    audio.nextBeat = m.ctx.currentTime + 0.12;
+    startVinyl(m.ctx, m.bus);
+    scheduleMusic();
+    return true;
+  };
+
+  Scene.stopMusic = function () {
+    audio.musicPlaying = false;
+    if (audio.musicTimer) { clearTimeout(audio.musicTimer); audio.musicTimer = null; }
+    var ctx = getCtx();
+    if (ctx && audio.bus) {
+      audio.bus.gain.cancelScheduledValues(ctx.currentTime);
+      audio.bus.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.18);
+    }
+    stopVinyl();
+  };
+
+  Scene.isMusicPlaying = function () { return audio.musicPlaying; };
+
+  Scene.audioState = function () {
+    return {
+      unlocked: audio.unlocked,
+      music: audio.musicPlaying,
+      mood: audio.mood,
+      ambience: audio.ambienceKey,
+      weather: audio.sceneWeather,
+      season: audio.sceneSeason,
+      hidden: audio.hidden
+    };
+  };
+
+  Scene.setMusicMood = function (mood) {
+    audio.mood = mood || 'day';
+    var ctx = getCtx();
+    if (!ctx || !audio.bus) { return; }
+    var cutoff = audio.mood === 'evening' ? 1450 : audio.mood === 'chat' ? 1900 : 2600;
+    audio.filter.frequency.setTargetAtTime(cutoff, ctx.currentTime, 0.6);
+    if (audio.musicPlaying) {
+      audio.bus.gain.setTargetAtTime(audio.mood === 'chat' ? 0.55 : 0.9, ctx.currentTime, 0.5);
+    }
+  };
+
+  function stopAmbience() {
+    if (audio.birdTimer) { clearTimeout(audio.birdTimer); audio.birdTimer = null; }
+    var ctx = getCtx();
+    for (var i = 0; i < audio.ambienceNodes.length; i++) {
+      var n = audio.ambienceNodes[i];
+      try {
+        if (ctx) { n.gain.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.15); }
+        n.src.stop((ctx ? ctx.currentTime : 0) + 0.45);
+      } catch (e) {}
+    }
+    audio.ambienceNodes = [];
+    audio.ambienceKey = '';
+  }
+
+  function ambienceLoop(type, freq, volume) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    try {
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      src.loop = true;
+      var f = ctx.createBiquadFilter();
+      f.type = type;
+      f.frequency.value = freq;
+      f.Q.value = 0.55;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.setTargetAtTime(volume, ctx.currentTime, 0.7);
+      src.connect(f);
+      f.connect(g);
+      g.connect(ctx.destination);
+      src.start();
+      audio.ambienceNodes.push({ src: src, gain: g });
+    } catch (e) {}
+  }
+
+  function birdChirp() {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    var base = 1900 + Math.random() * 900;
+    for (var i = 0; i < 3; i++) {
+      toneAt(base * (1 + i * 0.05), 0.075, 'sine', 0.0055, ctx.currentTime + i * 0.11, null, 0.008);
+    }
+  }
+
+  function scheduleBirds() {
+    if (audio.birdTimer) { clearTimeout(audio.birdTimer); audio.birdTimer = null; }
+    if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+    audio.birdTimer = setTimeout(function () {
+      audio.birdTimer = null;
+      if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+      birdChirp();
+      scheduleBirds();
+    }, 4200 + Math.random() * 5200);
+  }
+
+  Scene.setAmbience = function (weather, season) {
+    weather = weather || 'sunny';
+    season = season || 'spring';
+    audio.sceneWeather = weather;
+    audio.sceneSeason = season;
+    var key = weather + '|' + season;
+    if (key === audio.ambienceKey) { return; }
+    stopAmbience();
+    if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+    var rainy = weather === 'rain' || weather === 'thunder' || weather === 'downpour';
+    var snowy = weather === 'snow' || weather === 'cold' || weather === 'coldwave';
+    if (rainy) {
+      ambienceLoop('lowpass', 1300, 0.011);
+      ambienceLoop('highpass', 500, 0.0035);
+    } else if (snowy) {
+      ambienceLoop('lowpass', 480, 0.006);
+    } else if (season === 'autumn') {
+      ambienceLoop('bandpass', 700, 0.004);
+    }
+    if (!rainy && !snowy && (season === 'spring' || season === 'summer')) {
+      scheduleBirds();
+    }
+    audio.ambienceKey = key;
+  };
+
+  Scene.unlockAudio = function () {
+    audio.unlocked = true;
+    var ctx = getCtx();
+    if (!ctx) { return false; }
+    if (soundOn && !audio.hidden) {
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+    }
+    return true;
+  };
+
+  Scene.pauseAudio = function () {
+    audio.hidden = true;
+    Scene.stopMusic();
+    stopAmbience();
+    if (audioCtx && audioCtx.state === 'running' && audioCtx.suspend) {
+      try { audioCtx.suspend(); } catch (e) {}
+    }
+  };
+
+  Scene.resumeAudio = function () {
+    audio.hidden = false;
+    var ctx = getCtx();
+    if (ctx && ctx.state === 'suspended' && ctx.resume) {
+      try { ctx.resume(); } catch (e) {}
+    }
+    if (soundOn && audio.unlocked) {
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+    }
+  };
+
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { Scene.pauseAudio(); } else { Scene.resumeAudio(); }
+    });
+  }
 
   Scene.isSoundOn = function () { return soundOn; };
 
   Scene.toggleSound = function () {
+    if (soundOn) {
+      Scene.stopMusic();
+      stopAmbience();
+    }
     soundOn = !soundOn;
     try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) {}
-    if (soundOn) { Scene.play('pop'); }
+    if (soundOn) {
+      audio.unlocked = true;
+      getCtx();
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+      Scene.play('pop');
+    }
     return soundOn;
   };
 
@@ -21774,8 +22265,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       tools += '<button type="button" class="stage-tool" data-action="care-water" title="倒杯温水">💧<span>倒水</span></button>';
     }
     tools += '<button type="button" class="stage-tool" data-action="pet-cat" title="摸摸猫">🐈<span>摸猫</span></button>';
-    tools += '<button type="button" class="stage-tool sound" data-action="toggle-sound" title="音效开关">' +
-      (Scene.isSoundOn() ? '🔊' : '🔇') + '<span>音效</span></button>';
+    tools += '<button type="button" class="stage-tool sound" data-action="toggle-sound" title="声音开关">' +
+      (Scene.isSoundOn() ? '🔊' : '🔇') + '<span>声音</span></button>';
 
     var stamp = '';
     if (key === 'result' && s.pendingResult) {
@@ -21876,7 +22367,20 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   Scene._isoOn = false;
 
+  Scene.setAudioScene = function (s, key) {
+    var season = 'spring';
+    var weather = 'sunny';
+    try {
+      if (window.Engine && Engine.getSeason) { season = Engine.getSeason(s.day).id || season; }
+      if (window.Engine && Engine.getWeatherDay) { weather = Engine.getWeatherDay(s.day).id || weather; }
+    } catch (e) {}
+    var mood = key === 'settle' ? 'evening' : (key === 'chat' || key === 'service' ? 'chat' : 'day');
+    Scene.setMusicMood(mood);
+    Scene.setAmbience(weather, season);
+  };
+
   Scene.mount = function (root, s, key) {
+    if (s && Scene.setAudioScene) { Scene.setAudioScene(s, key); }
     var forceSvg = /[?&]art=svg/.test(window.location.search || '');
     if (!window.Iso || !Iso.isAvailable() || forceSvg) {
       root.innerHTML = Scene.render(s, key);
@@ -22883,11 +23387,33 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     return '<div class="score-ring" style="background:none">' +
       '<svg viewBox="0 0 120 120" width="108" height="108" style="position:absolute;top:0;left:0">' +
       '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="#EFE6D8" stroke-width="10"/>' +
-      '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="#C97B63" stroke-width="10" stroke-linecap="round" ' +
-      'stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '" transform="rotate(-90 60 60)"/>' +
+      '<circle class="score-progress" cx="60" cy="60" r="' + r + '" fill="none" stroke="#C97B63" stroke-width="10" stroke-linecap="round" ' +
+      'style="--dash:' + c.toFixed(1) + '" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '" transform="rotate(-90 60 60)"/>' +
       '</svg>' +
-      '<div class="score-ring-inner"><div class="score-number">' + score + '</div><div class="score-label">搭配分</div></div>' +
+      '<div class="score-ring-inner"><div class="score-number" data-score="' + score + '">' + score + '</div><div class="score-label">搭配分</div></div>' +
       '</div>';
+  }
+
+  function animateScoreNumber() {
+    var el = document.querySelector('.score-number[data-score]');
+    if (!el) { return; }
+    var target = parseInt(el.getAttribute('data-score'), 10);
+    if (isNaN(target)) { return; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.textContent = String(target);
+      return;
+    }
+    var start = 0;
+    var begin = Date.now();
+    var dur = 720;
+    function frame() {
+      var p = Math.min(1, (Date.now() - begin) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(start + (target - start) * e));
+      if (p < 1) { requestAnimationFrame(frame); }
+    }
+    el.textContent = '0';
+    requestAnimationFrame(frame);
   }
 
   function breakdownRow(name, value, max) {
@@ -25026,7 +25552,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
 
     if (pr.sale) {
-      html += '<div class="sale-box">' +
+      html += '<div class="sale-box receipt">' +
         '<div class="sale-title">成交 ' + money(pr.sale.revenue) + (pr.sale.tip ? ' + 小费 ' + money(pr.sale.tip) : '') + '</div>' +
         '<div class="sale-row"><span>她带走了</span><strong>' + pr.sale.items.map(function (id) { return esc(itemById(id).name); }).join('、') + '</strong></div>' +
         (pr.sale.discount < 1 ? '<div class="sale-row"><span>折扣</span><strong>九折</strong></div>' : '') +
@@ -25428,6 +25954,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       screen.innerHTML = UI.screens[key](s);
       UI._screenSig = screenSig;
       if (key === 'title') { UI.bindTitle(); }
+      if (key === 'result') { animateScoreNumber(); }
       if (key === 'prep' && (UI._prepTab || 'today') === 'decor') { UI.bindDecorGrid(); }
       if (key === 'design') {
         if (UI._board) { UI.bindDesignBoard(); } else { UI.bindDesignScreen(); }
@@ -26470,7 +26997,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         var on = window.Scene ? Scene.toggleSound() : false;
         UI._stageSig = '';
         UI.render();
-        UI.toast(on ? '音效已打开' : '音效已关闭');
+        UI.toast(on ? '声音已打开' : '声音已关闭');
         break;
       }
       case 'try-on': {
@@ -26478,7 +27005,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         if (!tryRes.ok) {
           UI.toast(tryRes.message);
         } else {
-          if (window.Scene) { Scene.play('pop'); }
+          if (window.Scene) { Scene.play('hanger'); }
           UI.toast('她试了试：' + tryRes.hint);
           UI.render();
           setTimeout(function () { UI.scrollToEl('.try-feedback'); }, 60);
@@ -26542,7 +27069,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
           UI.toast('先选几件衣服再试穿');
         } else {
           var fitRes = E.startTryOn(s.selectedItems);
-          if (window.Scene) { Scene.play('cloth'); }
+          if (window.Scene) { Scene.play('curtain'); }
           if (fitRes && fitRes.waiting) { UI.toast('试衣间满了，先排个队'); }
           UI.render();
           UI.scrollTop();
@@ -26566,7 +27093,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       }
       case 'complete-fitting':
         E.completeFitting();
-        if (window.Scene) { Scene.play('stamp'); }
+        if (window.Scene) { Scene.play('curtain'); Scene.play('stamp'); }
         UI.render();
         UI.scrollTop();
         break;
@@ -26576,7 +27103,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         break;
       case 'accept-discount':
         E.acceptDiscount();
-        if (window.Scene) { Scene.play('coin'); }
+        if (window.Scene) { Scene.play('coin'); Scene.play('receipt'); }
         UI.render();
         break;
       case 'decline-discount':
@@ -26594,7 +27121,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
           var leftLog = newLogs.filter(function (l) { return l.type === 'queueLeft'; })[0];
           if (leftLog) { UI.toast(leftLog.customerName + ' 等太久走了'); }
         }
-        if (window.Scene) { Scene.play('page'); }
+        if (window.Scene) {
+          Scene.play(saleLog ? 'receipt' : 'page');
+          if (saleLog) { Scene.play('coin'); }
+        }
         UI.render();
         break;
       }
@@ -26699,6 +27229,14 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
     window.UI.render();
   }
+
+  // 浏览器要求第一次用户手势后才能启动 WebAudio；BGM / 环境声在这里解锁
+  function unlockAudio() {
+    if (window.Scene && Scene.unlockAudio) { Scene.unlockAudio(); }
+  }
+  document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+  document.addEventListener('keydown', unlockAudio, { once: true });
+  document.addEventListener('click', unlockAudio, { once: true });
 
   document.addEventListener('click', function (e) {
     var el = e.target;

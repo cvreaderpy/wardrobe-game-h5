@@ -1,7 +1,7 @@
 {
-  "builtAt": "2026-11-26T10:40:15.003Z",
-  "commit": "c06250d",
-  "cacheVersion": "c61f631118a8",
+  "builtAt": "2026-11-26T11:10:51.836Z",
+  "commit": "cc33572",
+  "cacheVersion": "4b24b0f60d20",
   "precache": [
     "./",
     "./index.html",

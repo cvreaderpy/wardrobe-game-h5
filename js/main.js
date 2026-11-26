@@ -7,6 +7,14 @@
     window.UI.render();
   }
 
+  // 浏览器要求第一次用户手势后才能启动 WebAudio；BGM / 环境声在这里解锁
+  function unlockAudio() {
+    if (window.Scene && Scene.unlockAudio) { Scene.unlockAudio(); }
+  }
+  document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
+  document.addEventListener('keydown', unlockAudio, { once: true });
+  document.addEventListener('click', unlockAudio, { once: true });
+
   document.addEventListener('click', function (e) {
     var el = e.target;
     while (el && el !== document) {

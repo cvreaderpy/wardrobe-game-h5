@@ -5,6 +5,24 @@
   var soundOn = true;
   var audioCtx = null;
   var SOUND_KEY = 'yijian_xiaorizi_sound';
+  var audio = {
+    unlocked: false,
+    musicPlaying: false,
+    musicTimer: null,
+    nextBeat: 0,
+    beat: 0,
+    mood: 'day',
+    bus: null,
+    filter: null,
+    noiseBuf: null,
+    vinyl: null,
+    ambienceNodes: [],
+    ambienceKey: '',
+    sceneWeather: 'sunny',
+    sceneSeason: 'spring',
+    birdTimer: null,
+    hidden: false
+  };
 
   try {
     soundOn = localStorage.getItem(SOUND_KEY) !== '0';
@@ -77,22 +95,61 @@
     }
   }
 
-  function tone(freq, duration, type, volume, delay) {
+  function toneAt(freq, duration, type, volume, start, dest, attack) {
     var ctx = getCtx();
     if (!ctx) { return; }
     try {
-      var start = ctx.currentTime + (delay || 0);
+      var at = Math.max(ctx.currentTime, start || 0);
       var osc = ctx.createOscillator();
       var gain = ctx.createGain();
       osc.type = type || 'sine';
-      osc.frequency.setValueAtTime(freq, start);
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(volume || 0.04, start + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      osc.frequency.setValueAtTime(freq, at);
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.04, at + (attack || 0.012));
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
       osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(start);
-      osc.stop(start + duration + 0.02);
+      gain.connect(dest || ctx.destination);
+      osc.start(at);
+      osc.stop(at + duration + 0.02);
+    } catch (e) {}
+  }
+
+  function tone(freq, duration, type, volume, delay) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    toneAt(freq, duration, type, volume, ctx.currentTime + (delay || 0));
+  }
+
+  function noiseBuffer(ctx) {
+    if (audio.noiseBuf && audio.noiseBuf.sampleRate === ctx.sampleRate) { return audio.noiseBuf; }
+    var len = Math.floor(ctx.sampleRate * 2);
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) { data[i] = Math.random() * 2 - 1; }
+    audio.noiseBuf = buf;
+    return buf;
+  }
+
+  function noiseAt(duration, volume, start, type, freq, dest) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    try {
+      var at = Math.max(ctx.currentTime, start || 0);
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      var f = ctx.createBiquadFilter();
+      f.type = type || 'bandpass';
+      f.frequency.value = freq || 1200;
+      f.Q.value = 0.7;
+      var gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(volume || 0.012, at + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+      src.connect(f);
+      f.connect(gain);
+      gain.connect(dest || ctx.destination);
+      src.start(at);
+      src.stop(at + duration + 0.03);
     } catch (e) {}
   }
 
@@ -127,15 +184,320 @@
       tone(96, 0.32, 'triangle', 0.018, 0);
       tone(120, 0.26, 'triangle', 0.014, 0.12);
       tone(88, 0.3, 'sine', 0.012, 0.24);
+    } else if (name === 'hanger') {
+      tone(1220, 0.055, 'triangle', 0.016, 0);
+      tone(1760, 0.045, 'sine', 0.011, 0.025);
+      noiseAt(0.045, 0.005, 0, 'highpass', 3200);
+    } else if (name === 'curtain') {
+      noiseAt(0.28, 0.010, 0, 'bandpass', 760);
+      tone(220, 0.2, 'sine', 0.008, 0);
+      tone(330, 0.16, 'sine', 0.005, 0.06);
+    } else if (name === 'receipt') {
+      noiseAt(0.08, 0.008, 0, 'highpass', 2400);
+      noiseAt(0.07, 0.006, 0.11, 'highpass', 2800);
+      tone(940, 0.04, 'triangle', 0.008, 0.02);
+    } else if (name === 'footstep') {
+      tone(118, 0.075, 'sine', 0.014, 0);
+      tone(96, 0.09, 'sine', 0.010, 0.085);
+    } else if (name === 'chime') {
+      tone(1046, 0.16, 'sine', 0.018, 0);
+      tone(1568, 0.22, 'sine', 0.012, 0.07);
+    } else if (name === 'paper') {
+      noiseAt(0.1, 0.006, 0, 'bandpass', 1800);
     }
   };
+
+
+  /* ---------------- 程序化 BGM / 环境声 ---------------- */
+
+  var MUSIC_BPM = 72;
+  var MUSIC_BEAT = 60 / MUSIC_BPM;
+  var MUSIC_PROG = [
+    { bass: 38, pad: [50, 54, 57, 61] }, // Dmaj7
+    { bass: 35, pad: [47, 50, 54, 57] }, // Bm7
+    { bass: 31, pad: [43, 47, 50, 54] }, // Gmaj7
+    { bass: 33, pad: [45, 49, 52, 55] }  // A7
+  ];
+  var MUSIC_PENT = [62, 64, 66, 69, 71, 74, 76, 78];
+  var MUSIC_MEL = [
+    [0, 2, 4, 2], [1, 3, 1, 0], [2, 4, 3, 2], [0, 1, 2, 3],
+    [4, 2, 1, 2], [3, 1, 0, 1], [2, 3, 4, 2], [1, 0, 2, 1]
+  ];
+
+  function midiToFreq(n) {
+    return 440 * Math.pow(2, (n - 69) / 12);
+  }
+
+  function ensureMusicBus() {
+    var ctx = getCtx();
+    if (!ctx) { return null; }
+    if (!audio.bus) {
+      audio.bus = ctx.createGain();
+      audio.bus.gain.value = 0.0001;
+      audio.filter = ctx.createBiquadFilter();
+      audio.filter.type = 'lowpass';
+      audio.filter.frequency.value = 2600;
+      audio.bus.connect(audio.filter);
+      audio.filter.connect(ctx.destination);
+    }
+    return { ctx: ctx, bus: audio.bus };
+  }
+
+  function startVinyl(ctx, bus) {
+    if (audio.vinyl) { return; }
+    try {
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      src.loop = true;
+      var f = ctx.createBiquadFilter();
+      f.type = 'lowpass';
+      f.frequency.value = 1700;
+      var g = ctx.createGain();
+      g.gain.value = 0.0022;
+      src.connect(f);
+      f.connect(g);
+      g.connect(bus);
+      src.start();
+      audio.vinyl = { src: src, gain: g };
+    } catch (e) {}
+  }
+
+  function stopVinyl() {
+    if (!audio.vinyl) { return; }
+    try { audio.vinyl.src.stop(); } catch (e) {}
+    try { audio.vinyl.src.disconnect(); } catch (e) {}
+    audio.vinyl = null;
+  }
+
+  function musicBeat(step, when) {
+    var ctx = getCtx();
+    if (!ctx || !audio.bus) { return; }
+    var bar = Math.floor(step / 4) % 8;
+    var beat = step % 4;
+    var chord = MUSIC_PROG[bar % MUSIC_PROG.length];
+
+    if (beat === 0) {
+      for (var i = 0; i < chord.pad.length; i++) {
+        toneAt(midiToFreq(chord.pad[i]), MUSIC_BEAT * 3.65, 'sine', 0.010, when, audio.bus, 0.5);
+      }
+      toneAt(midiToFreq(chord.bass), MUSIC_BEAT * 3.4, 'sine', 0.016, when, audio.bus, 0.06);
+    }
+
+    var idx = MUSIC_MEL[bar][beat];
+    if (idx >= 0) {
+      var freq = midiToFreq(MUSIC_PENT[idx]);
+      toneAt(freq, MUSIC_BEAT * 0.48, 'triangle', audio.mood === 'chat' ? 0.009 : 0.013, when, audio.bus, 0.012);
+      if (beat === 2 && bar % 2 === 0) {
+        toneAt(freq * 2, MUSIC_BEAT * 0.34, 'sine', 0.0045, when + 0.04, audio.bus, 0.01);
+      }
+    }
+    if (beat % 2 === 1 && audio.mood !== 'evening') {
+      noiseAt(0.045, 0.0035, when, 'highpass', 5200, audio.bus);
+    }
+  }
+
+  function scheduleMusic() {
+    if (!audio.musicPlaying) { return; }
+    var ctx = getCtx();
+    if (!ctx) { audio.musicPlaying = false; return; }
+    if (audio.nextBeat < ctx.currentTime - 0.15) {
+      audio.nextBeat = ctx.currentTime + 0.12;
+      audio.beat = 0;
+    }
+    while (audio.nextBeat < ctx.currentTime + 0.9) {
+      musicBeat(audio.beat, audio.nextBeat);
+      audio.beat = (audio.beat + 1) % 32;
+      audio.nextBeat += MUSIC_BEAT;
+    }
+    audio.musicTimer = setTimeout(scheduleMusic, 240);
+  }
+
+  Scene.startMusic = function () {
+    if (!soundOn || audio.hidden) { return false; }
+    var m = ensureMusicBus();
+    if (!m) { return false; }
+    m.bus.gain.cancelScheduledValues(m.ctx.currentTime);
+    m.bus.gain.setTargetAtTime(audio.mood === 'chat' ? 0.55 : 0.9, m.ctx.currentTime, 0.6);
+    if (audio.musicPlaying) { return true; }
+    audio.musicPlaying = true;
+    audio.beat = 0;
+    audio.nextBeat = m.ctx.currentTime + 0.12;
+    startVinyl(m.ctx, m.bus);
+    scheduleMusic();
+    return true;
+  };
+
+  Scene.stopMusic = function () {
+    audio.musicPlaying = false;
+    if (audio.musicTimer) { clearTimeout(audio.musicTimer); audio.musicTimer = null; }
+    var ctx = getCtx();
+    if (ctx && audio.bus) {
+      audio.bus.gain.cancelScheduledValues(ctx.currentTime);
+      audio.bus.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.18);
+    }
+    stopVinyl();
+  };
+
+  Scene.isMusicPlaying = function () { return audio.musicPlaying; };
+
+  Scene.audioState = function () {
+    return {
+      unlocked: audio.unlocked,
+      music: audio.musicPlaying,
+      mood: audio.mood,
+      ambience: audio.ambienceKey,
+      weather: audio.sceneWeather,
+      season: audio.sceneSeason,
+      hidden: audio.hidden
+    };
+  };
+
+  Scene.setMusicMood = function (mood) {
+    audio.mood = mood || 'day';
+    var ctx = getCtx();
+    if (!ctx || !audio.bus) { return; }
+    var cutoff = audio.mood === 'evening' ? 1450 : audio.mood === 'chat' ? 1900 : 2600;
+    audio.filter.frequency.setTargetAtTime(cutoff, ctx.currentTime, 0.6);
+    if (audio.musicPlaying) {
+      audio.bus.gain.setTargetAtTime(audio.mood === 'chat' ? 0.55 : 0.9, ctx.currentTime, 0.5);
+    }
+  };
+
+  function stopAmbience() {
+    if (audio.birdTimer) { clearTimeout(audio.birdTimer); audio.birdTimer = null; }
+    var ctx = getCtx();
+    for (var i = 0; i < audio.ambienceNodes.length; i++) {
+      var n = audio.ambienceNodes[i];
+      try {
+        if (ctx) { n.gain.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.15); }
+        n.src.stop((ctx ? ctx.currentTime : 0) + 0.45);
+      } catch (e) {}
+    }
+    audio.ambienceNodes = [];
+    audio.ambienceKey = '';
+  }
+
+  function ambienceLoop(type, freq, volume) {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    try {
+      var src = ctx.createBufferSource();
+      src.buffer = noiseBuffer(ctx);
+      src.loop = true;
+      var f = ctx.createBiquadFilter();
+      f.type = type;
+      f.frequency.value = freq;
+      f.Q.value = 0.55;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.setTargetAtTime(volume, ctx.currentTime, 0.7);
+      src.connect(f);
+      f.connect(g);
+      g.connect(ctx.destination);
+      src.start();
+      audio.ambienceNodes.push({ src: src, gain: g });
+    } catch (e) {}
+  }
+
+  function birdChirp() {
+    var ctx = getCtx();
+    if (!ctx) { return; }
+    var base = 1900 + Math.random() * 900;
+    for (var i = 0; i < 3; i++) {
+      toneAt(base * (1 + i * 0.05), 0.075, 'sine', 0.0055, ctx.currentTime + i * 0.11, null, 0.008);
+    }
+  }
+
+  function scheduleBirds() {
+    if (audio.birdTimer) { clearTimeout(audio.birdTimer); audio.birdTimer = null; }
+    if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+    audio.birdTimer = setTimeout(function () {
+      audio.birdTimer = null;
+      if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+      birdChirp();
+      scheduleBirds();
+    }, 4200 + Math.random() * 5200);
+  }
+
+  Scene.setAmbience = function (weather, season) {
+    weather = weather || 'sunny';
+    season = season || 'spring';
+    audio.sceneWeather = weather;
+    audio.sceneSeason = season;
+    var key = weather + '|' + season;
+    if (key === audio.ambienceKey) { return; }
+    stopAmbience();
+    if (!soundOn || !audio.unlocked || audio.hidden) { return; }
+    var rainy = weather === 'rain' || weather === 'thunder' || weather === 'downpour';
+    var snowy = weather === 'snow' || weather === 'cold' || weather === 'coldwave';
+    if (rainy) {
+      ambienceLoop('lowpass', 1300, 0.011);
+      ambienceLoop('highpass', 500, 0.0035);
+    } else if (snowy) {
+      ambienceLoop('lowpass', 480, 0.006);
+    } else if (season === 'autumn') {
+      ambienceLoop('bandpass', 700, 0.004);
+    }
+    if (!rainy && !snowy && (season === 'spring' || season === 'summer')) {
+      scheduleBirds();
+    }
+    audio.ambienceKey = key;
+  };
+
+  Scene.unlockAudio = function () {
+    audio.unlocked = true;
+    var ctx = getCtx();
+    if (!ctx) { return false; }
+    if (soundOn && !audio.hidden) {
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+    }
+    return true;
+  };
+
+  Scene.pauseAudio = function () {
+    audio.hidden = true;
+    Scene.stopMusic();
+    stopAmbience();
+    if (audioCtx && audioCtx.state === 'running' && audioCtx.suspend) {
+      try { audioCtx.suspend(); } catch (e) {}
+    }
+  };
+
+  Scene.resumeAudio = function () {
+    audio.hidden = false;
+    var ctx = getCtx();
+    if (ctx && ctx.state === 'suspended' && ctx.resume) {
+      try { ctx.resume(); } catch (e) {}
+    }
+    if (soundOn && audio.unlocked) {
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+    }
+  };
+
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { Scene.pauseAudio(); } else { Scene.resumeAudio(); }
+    });
+  }
 
   Scene.isSoundOn = function () { return soundOn; };
 
   Scene.toggleSound = function () {
+    if (soundOn) {
+      Scene.stopMusic();
+      stopAmbience();
+    }
     soundOn = !soundOn;
     try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) {}
-    if (soundOn) { Scene.play('pop'); }
+    if (soundOn) {
+      audio.unlocked = true;
+      getCtx();
+      Scene.startMusic();
+      Scene.setAmbience(audio.sceneWeather, audio.sceneSeason);
+      Scene.play('pop');
+    }
     return soundOn;
   };
 
@@ -727,8 +1089,8 @@
       tools += '<button type="button" class="stage-tool" data-action="care-water" title="倒杯温水">💧<span>倒水</span></button>';
     }
     tools += '<button type="button" class="stage-tool" data-action="pet-cat" title="摸摸猫">🐈<span>摸猫</span></button>';
-    tools += '<button type="button" class="stage-tool sound" data-action="toggle-sound" title="音效开关">' +
-      (Scene.isSoundOn() ? '🔊' : '🔇') + '<span>音效</span></button>';
+    tools += '<button type="button" class="stage-tool sound" data-action="toggle-sound" title="声音开关">' +
+      (Scene.isSoundOn() ? '🔊' : '🔇') + '<span>声音</span></button>';
 
     var stamp = '';
     if (key === 'result' && s.pendingResult) {
@@ -829,7 +1191,20 @@
 
   Scene._isoOn = false;
 
+  Scene.setAudioScene = function (s, key) {
+    var season = 'spring';
+    var weather = 'sunny';
+    try {
+      if (window.Engine && Engine.getSeason) { season = Engine.getSeason(s.day).id || season; }
+      if (window.Engine && Engine.getWeatherDay) { weather = Engine.getWeatherDay(s.day).id || weather; }
+    } catch (e) {}
+    var mood = key === 'settle' ? 'evening' : (key === 'chat' || key === 'service' ? 'chat' : 'day');
+    Scene.setMusicMood(mood);
+    Scene.setAmbience(weather, season);
+  };
+
   Scene.mount = function (root, s, key) {
+    if (s && Scene.setAudioScene) { Scene.setAudioScene(s, key); }
     var forceSvg = /[?&]art=svg/.test(window.location.search || '');
     if (!window.Iso || !Iso.isAvailable() || forceSvg) {
       root.innerHTML = Scene.render(s, key);

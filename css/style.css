@@ -5650,3 +5650,62 @@ body.prep-active .debug-panel {
   color: var(--muted);
   background: transparent;
 }
+
+/* 等距舞台：季节/天气/傍晚色调 + 纸纹 */
+.iso-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 246, 221, .48), rgba(255, 246, 221, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .035) 0 1px, transparent 1px 3px);
+  mix-blend-mode: soft-light;
+  opacity: .5;
+}
+
+.stage-root[data-season="spring"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 232, 220, .46), rgba(255, 232, 220, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .032) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="summer"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 238, 190, .5), rgba(255, 238, 190, 0) 58%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .03) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="autumn"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(226, 146, 92, .42), rgba(226, 146, 92, 0) 60%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .04) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-season="winter"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(205, 226, 238, .42), rgba(205, 226, 238, 0) 60%),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .03) 0 1px, transparent 1px 3px);
+}
+
+.stage-root[data-evening="1"] .iso-tint {
+  background:
+    radial-gradient(120% 130% at 18% 16%, rgba(255, 196, 128, .5), rgba(255, 196, 128, 0) 58%),
+    linear-gradient(180deg, rgba(255, 213, 166, .08), rgba(91, 70, 54, .12)),
+    repeating-linear-gradient(0deg, rgba(91, 70, 54, .04) 0 1px, transparent 1px 3px);
+  opacity: .7;
+}
+
+/* 评分环：从 0 开始填充 */
+.score-ring .score-progress {
+  animation: scoreFill .9s .18s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@keyframes scoreFill {
+  from { stroke-dashoffset: var(--dash); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score-ring .score-progress { animation: none; }
+  .iso-tint { transition: none; }
+}

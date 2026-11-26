@@ -66,6 +66,7 @@
     evening: false,
     fx: null,
     fxTex: {},
+    camKick: 0,
     fxParts: [],
     burstKey: ''
   };
@@ -217,7 +218,7 @@
 
     // 对话 / 服务 / 结果：镜头推近顾客；其他页面显示整间店
     var focusRig = rig && (key === 'chat' || key === 'service' || key === 'result' || key === 'fitting');
-    var base = key === 'chat' ? 1.32 : key === 'service' ? 1.28 : key === 'result' ? 1.22 : key === 'fitting' ? 1.24 : 1;
+    var base = key === 'chat' ? 1.5 : key === 'service' ? 1.45 : key === 'result' ? 1.34 : key === 'fitting' ? 1.4 : 1;
     if (!focusRig) { base = 1; }
     var zoom = Math.max(0.8, Math.min(2.4, st.zoom)) * base;
     var scale = st.fit * zoom;
@@ -329,6 +330,7 @@
     if (st.ready) {
       if (!st.app.canvas.parentNode) {
         root.appendChild(st.app.canvas);
+        if (st.tint) { root.appendChild(st.tint); }
         if (st.tags) { root.appendChild(st.tags); }
         if (st.hot) { root.appendChild(st.hot); }
         if (st.hint) { root.appendChild(st.hint); }
@@ -340,6 +342,7 @@
       if (st.root !== root) {
         if (st.app.canvas.parentNode) { st.app.canvas.parentNode.removeChild(st.app.canvas); }
         root.appendChild(st.app.canvas);
+        if (st.tint) { root.appendChild(st.tint); }
         if (st.tags) { root.appendChild(st.tags); }
         if (st.hot) { root.appendChild(st.hot); }
         if (st.hint) { root.appendChild(st.hint); }
@@ -387,6 +390,10 @@
       st.camera.addChild(st.floor);
       st.camera.addChild(st.world);
       st.camera.addChild(st.fx);
+
+      st.tint = document.createElement('div');
+      st.tint.className = 'iso-tint';
+      root.appendChild(st.tint);
 
       st.hot = document.createElement('div');
       st.hot.className = 'iso-hotspot';
@@ -804,6 +811,8 @@
       shp.anchor.set(0.5, 0.5);
       shp.scale.set(base);
       shp.y = 1;
+      shp._baseScale = base;
+      rig._shadow = shp;
       rig.addChild(shp);
     }
     var avatar = new PIXI.Container();
@@ -826,6 +835,18 @@
     head.y = -88 * S;
     avatar.addChild(head);
     return { avatar: avatar, body: body, head: head };
+  }
+
+  function updateShadow(rig) {
+    var sh = rig && rig._shadow;
+    if (!sh) { return; }
+    var dir = 1;
+    sh.x = 2.4 * dir;
+    sh.y = 1.2;
+    sh.rotation = 0.035 * dir;
+    var base = sh._baseScale || 0.5;
+    sh.scale.x = base * (st.evening ? 1.2 : 1.1);
+    sh.scale.y = base * 0.96;
   }
 
   Iso.setState = function (s, key) {
@@ -853,6 +874,11 @@
     st.season = season;
     st.weather = weather;
     st.evening = evening;
+    if (st.root) {
+      st.root.dataset.season = season;
+      st.root.dataset.weather = weather;
+      st.root.dataset.evening = evening ? '1' : '0';
+    }
     var rk = [season, weather, evening ? 1 : 0, items.map(function (i) { return i.id; }).join(','), marketing].join('|');
     if (rk !== st.roomKey) {
       st.roomKey = rk;
@@ -1060,6 +1086,7 @@
           z: targetZ,
           dest: pos
         };
+        if (window.Scene && Scene.play) { Scene.play('footstep'); }
         if (st.greetedCustomerId !== customer.id) {
           st.greetedCustomerId = customer.id;
           st.greetPlaced = placed;
@@ -1081,6 +1108,7 @@
               if (st.char && st.char.rig === rr) {
                 Iso.burst('confetti', rr.x, rr.y - 118, 22);
                 Iso.burst('spark', rr.x, rr.y - 96, 6);
+                Iso.camPulse(0.03);
               }
             }, 460);
           })(rig);
@@ -1492,7 +1520,8 @@
     st.cam.scale += (tg.scale - st.cam.scale) * k;
     st.cam.x += (tg.x - st.cam.x) * k;
     st.cam.y += (tg.y - st.cam.y) * k;
-    st.camera.scale.set(st.cam.scale);
+    st.camKick = (st.camKick || 0) * 0.9;
+    st.camera.scale.set(st.cam.scale + st.camKick);
     st.camera.x = st.cam.x;
     st.camera.y = st.cam.y;
 
@@ -1599,6 +1628,7 @@
       r.head.rotation = tilt;
       r.head.y = headY;
       r.head.x = (r._lookDir || 0) * 1.1 * lookW;
+      updateShadow(r);
     }
 
     for (var sri = 0; sri < st.staffList.length; sri++) {
@@ -1697,6 +1727,7 @@
       var staffLook = 0;
       if (st.char && st.char.rig) { staffLook = st.char.rig.x >= sr.x ? 0.04 : -0.04; }
       sr.head.rotation = Math.sin(t * 0.6 + sp0) * 0.02 + staffLook + taskNod;
+      updateShadow(sr);
     }
 
     // 排队中的顾客：轻微呼吸 / 眨眼 / 看当前顾客
@@ -1728,6 +1759,7 @@
         }
       }
       qr.head.rotation = Math.sin(t * 0.8 + qp) * 0.02 + qLook;
+      updateShadow(qr);
     }
 
     // 店猫
@@ -1876,10 +1908,16 @@
     r._talkUntil = now + (ms || 1000);
   };
 
+  Iso.camPulse = function (amount) {
+    if (Iso.reducedMotion) { return; }
+    st.camKick = Math.max(st.camKick || 0, amount || 0.02);
+  };
+
   Iso.pulse = function (name) {
     var r = st.char && st.char.rig;
     if (!r) { return; }
     var now = nowMs();
+    if (name === 'happy') { Iso.camPulse(0.018); }
     if (name === 'reach') {
       r._reachUntil = now + 900;
       Iso.burst('spark', r.x, r.y - 78, 5);

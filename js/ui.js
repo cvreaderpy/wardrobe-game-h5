@@ -979,11 +979,33 @@
     return '<div class="score-ring" style="background:none">' +
       '<svg viewBox="0 0 120 120" width="108" height="108" style="position:absolute;top:0;left:0">' +
       '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="#EFE6D8" stroke-width="10"/>' +
-      '<circle cx="60" cy="60" r="' + r + '" fill="none" stroke="#C97B63" stroke-width="10" stroke-linecap="round" ' +
-      'stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '" transform="rotate(-90 60 60)"/>' +
+      '<circle class="score-progress" cx="60" cy="60" r="' + r + '" fill="none" stroke="#C97B63" stroke-width="10" stroke-linecap="round" ' +
+      'style="--dash:' + c.toFixed(1) + '" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + offset.toFixed(1) + '" transform="rotate(-90 60 60)"/>' +
       '</svg>' +
-      '<div class="score-ring-inner"><div class="score-number">' + score + '</div><div class="score-label">搭配分</div></div>' +
+      '<div class="score-ring-inner"><div class="score-number" data-score="' + score + '">' + score + '</div><div class="score-label">搭配分</div></div>' +
       '</div>';
+  }
+
+  function animateScoreNumber() {
+    var el = document.querySelector('.score-number[data-score]');
+    if (!el) { return; }
+    var target = parseInt(el.getAttribute('data-score'), 10);
+    if (isNaN(target)) { return; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.textContent = String(target);
+      return;
+    }
+    var start = 0;
+    var begin = Date.now();
+    var dur = 720;
+    function frame() {
+      var p = Math.min(1, (Date.now() - begin) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = String(Math.round(start + (target - start) * e));
+      if (p < 1) { requestAnimationFrame(frame); }
+    }
+    el.textContent = '0';
+    requestAnimationFrame(frame);
   }
 
   function breakdownRow(name, value, max) {
@@ -3122,7 +3144,7 @@
     }
 
     if (pr.sale) {
-      html += '<div class="sale-box">' +
+      html += '<div class="sale-box receipt">' +
         '<div class="sale-title">成交 ' + money(pr.sale.revenue) + (pr.sale.tip ? ' + 小费 ' + money(pr.sale.tip) : '') + '</div>' +
         '<div class="sale-row"><span>她带走了</span><strong>' + pr.sale.items.map(function (id) { return esc(itemById(id).name); }).join('、') + '</strong></div>' +
         (pr.sale.discount < 1 ? '<div class="sale-row"><span>折扣</span><strong>九折</strong></div>' : '') +
@@ -3524,6 +3546,7 @@
       screen.innerHTML = UI.screens[key](s);
       UI._screenSig = screenSig;
       if (key === 'title') { UI.bindTitle(); }
+      if (key === 'result') { animateScoreNumber(); }
       if (key === 'prep' && (UI._prepTab || 'today') === 'decor') { UI.bindDecorGrid(); }
       if (key === 'design') {
         if (UI._board) { UI.bindDesignBoard(); } else { UI.bindDesignScreen(); }
@@ -4566,7 +4589,7 @@
         var on = window.Scene ? Scene.toggleSound() : false;
         UI._stageSig = '';
         UI.render();
-        UI.toast(on ? '音效已打开' : '音效已关闭');
+        UI.toast(on ? '声音已打开' : '声音已关闭');
         break;
       }
       case 'try-on': {
@@ -4574,7 +4597,7 @@
         if (!tryRes.ok) {
           UI.toast(tryRes.message);
         } else {
-          if (window.Scene) { Scene.play('pop'); }
+          if (window.Scene) { Scene.play('hanger'); }
           UI.toast('她试了试：' + tryRes.hint);
           UI.render();
           setTimeout(function () { UI.scrollToEl('.try-feedback'); }, 60);
@@ -4638,7 +4661,7 @@
           UI.toast('先选几件衣服再试穿');
         } else {
           var fitRes = E.startTryOn(s.selectedItems);
-          if (window.Scene) { Scene.play('cloth'); }
+          if (window.Scene) { Scene.play('curtain'); }
           if (fitRes && fitRes.waiting) { UI.toast('试衣间满了，先排个队'); }
           UI.render();
           UI.scrollTop();
@@ -4662,7 +4685,7 @@
       }
       case 'complete-fitting':
         E.completeFitting();
-        if (window.Scene) { Scene.play('stamp'); }
+        if (window.Scene) { Scene.play('curtain'); Scene.play('stamp'); }
         UI.render();
         UI.scrollTop();
         break;
@@ -4672,7 +4695,7 @@
         break;
       case 'accept-discount':
         E.acceptDiscount();
-        if (window.Scene) { Scene.play('coin'); }
+        if (window.Scene) { Scene.play('coin'); Scene.play('receipt'); }
         UI.render();
         break;
       case 'decline-discount':
@@ -4690,7 +4713,10 @@
           var leftLog = newLogs.filter(function (l) { return l.type === 'queueLeft'; })[0];
           if (leftLog) { UI.toast(leftLog.customerName + ' 等太久走了'); }
         }
-        if (window.Scene) { Scene.play('page'); }
+        if (window.Scene) {
+          Scene.play(saleLog ? 'receipt' : 'page');
+          if (saleLog) { Scene.play('coin'); }
+        }
         UI.render();
         break;
       }

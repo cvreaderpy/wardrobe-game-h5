@@ -46,8 +46,25 @@
     function pts(list) {
       return list.map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ');
     }
-    var body = '<polygon points="' + pts(outer) + '" fill="#FFF3CE" opacity=".42"/>' +
-      '<polygon points="' + pts(inner) + '" fill="#FFF9EF" opacity=".3"/>';
+    function line(a, b) {
+      return '<path d="M' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) + 'L' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + '" stroke="#8A6A52" stroke-width="2.2" opacity=".11"/>';
+    }
+    var mull = '';
+    var g1 = y1 + (y2 - y1) / 3;
+    var g2 = y1 + (y2 - y1) * 2 / 3;
+    mull += line(Iso.P(0, g1, 0), Iso.P(3.4, g1 + 1.2, 0));
+    mull += line(Iso.P(0, g2, 0), Iso.P(3.4, g2 + 1.2, 0));
+    mull += line(Iso.P(0, y1, 0), Iso.P(3.4, y1 + 1.2, 0));
+    mull += line(Iso.P(0, y2, 0), Iso.P(3.4, y2 + 1.2, 0));
+    var body = '<defs><linearGradient id="ambBeam" x1="0" y1="0" x2="1" y2="0">' +
+      '<stop offset="0" stop-color="#FFF3CE" stop-opacity=".82"/>' +
+      '<stop offset=".55" stop-color="#FFF3CE" stop-opacity=".44"/>' +
+      '<stop offset="1" stop-color="#FFF3CE" stop-opacity=".06"/>' +
+      '</linearGradient>' +
+      '<filter id="ambSoft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4"/></filter>' +
+      '</defs>' +
+      '<polygon points="' + pts(outer) + '" fill="url(#ambBeam)" filter="url(#ambSoft)"/>' +
+      '<polygon points="' + pts(inner) + '" fill="#FFF9EF" opacity=".34"/>' + mull;
     return { vb: { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }, body: body };
   }
 
@@ -80,6 +97,8 @@
     state.lamps = [];
     state.clock = null;
     state.light = null;
+    state.lightBase = null;
+    state.evening = !!opts.evening;
     state.phase = Math.random() * 6.28;
     var win = Iso.cfg.WIN || { y1: 2.2, y2: 7.4, z1: 42, z2: 96 };
 
@@ -101,8 +120,10 @@
       sp.width = vb.w;
       sp.height = vb.h;
       sp.alpha = 0.9;
+      sp.tint = opts.evening ? 0xFFD2A8 : (opts.season === 'winter' ? 0xEAF3FF : 0xFFF3CE);
       back.addChild(sp);
       state.light = sp;
+      state.lightBase = { x: vb.x, y: vb.y };
     });
 
     // 浮尘
@@ -361,9 +382,13 @@
       lp.sp.scale.set(sc);
     }
 
-    // 窗光呼吸
+    // 窗光呼吸 + 极慢漂移
     if (state.light) {
-      state.light.alpha = 0.78 + Math.sin(t * 0.55) * 0.14 * slow;
+      state.light.alpha = (state.evening ? 0.62 : 0.78) + Math.sin(t * 0.55) * 0.14 * slow;
+      if (state.lightBase) {
+        state.light.x = state.lightBase.x + Math.sin(t * 0.11 + state.phase) * 2.2;
+        state.light.y = state.lightBase.y + Math.cos(t * 0.09 + state.phase) * 1.4;
+      }
     }
   };
 

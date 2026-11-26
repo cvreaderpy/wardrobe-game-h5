@@ -77,7 +77,8 @@
       '<linearGradient id="outWinSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + (evening ? '#EDC3A0' : sp.sky1) + '"/><stop offset="1" stop-color="' + (evening ? '#F6DCC6' : sp.sky2) + '"/></linearGradient>' +
       '<linearGradient id="rGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8F3F5"/><stop offset=".55" stop-color="#CFE4E8"/><stop offset="1" stop-color="#F7FBFA"/></linearGradient>' +
       '<linearGradient id="rCurtain" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + sp.curtainDark + '"/><stop offset=".45" stop-color="' + sp.curtain + '"/><stop offset="1" stop-color="' + sp.curtainDark + '"/></linearGradient>' +
-      '<linearGradient id="rFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sp.floor[0] + '"/><stop offset="1" stop-color="' + sp.floor[3] + '"/></linearGradient>';
+      '<linearGradient id="rFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sp.floor[0] + '"/><stop offset="1" stop-color="' + sp.floor[3] + '"/></linearGradient>' +
+      '<linearGradient id="rAoWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B4636" stop-opacity="0"/><stop offset=".7" stop-color="#5B4636" stop-opacity=".03"/><stop offset="1" stop-color="#5B4636" stop-opacity=".13"/></linearGradient>';
 
     var s = '';
 
@@ -109,6 +110,12 @@
       s += line(p(0, i, 3), p(0, i, 27), { sw: 1, opacity: 0.3, stroke: '#C9A57E' });
       s += line(p(i, 0, 3), p(i, 0, 27), { sw: 1, opacity: 0.3, stroke: '#C9A57E' });
     }
+
+    // 墙脚环境遮蔽 + 地板靠墙暗部
+    s += poly([p(0, 0, 0), p(0, N, 0), p(0, N, 14), p(0, 0, 14)], 'url(#rAoWall)', { stroke: null, opacity: 0.85 });
+    s += poly([p(0, 0, 0), p(N, 0, 0), p(N, 0, 14), p(0, 0, 14)], 'url(#rAoWall)', { stroke: null, opacity: 0.62 });
+    s += poly([p(0, 0, 0), p(0, N, 0), p(1.1, N, 0), p(1.1, 0, 0)], '#5B4636', { stroke: null, opacity: 0.032 });
+    s += poly([p(0, 0, 0), p(N, 0, 0), p(N, 1.0, 0), p(0, 1.0, 0)], '#5B4636', { stroke: null, opacity: 0.04 });
 
     // 顶角线 / 踢脚
     s += poly([p(0, 0, 104), p(0, N, 104), p(0, N, 110), p(0, 0, 110)], '#E7D5BE', { sw: 1.2 });
@@ -224,8 +231,8 @@
     }
 
     // 窗光
-    s += poly([p(0, wy1, 0), p(0, wy2, 0), p(3.4, wy2 + 1.2, 0), p(3.4, wy1 + 1.2, 0)], sp.light, { opacity: 0.14, stroke: null });
-    s += poly([p(0, wy1 + 0.5, 0), p(0, wy2 - 1.0, 0), p(2.6, wy2 - 0.1, 0), p(2.6, wy1 + 0.7, 0)], sp.light, { opacity: 0.1, stroke: null });
+    s += poly([p(0, wy1, 0), p(0, wy2, 0), p(3.4, wy2 + 1.2, 0), p(3.4, wy1 + 1.2, 0)], sp.light, { opacity: 0.22, stroke: null });
+    s += poly([p(0, wy1 + 0.5, 0), p(0, wy2 - 1.0, 0), p(2.6, wy2 - 0.1, 0), p(2.6, wy1 + 0.7, 0)], sp.light, { opacity: 0.16, stroke: null });
 
     if (evening) {
       s += '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#C97B63" opacity=".1"/>';
