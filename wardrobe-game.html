@@ -5720,6 +5720,95 @@ body.prep-active .debug-panel {
   .iso-tint { transition: none; }
 }
 
+/* 常客记忆 / 顾客晒单 feed */
+.regular-memory-card {
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: #FFF9EF;
+  border-color: #E8CE91;
+}
+.regular-memory-kicker {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--terracotta-dark);
+  margin-bottom: 2px;
+}
+
+.feed-card {
+  padding: 10px 12px;
+}
+.feed-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.feed-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.feed-meta strong {
+  font-size: 12px;
+  color: var(--ink);
+}
+.feed-meta span {
+  font-size: 9px;
+  color: var(--muted);
+}
+.feed-score {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--sage-dark);
+  background: #E8EFE4;
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+.feed-text {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px dashed var(--line);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.feed-items {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.feed-items .mini-item {
+  width: 38px;
+  height: 38px;
+}
+.feed-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.feed-like {
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+}
+.feed-like.liked {
+  color: #B85454;
+  border-color: #D99A9A;
+  background: #FFF3F0;
+}
+
 </style>
   <!-- 单文件离线版：CSS/JS/图标全部内联，不注册 Service Worker（file:// 不支持） -->
 </head>
@@ -6351,7 +6440,66 @@ body.prep-active .debug-panel {
       story: '下周开庭，想穿得让客户放心。',
       request: '帮我搭一套有气场但不咄咄逼人的。',
       portrait: { skin: '#F5DCC6', hair: '#2E2A27', hairStyle: 'bob', top: '#2E2A27', expression: 'calm', accessory: 'glasses' }
+    },
+    // 常客第二次来访（不占固定预约，满足条件时由引擎注入）
+    {
+      id: 'lin2', name: '林小满', age: 24, job: '广告公司新人', occasion: '入职第一天',
+      formality: 4, budget: 700, styles: ['work', 'minimal'], avoid: ['sweet', 'sporty'],
+      bodyNeed: 'tall', bodyLabel: '想显得可靠、不老气', colorPref: 'neutral', styling: true, reserveDay: 0,
+      regularFirst: 'lin', appearanceOf: 'lin',
+      wish: 'polish', wishLine: '第一天上班，不想被当成来实习的。',
+      story: '上次那套面试战袍真的拿到了 offer。今天入职，想穿得像个能开会的人。',
+      request: '帮我搭一套入职第一天的衣服，专业但别像主管。',
+      portrait: { skin: '#F2D3B8', hair: '#2E2A27', hairStyle: 'bob', top: '#E8E2D6', expression: 'calm', accessory: 'glasses' }
+    },
+    {
+      id: 'zhou2', name: '周雨', age: 28, job: '品牌设计师', occasion: '第二次约会',
+      formality: 3, budget: 800, styles: ['french', 'sweet'], avoid: ['sporty'],
+      bodyNeed: 'slim', bodyLabel: '显瘦、有氛围', colorPref: 'warm', styling: true, reserveDay: 0,
+      regularFirst: 'zhou', appearanceOf: 'zhou',
+      wish: 'bright', wishLine: '这次想再勇敢一点，但别太用力。',
+      story: '上次约会那套被夸了。这次想再勇敢一点，但别太用力。',
+      request: '帮我搭一套第二次约会的，想让他再看见我一次。',
+      portrait: { skin: '#F5DCC6', hair: '#6B4F3A', hairStyle: 'wavy', top: '#D99A9A', expression: 'happy', accessory: 'earrings' }
+    },
+    {
+      id: 'laochen2', name: '老陈', age: 40, job: '花店老板', occasion: '花店周年',
+      formality: 2, budget: 600, styles: ['vintage', 'minimal'], avoid: ['y2k'],
+      bodyNeed: 'dirty', bodyLabel: '耐脏、方便搬花', colorPref: 'warm', styling: false, reserveDay: 0,
+      regularFirst: 'laochen', appearanceOf: 'laochen',
+      wish: 'practical', wishLine: '搬花和拍照，最好一套搞定。',
+      story: '花店开满一年了，想在门口拍张照，也想穿得舒服。',
+      request: '帮我配一套能搬花、也能上镜的。',
+      portrait: { skin: '#D9B08C', hair: '#2E2A27', hairStyle: 'short', top: '#6B4F3A', expression: 'calm', accessory: 'none' }
+    },
+    {
+      id: 'xiaolu2', name: '小鹿', age: 19, job: '大一学生', occasion: '社团招新',
+      formality: 2, budget: 450, styles: ['sweet', 'sporty'], avoid: ['work'],
+      bodyNeed: 'photo', bodyLabel: '上镜、显高', colorPref: 'cool', styling: false, reserveDay: 0,
+      regularFirst: 'xiaolu', appearanceOf: 'xiaolu',
+      wish: 'budget', wishLine: '预算不多，但想被记住。',
+      story: '开学那套被学姐问链接了。社团招新想再亮一点。',
+      request: '预算不多，想搭一套招新时能被记住的。',
+      portrait: { skin: '#F2D3B8', hair: '#6B4F3A', hairStyle: 'pixie', top: '#D99A9A', expression: 'happy', accessory: 'none' }
+    },
+    {
+      id: 'chen2', name: '陈姐', age: 35, job: '全职妈妈', occasion: '重返职场',
+      formality: 4, budget: 800, styles: ['work', 'minimal'], avoid: ['y2k'],
+      bodyNeed: 'cover', bodyLabel: '遮肉、得体', colorPref: 'neutral', styling: true, reserveDay: 0,
+      regularFirst: 'chen', appearanceOf: 'chen',
+      wish: 'polish', wishLine: '想穿回那个能开会、能提案的自己。',
+      story: '上次那套日常装让她想起自己。这次要去面试，想穿回职场的样子。',
+      request: '帮我搭一套面试的，得体但别太凶。',
+      portrait: { skin: '#EBC9A9', hair: '#2E2A27', hairStyle: 'bun', top: '#8A9A7B', expression: 'calm', accessory: 'none' }
     }
+  ];
+
+  D.REGULAR_RETURNS = [
+    { first: 'lin', next: 'lin2', day: 3 },
+    { first: 'zhou', next: 'zhou2', day: 4 },
+    { first: 'laochen', next: 'laochen2', day: 5 },
+    { first: 'xiaolu', next: 'xiaolu2', day: 6 },
+    { first: 'chen', next: 'chen2', day: 7 }
   ];
 
   D.CUSTOMERS_BY_ID = {};
@@ -7294,7 +7442,7 @@ body.prep-active .debug-panel {
   var D = window.GAME_DATA;
   var SAVE_KEY = 'yijian_xiaorizi_save_v1';
   var SAVE_BACKUP_KEY = SAVE_KEY + '_backup';
-  var VERSION = 16;
+  var VERSION = 17;
   var SAVE_WARN_BYTES = 1024 * 1024;   // 超过就提示，为 IndexedDB 决策留数据
   var SAVE_EXPORT_APP = 'yijian-xiaorizi';
   var SAVE_IMPORT_MAX_BYTES = 8 * 1024 * 1024;
@@ -7349,7 +7497,8 @@ body.prep-active .debug-panel {
       'usedCustomers', 'pendingResult', 'completed', 'summary', 'flags', 'savedAt', 'rev',
       'seasonClosed', 'staffMarket', 'staffMarketDay', 'staffUid', 'ordersDay', 'orderUid',
       'designUid', 'designDay', 'designDraft', 'designOrderDay', 'vipToday', 'weatherPrepDay', 'weatherPrepId',
-      'queue', 'servingCustomerId', 'staffLog'
+      'queue', 'servingCustomerId', 'staffLog', 'regularVisits', 'feed', 'feedUid'
+
     ],
     ui: [
       'screen', 'cart', 'cartCategory', 'invCategory', 'todayLots', 'pendingLot',
@@ -7698,6 +7847,16 @@ body.prep-active .debug-panel {
         if (!o.kind) { o.kind = 'item'; }
         if (o.kind === 'design' && !o.want) { o.want = {}; }
       });
+    },
+
+    // v16 → v17：常客回访 / 顾客晒单
+    17: function (s) {
+      if (!s.regularVisits || typeof s.regularVisits !== 'object' || Array.isArray(s.regularVisits)) {
+        s.regularVisits = {};
+      }
+      if (!Array.isArray(s.feed)) { s.feed = []; }
+      if (typeof s.feedUid !== 'number') { s.feedUid = 1; }
+      // 老存档里的设计款/订单字段保持；回访由后续结算自然产生
     }
   };
 
@@ -7756,7 +7915,10 @@ body.prep-active .debug-panel {
         weatherPrepId: null,
         queue: [],
         servingCustomerId: null,
-        staffLog: []
+        staffLog: [],
+        regularVisits: {},
+        feed: [],
+        feedUid: 1
       },
       inventory: { shelf: {}, store: {} },
       warehouse: { level: 1 },
@@ -8007,6 +8169,11 @@ body.prep-active .debug-panel {
     if (!s.accessorySlot) { s.accessorySlot = 'all'; }
     if (!s.styleFilter) { s.styleFilter = 'all'; }
     if (!Array.isArray(s.selectedItems)) { s.selectedItems = []; }
+    if (!s.regularVisits || typeof s.regularVisits !== 'object' || Array.isArray(s.regularVisits)) {
+      s.regularVisits = {};
+    }
+    if (!Array.isArray(s.feed)) { s.feed = []; }
+    if (typeof s.feedUid !== 'number') { s.feedUid = 1; }
     (s.designs || []).forEach(registerDesignItem);
     s.version = VERSION;
     return s;
@@ -9184,7 +9351,8 @@ body.prep-active .debug-panel {
       var color = colors[Math.floor(Engine.nextRandom() * colors.length)];
       var fabric = D.DESIGN.fabrics[Math.floor(Engine.nextRandom() * D.DESIGN.fabrics.length)];
       var deco = Engine.nextRandom() > 0.35 ? D.DESIGN.decorations[Math.floor(Engine.nextRandom() * D.DESIGN.decorations.length)] : null;
-      var customer = D.CUSTOMERS[Math.floor(Engine.nextRandom() * D.CUSTOMERS.length)];
+      var designCustomers = D.CUSTOMERS.filter(function (c) { return !c.regularFirst; });
+      var customer = designCustomers[Math.floor(Engine.nextRandom() * designCustomers.length)];
       var baseCost = D.DESIGN.workCost + fabric.cost + (deco ? deco.cost : 0);
       var budget = Math.round(baseCost * (2.2 + Engine.nextRandom() * 0.7) / 10) * 10;
       var ddl = d + 3 + Math.floor(Engine.nextRandom() * 3);
@@ -10216,6 +10384,13 @@ body.prep-active .debug-panel {
     });
 
     var force = (cfg.force || []).filter(function (id) { return !!D.CUSTOMERS_BY_ID[id]; });
+    // 常客回访：第一次接待过、今天到回访日、还没回来过，就作为额外预约注入
+    (D.REGULAR_RETURNS || []).forEach(function (r) {
+      var rec = s.regularVisits && s.regularVisits[r.first];
+      if (!rec || rec.returned || r.day !== s.day) { return; }
+      if (s.usedCustomers.indexOf(r.next) >= 0) { return; }
+      if (D.CUSTOMERS_BY_ID[r.next] && force.indexOf(r.next) < 0) { force.push(r.next); }
+    });
     force.forEach(function (id) {
       if (selected.indexOf(id) < 0) { selected.unshift(id); }
     });
@@ -10231,6 +10406,7 @@ body.prep-active .debug-panel {
     }
 
     var pool = D.CUSTOMERS.filter(function (c) {
+      if (c.regularFirst) { return false; }   // 回访客只按日程注入，不参与随机池
       if (used.indexOf(c.id) >= 0) { return false; }
       if (selected.indexOf(c.id) >= 0) { return false; }
       return true;
@@ -11688,6 +11864,9 @@ body.prep-active .debug-panel {
     } else if (pr.outcome === 'leave') {
       Engine.completeLeave(customer, '她照了照镜子，说不太像自己。', 2);
     }
+    Engine.recordRegularVisit(customer, pr);
+    Engine.addFeedPost(customer, pr);
+    Engine.save();
   };
 
   Engine.acceptDiscount = function () {
@@ -11862,6 +12041,124 @@ body.prep-active .debug-panel {
   Engine.markCustomerUsed = function (id) {
     var s = Engine.state;
     if (s.usedCustomers.indexOf(id) < 0) { s.usedCustomers.push(id); }
+  };
+
+  /* ---------------- 常客回访 / 顾客晒单 ---------------- */
+
+  Engine.recordRegularVisit = function (customer, pr) {
+    var s = Engine.state;
+    if (!s || !customer || !pr) { return; }
+    var score = (pr.result && pr.result.score) || 0;
+    var items = (pr.itemIds || []).slice(0, 6);
+    s.regularVisits = s.regularVisits || {};
+
+    if (customer.regularFirst) {
+      var rec = s.regularVisits[customer.regularFirst];
+      if (!rec) { rec = s.regularVisits[customer.regularFirst] = {}; }
+      rec.returned = true;
+      rec.returnDay = s.day;
+      rec.returnScore = score;
+      rec.returnOutcome = pr.outcome;
+      rec.returnItems = items;
+      return;
+    }
+
+    var next = null;
+    (D.REGULAR_RETURNS || []).forEach(function (r) {
+      if (r.first === customer.id) { next = r; }
+    });
+    if (next && !s.regularVisits[customer.id]) {
+      s.regularVisits[customer.id] = {
+        firstDay: s.day,
+        firstScore: score,
+        firstOutcome: pr.outcome,
+        firstItems: items,
+        returned: false
+      };
+    }
+  };
+
+  Engine.getRegularMemory = function (customer) {
+    var s = Engine.state;
+    if (!s || !customer || !customer.regularFirst) { return null; }
+    var rec = s.regularVisits && s.regularVisits[customer.regularFirst];
+    if (!rec) { return null; }
+    var first = D.CUSTOMERS_BY_ID[customer.regularFirst];
+    var items = (rec.firstItems || []).map(function (id) { return D.ITEMS_BY_ID[id]; }).filter(Boolean);
+    var score = rec.firstScore || 0;
+    var line;
+    if (score >= 85) {
+      line = '上次那套' + (items[0] ? '「' + items[0].name + '」' : '搭配') + '她穿去' + (first ? first.occasion : '') + '，被夸了好几次。';
+    } else if (score >= 60) {
+      line = '上次那套' + (items[0] ? '「' + items[0].name + '」' : '搭配') + '还算合身，这次想再往前走一点。';
+    } else {
+      line = '上次那套她没怎么穿，这次想换个方向。';
+    }
+    return { score: score, items: items, line: line, firstDay: rec.firstDay || 0 };
+  };
+
+  Engine.addFeedPost = function (customer, pr) {
+    var s = Engine.state;
+    if (!s || !customer || !pr || !pr.result) { return null; }
+    var score = pr.result.score || 0;
+    var text;
+    if (pr.outcome === 'perfect') {
+      text = '今天这套被三个人夸了，链接已经发群里。';
+    } else if (pr.outcome === 'happy') {
+      text = '新衣服上身，今天走路都轻一点。';
+    } else if (pr.outcome === 'single') {
+      text = '试了好几套，最后只带走一件，但很值。';
+    } else if (pr.outcome === 'discount') {
+      text = '犹豫了半天，还是拿下了。谢谢老板给台阶。';
+    } else if (pr.outcome === 'expensive') {
+      text = '很喜欢，但超预算了。先收藏，下次再来。';
+    } else {
+      text = '今天在「' + s.shopName + '」试了几套，记录一下。';
+    }
+    s.feed = s.feed || [];
+    s.feedUid = s.feedUid || 1;
+    var post = {
+      id: 'f' + s.feedUid,
+      day: s.day,
+      customerId: customer.id,
+      customerName: customer.name,
+      outfit: (pr.itemIds || []).slice(0, 4),
+      score: score,
+      outcome: pr.outcome,
+      text: text,
+      likes: 3 + Math.round(score / 12) + (pr.outcome === 'perfect' ? 4 : 0),
+      liked: false,
+      createdAt: Date.now()
+    };
+    s.feedUid += 1;
+    s.feed.unshift(post);
+    if (s.feed.length > 24) { s.feed = s.feed.slice(0, 24); }
+    pr.feedId = post.id;
+    return post;
+  };
+
+  Engine.getFeed = function (limit) {
+    var s = Engine.state;
+    if (!s || !Array.isArray(s.feed)) { return []; }
+    return s.feed.slice(0, limit || 6);
+  };
+
+  Engine.getFeedPost = function (id) {
+    var s = Engine.state;
+    if (!s || !Array.isArray(s.feed)) { return null; }
+    for (var i = 0; i < s.feed.length; i++) {
+      if (s.feed[i].id === id) { return s.feed[i]; }
+    }
+    return null;
+  };
+
+  Engine.likeFeedPost = function (id) {
+    var post = Engine.getFeedPost(id);
+    if (!post) { return false; }
+    post.liked = !post.liked;
+    post.likes = Math.max(0, (post.likes || 0) + (post.liked ? 1 : -1));
+    Engine.save();
+    return post.liked;
   };
 
   Engine.advanceQueue = function () {
@@ -15440,6 +15737,16 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     var c = p(x + w * 0.91, y + d * 0.44, bodyH + 14);
     s += '<path d="M' + c[0].toFixed(1) + ' ' + c[1].toFixed(1) + 'q-6 -1 -7 -7 q6 0 7 7Z" fill="#8A9A7B" stroke="' + LINE + '" stroke-width="1"/>';
     s += '<path d="M' + c[0].toFixed(1) + ' ' + c[1].toFixed(1) + 'q6 -1 7 -7 q-6 0 -7 7Z" fill="#9CAF8C" stroke="' + LINE + '" stroke-width="1"/>';
+    // 小票 + 笔
+    s += poly([
+      p(x + w * 0.45, y + d * 0.48, bodyH + 7),
+      p(x + w * 0.56, y + d * 0.48, bodyH + 7),
+      p(x + w * 0.56, y + d * 0.62, bodyH + 7),
+      p(x + w * 0.45, y + d * 0.62, bodyH + 7)
+    ], '#FFF9EF', { sw: 0.8 });
+    s += line(p(x + w * 0.47, y + d * 0.52, bodyH + 8), p(x + w * 0.54, y + d * 0.52, bodyH + 8), { sw: 0.7, opacity: 0.35, stroke: '#B98D69' });
+    s += line(p(x + w * 0.47, y + d * 0.55, bodyH + 8), p(x + w * 0.52, y + d * 0.55, bodyH + 8), { sw: 0.6, opacity: 0.28, stroke: '#B98D69' });
+    s += line(p(x + w * 0.47, y + d * 0.66, bodyH + 8), p(x + w * 0.53, y + d * 0.69, bodyH + 8), { sw: 1.4, stroke: '#C97B63', cap: 'round' });
     return s;
   }
 
@@ -15502,6 +15809,13 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     // 上身
     s += poly([[c[0] - 11, c[1] - 84], [c[0] + 11, c[1] - 84], [c[0] + 13, c[1] - 64], [c[0] - 13, c[1] - 64]], '#C9BCD8', { sw: 1.6 });
     s += line([c[0], c[1] - 84], [c[0], c[1] - 18], { sw: 1, opacity: 0.35, stroke: '#9C8FAE' });
+    // 腰带 + 项链 + 吊牌
+    s += line([c[0] - 12.5, c[1] - 64], [c[0] + 12.5, c[1] - 64], { sw: 2.4, stroke: '#8A6A52', cap: 'round' });
+    s += '<rect x="' + (c[0] - 2.5).toFixed(1) + '" y="' + (c[1] - 66).toFixed(1) + '" width="5" height="4" rx="1" fill="#E3B23C" stroke="' + LINE + '" stroke-width=".8"/>';
+    s += '<path d="M' + (c[0] - 7).toFixed(1) + ' ' + (c[1] - 80).toFixed(1) + 'Q' + c[0].toFixed(1) + ' ' + (c[1] - 75).toFixed(1) + ' ' + (c[0] + 7).toFixed(1) + ' ' + (c[1] - 80).toFixed(1) + '" fill="none" stroke="#E3B23C" stroke-width="1.1"/>';
+    s += '<circle cx="' + c[0].toFixed(1) + '" cy="' + (c[1] - 76).toFixed(1) + '" r="1.3" fill="#E3B23C" stroke="' + LINE + '" stroke-width=".5"/>';
+    s += line([c[0] + 11, c[1] - 70], [c[0] + 17, c[1] - 66], { sw: 0.8, stroke: '#8A6A52' });
+    s += poly([[c[0] + 16, c[1] - 68], [c[0] + 22, c[1] - 68], [c[0] + 22, c[1] - 61], [c[0] + 16, c[1] - 61]], '#FFF9EF', { sw: 0.8 });
     s += '<circle cx="' + c[0].toFixed(1) + '" cy="' + (c[1] - 88).toFixed(1) + '" r="4.5" fill="#F1E3D3" stroke="' + LINE + '" stroke-width="1.4"/>';
     return s;
   }
@@ -16506,12 +16820,72 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     return 'url(#' + id + ')';
   }
 
+  function materialPattern(ctx, m, color) {
+    if (!m) { return null; }
+    ctx._matPat = ctx._matPat || {};
+    var key = m + '|' + color;
+    if (ctx._matPat[key]) { return ctx._matPat[key]; }
+    var ink = lum(color) < 0.42 ? Iso.shade(color, 1.32) : Iso.shade(color, 0.86);
+    var ink2 = lum(color) < 0.42 ? Iso.shade(color, 1.5) : Iso.shade(color, 1.12);
+    var tile = 7;
+    var body = '';
+    switch (m) {
+      case 'satin':
+      case 'silk':
+      case 'velvet':
+        tile = 9;
+        body = '<path d="M-3 9L9 -3M0 12L12 0" stroke="' + ink2 + '" stroke-width="1.6" opacity=".42" fill="none"/>' +
+          '<path d="M2 10L10 2" stroke="' + ink + '" stroke-width=".9" opacity=".3" fill="none"/>';
+        break;
+      case 'leather':
+      case 'suede':
+        tile = 10;
+        body = '<path d="M1 2L3 2.6M6 1L7 2M2 7L4 7.4M7 6L8.5 6.6M4 9L5 8.4" stroke="' + ink + '" stroke-width=".8" opacity=".42" fill="none"/>' +
+          '<path d="M2 4L3 4.6M7 8L8 8.4" stroke="' + ink2 + '" stroke-width=".7" opacity=".34" fill="none"/>';
+        break;
+      case 'wool':
+      case 'tweed':
+        tile = 8;
+        body = '<path d="M0 2L2 3M4 0L5 1.4M1 6L3 7M6 5L7.5 6M3 9L4 8" stroke="' + ink + '" stroke-width=".75" opacity=".4" fill="none"/>' +
+          '<path d="M5 2L6 2.6M2 4L3 4.4M7 7L8 7.4" stroke="' + ink2 + '" stroke-width=".65" opacity=".32" fill="none"/>';
+        break;
+      case 'knit':
+        tile = 3;
+        body = '<rect x="0" y="0" width=".55" height="3" fill="' + ink + '" opacity=".35"/>' +
+          '<rect x="1.65" y="0" width=".3" height="3" fill="' + ink2 + '" opacity=".22"/>';
+        break;
+      case 'denim':
+        tile = 4;
+        body = '<path d="M-1 4L4 -1M0 5L5 0" stroke="' + ink2 + '" stroke-width=".65" opacity=".36" fill="none"/>';
+        break;
+      case 'cotton':
+      case 'canvas':
+      case 'linen':
+        tile = 5;
+        body = '<path d="M0 0H5M0 0V5" stroke="' + ink + '" stroke-width=".4" opacity=".24" fill="none"/>';
+        break;
+      case 'nylon':
+      case 'mesh':
+        tile = 4;
+        body = '<path d="M0 0H4M0 0V4" stroke="' + ink2 + '" stroke-width=".5" opacity=".26" fill="none"/>';
+        break;
+      default:
+        return null;
+    }
+    var id = uid(ctx, 'mat');
+    addDef(ctx, '<pattern id="' + id + '" width="' + tile + '" height="' + tile + '" patternUnits="userSpaceOnUse">' + body + '</pattern>');
+    ctx._matPat[key] = 'url(#' + id + ')';
+    return ctx._matPat[key];
+  }
+
   function fabricPattern(ctx, look, color) {
     if (look && look.print) {
       var pp = printPattern(ctx, look.print);
       if (pp) { return pp; }
     }
-    return pattern(ctx, look && look.p, color);
+    var p = pattern(ctx, look && look.p, color);
+    if (p) { return p; }
+    return materialPattern(ctx, look && look.m, color);
   }
 
   function customCloth(ctx, look, color, cat) {
@@ -17691,7 +18065,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   Iso.character.appearance = function (customer) {
     var p = (customer && customer.portrait) || {};
-    var id = (customer && customer.id) || 'guest';
+    var id = (customer && (customer.appearanceOf || customer.id)) || 'guest';
     var h = 1 + ((hash(id) % 5) - 2) * 0.03;
     var hn = hash(id);
     var faces = ['oval', 'round', 'heart', 'long'];
@@ -21137,6 +21511,16 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     r._talkUntil = now + (ms || 1000);
   };
 
+  Iso.snapshot = function () {
+    if (!st.ready || !st.app || !st.app.renderer) { return null; }
+    try {
+      var canvas = st.app.renderer.extract.canvas(st.app.stage);
+      return canvas.toDataURL('image/png');
+    } catch (e) {
+      return null;
+    }
+  };
+
   Iso.camPulse = function (amount) {
     if (Iso.reducedMotion) { return; }
     st.camKick = Math.max(st.camKick || 0, amount || 0.02);
@@ -22367,6 +22751,11 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   Scene._isoOn = false;
 
+  Scene.snapshot = function () {
+    if (Scene._isoOn && window.Iso && Iso.snapshot) { return Iso.snapshot(); }
+    return null;
+  };
+
   Scene.setAudioScene = function (s, key) {
     var season = 'spring';
     var weather = 'sunny';
@@ -23244,6 +23633,25 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       '</div>';
   }
 
+  function feedCardHtml(post, customer) {
+    if (!post || !customer) { return ''; }
+    return '<div class="card feed-card">' +
+      '<div class="feed-head">' +
+      '<div class="avatar tiny-avatar">' + avatarSvg(customer) + '</div>' +
+      '<div class="feed-meta"><strong>' + esc(customer.name) + '</strong>' +
+      '<span>' + esc(customer.occasion) + ' · DAY ' + post.day + '</span></div>' +
+      '<span class="feed-score">' + post.score + ' 分</span>' +
+      '</div>' +
+      '<div class="feed-text">“' + esc(post.text) + '”</div>' +
+      '<div class="feed-items">' + (post.outfit || []).map(miniItem).join('') + '</div>' +
+      '<div class="feed-foot">' +
+      '<button type="button" class="feed-like' + (post.liked ? ' liked' : '') + '" data-action="like-post" data-id="' + post.id + '">' +
+      (post.liked ? '♥ ' : '♡ ') + post.likes + '</button>' +
+      '<span class="small muted">顾客晒单</span>' +
+      '</div>' +
+      '</div>';
+  }
+
   function customerMiniBar(s, c) {
     return '<div class="customer-mini">' +
       '<div class="avatar tiny-avatar">' + avatarSvg(c) + '</div>' +
@@ -23293,7 +23701,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       html += '<div class="appointment-row">' +
         '<div class="avatar small">' + avatarSvg(c) + '</div>' +
         '<div class="appointment-info">' +
-        '<div class="appointment-name">' + esc(c.name) + ' <span class="small muted">' + esc(c.occasion) + '</span></div>' +
+        '<div class="appointment-name">' + esc(c.name) + ' <span class="small muted">' + esc(c.occasion) + '</span>' +
+        (c.regularFirst ? ' <span class="tag sage">回头客</span>' : '') + '</div>' +
         '<div class="small muted">预算 ' + money(c.budget) + ' · 偏好 ' + styleLabels(c.styles).join(' / ') + '</div>' +
         '</div></div>';
     });
@@ -25260,6 +25669,11 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     var beat = E.getChatBeat();
     var html = header(s, '接待中');
     html += queueStrip(s);
+    var mem = E.getRegularMemory(c);
+    if (mem) {
+      html += '<div class="card soft regular-memory-card"><div class="regular-memory-kicker">回头客 · 上次 DAY ' + mem.firstDay + '</div>' +
+        esc(mem.line) + '</div>';
+    }
     html += '<div class="chat-stats">' + affinityBar(s) + patienceHearts(s) + '</div>';
     html += wishCard(s, c);
 
@@ -25574,6 +25988,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         '</div>';
     }
 
+    var feedPost = pr.feedId ? E.getFeedPost(pr.feedId) : null;
+    if (feedPost) { html += feedCardHtml(feedPost, c); }
+    html += '<button type="button" class="btn secondary small mt10" data-action="photo">拍照留念</button>';
+
     html += staffLogHtml();
 
     if (pr.canDiscount && !pr.resolved) {
@@ -25643,6 +26061,15 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
     if (ds.loan) {
       html += '<div class="hint-box warn mt10">现金流告急，你临时借了 ¥3,000，口碑 -5。下一天要更小心。</div>';
+    }
+
+    var dayFeed = E.getFeed(4);
+    if (dayFeed.length) {
+      html += '<div class="section-head mt14"><h3>小店动态</h3><span class="small">今天顾客晒了 ' + dayFeed.length + ' 条</span></div>';
+      dayFeed.forEach(function (post) {
+        var pc = customerById(post.customerId);
+        if (pc) { html += feedCardHtml(post, pc); }
+      });
     }
 
     if (E.isSeasonEnd(s.day)) {
@@ -26449,6 +26876,25 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
   };
 
+  UI.openPhoto = function () {
+    var url = window.Scene && Scene.snapshot ? Scene.snapshot() : null;
+    if (!url) {
+      UI.toast('先切到等距店铺舞台再拍照');
+      return;
+    }
+    UI.lastShareDataUrl = url;
+    var s = E.state;
+    var day = s ? 'DAY ' + s.day + ' · ' + (E.state.shopName || '衣间小日子') : '衣间小日子';
+    UI.modal('<div class="modal-title">拍照留念</div>' +
+      '<img src="' + url + '" alt="店铺照片" style="width:100%;display:block;margin-top:10px;border:2px solid #5B4636;border-radius:12px">' +
+      '<div class="small muted" style="text-align:center;margin-top:6px">' + esc(day) + '</div>' +
+      '<div class="btn-row mt10">' +
+      '<button type="button" class="btn small" data-action="download-share">保存照片</button>' +
+      (canShareImage() ? '<button type="button" class="btn secondary small" data-action="share-share">分享</button>' : '') +
+      '<button type="button" class="btn ghost small" data-action="close-modal">关上</button>' +
+      '</div>');
+  };
+
   UI.saveShareImage = function () {
     if (!UI.lastShareDataUrl) { return; }
     var xhs = window.xhs && (window.xhs.miniTool || window.xhs);
@@ -27161,6 +27607,13 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         break;
       case 'share-share':
         UI.shareShareImage();
+        break;
+      case 'like-post':
+        E.likeFeedPost(id);
+        UI.render();
+        break;
+      case 'photo':
+        UI.openPhoto();
         break;
       case 'replay':
         E.reset();

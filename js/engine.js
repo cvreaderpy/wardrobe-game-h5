@@ -3,7 +3,7 @@
   var D = window.GAME_DATA;
   var SAVE_KEY = 'yijian_xiaorizi_save_v1';
   var SAVE_BACKUP_KEY = SAVE_KEY + '_backup';
-  var VERSION = 16;
+  var VERSION = 17;
   var SAVE_WARN_BYTES = 1024 * 1024;   // 超过就提示，为 IndexedDB 决策留数据
   var SAVE_EXPORT_APP = 'yijian-xiaorizi';
   var SAVE_IMPORT_MAX_BYTES = 8 * 1024 * 1024;
@@ -58,7 +58,8 @@
       'usedCustomers', 'pendingResult', 'completed', 'summary', 'flags', 'savedAt', 'rev',
       'seasonClosed', 'staffMarket', 'staffMarketDay', 'staffUid', 'ordersDay', 'orderUid',
       'designUid', 'designDay', 'designDraft', 'designOrderDay', 'vipToday', 'weatherPrepDay', 'weatherPrepId',
-      'queue', 'servingCustomerId', 'staffLog'
+      'queue', 'servingCustomerId', 'staffLog', 'regularVisits', 'feed', 'feedUid'
+
     ],
     ui: [
       'screen', 'cart', 'cartCategory', 'invCategory', 'todayLots', 'pendingLot',
@@ -407,6 +408,16 @@
         if (!o.kind) { o.kind = 'item'; }
         if (o.kind === 'design' && !o.want) { o.want = {}; }
       });
+    },
+
+    // v16 → v17：常客回访 / 顾客晒单
+    17: function (s) {
+      if (!s.regularVisits || typeof s.regularVisits !== 'object' || Array.isArray(s.regularVisits)) {
+        s.regularVisits = {};
+      }
+      if (!Array.isArray(s.feed)) { s.feed = []; }
+      if (typeof s.feedUid !== 'number') { s.feedUid = 1; }
+      // 老存档里的设计款/订单字段保持；回访由后续结算自然产生
     }
   };
 
@@ -465,7 +476,10 @@
         weatherPrepId: null,
         queue: [],
         servingCustomerId: null,
-        staffLog: []
+        staffLog: [],
+        regularVisits: {},
+        feed: [],
+        feedUid: 1
       },
       inventory: { shelf: {}, store: {} },
       warehouse: { level: 1 },
@@ -716,6 +730,11 @@
     if (!s.accessorySlot) { s.accessorySlot = 'all'; }
     if (!s.styleFilter) { s.styleFilter = 'all'; }
     if (!Array.isArray(s.selectedItems)) { s.selectedItems = []; }
+    if (!s.regularVisits || typeof s.regularVisits !== 'object' || Array.isArray(s.regularVisits)) {
+      s.regularVisits = {};
+    }
+    if (!Array.isArray(s.feed)) { s.feed = []; }
+    if (typeof s.feedUid !== 'number') { s.feedUid = 1; }
     (s.designs || []).forEach(registerDesignItem);
     s.version = VERSION;
     return s;
@@ -1893,7 +1912,8 @@
       var color = colors[Math.floor(Engine.nextRandom() * colors.length)];
       var fabric = D.DESIGN.fabrics[Math.floor(Engine.nextRandom() * D.DESIGN.fabrics.length)];
       var deco = Engine.nextRandom() > 0.35 ? D.DESIGN.decorations[Math.floor(Engine.nextRandom() * D.DESIGN.decorations.length)] : null;
-      var customer = D.CUSTOMERS[Math.floor(Engine.nextRandom() * D.CUSTOMERS.length)];
+      var designCustomers = D.CUSTOMERS.filter(function (c) { return !c.regularFirst; });
+      var customer = designCustomers[Math.floor(Engine.nextRandom() * designCustomers.length)];
       var baseCost = D.DESIGN.workCost + fabric.cost + (deco ? deco.cost : 0);
       var budget = Math.round(baseCost * (2.2 + Engine.nextRandom() * 0.7) / 10) * 10;
       var ddl = d + 3 + Math.floor(Engine.nextRandom() * 3);
@@ -2925,6 +2945,13 @@
     });
 
     var force = (cfg.force || []).filter(function (id) { return !!D.CUSTOMERS_BY_ID[id]; });
+    // 常客回访：第一次接待过、今天到回访日、还没回来过，就作为额外预约注入
+    (D.REGULAR_RETURNS || []).forEach(function (r) {
+      var rec = s.regularVisits && s.regularVisits[r.first];
+      if (!rec || rec.returned || r.day !== s.day) { return; }
+      if (s.usedCustomers.indexOf(r.next) >= 0) { return; }
+      if (D.CUSTOMERS_BY_ID[r.next] && force.indexOf(r.next) < 0) { force.push(r.next); }
+    });
     force.forEach(function (id) {
       if (selected.indexOf(id) < 0) { selected.unshift(id); }
     });
@@ -2940,6 +2967,7 @@
     }
 
     var pool = D.CUSTOMERS.filter(function (c) {
+      if (c.regularFirst) { return false; }   // 回访客只按日程注入，不参与随机池
       if (used.indexOf(c.id) >= 0) { return false; }
       if (selected.indexOf(c.id) >= 0) { return false; }
       return true;
@@ -4397,6 +4425,9 @@
     } else if (pr.outcome === 'leave') {
       Engine.completeLeave(customer, '她照了照镜子，说不太像自己。', 2);
     }
+    Engine.recordRegularVisit(customer, pr);
+    Engine.addFeedPost(customer, pr);
+    Engine.save();
   };
 
   Engine.acceptDiscount = function () {
@@ -4571,6 +4602,124 @@
   Engine.markCustomerUsed = function (id) {
     var s = Engine.state;
     if (s.usedCustomers.indexOf(id) < 0) { s.usedCustomers.push(id); }
+  };
+
+  /* ---------------- 常客回访 / 顾客晒单 ---------------- */
+
+  Engine.recordRegularVisit = function (customer, pr) {
+    var s = Engine.state;
+    if (!s || !customer || !pr) { return; }
+    var score = (pr.result && pr.result.score) || 0;
+    var items = (pr.itemIds || []).slice(0, 6);
+    s.regularVisits = s.regularVisits || {};
+
+    if (customer.regularFirst) {
+      var rec = s.regularVisits[customer.regularFirst];
+      if (!rec) { rec = s.regularVisits[customer.regularFirst] = {}; }
+      rec.returned = true;
+      rec.returnDay = s.day;
+      rec.returnScore = score;
+      rec.returnOutcome = pr.outcome;
+      rec.returnItems = items;
+      return;
+    }
+
+    var next = null;
+    (D.REGULAR_RETURNS || []).forEach(function (r) {
+      if (r.first === customer.id) { next = r; }
+    });
+    if (next && !s.regularVisits[customer.id]) {
+      s.regularVisits[customer.id] = {
+        firstDay: s.day,
+        firstScore: score,
+        firstOutcome: pr.outcome,
+        firstItems: items,
+        returned: false
+      };
+    }
+  };
+
+  Engine.getRegularMemory = function (customer) {
+    var s = Engine.state;
+    if (!s || !customer || !customer.regularFirst) { return null; }
+    var rec = s.regularVisits && s.regularVisits[customer.regularFirst];
+    if (!rec) { return null; }
+    var first = D.CUSTOMERS_BY_ID[customer.regularFirst];
+    var items = (rec.firstItems || []).map(function (id) { return D.ITEMS_BY_ID[id]; }).filter(Boolean);
+    var score = rec.firstScore || 0;
+    var line;
+    if (score >= 85) {
+      line = '上次那套' + (items[0] ? '「' + items[0].name + '」' : '搭配') + '她穿去' + (first ? first.occasion : '') + '，被夸了好几次。';
+    } else if (score >= 60) {
+      line = '上次那套' + (items[0] ? '「' + items[0].name + '」' : '搭配') + '还算合身，这次想再往前走一点。';
+    } else {
+      line = '上次那套她没怎么穿，这次想换个方向。';
+    }
+    return { score: score, items: items, line: line, firstDay: rec.firstDay || 0 };
+  };
+
+  Engine.addFeedPost = function (customer, pr) {
+    var s = Engine.state;
+    if (!s || !customer || !pr || !pr.result) { return null; }
+    var score = pr.result.score || 0;
+    var text;
+    if (pr.outcome === 'perfect') {
+      text = '今天这套被三个人夸了，链接已经发群里。';
+    } else if (pr.outcome === 'happy') {
+      text = '新衣服上身，今天走路都轻一点。';
+    } else if (pr.outcome === 'single') {
+      text = '试了好几套，最后只带走一件，但很值。';
+    } else if (pr.outcome === 'discount') {
+      text = '犹豫了半天，还是拿下了。谢谢老板给台阶。';
+    } else if (pr.outcome === 'expensive') {
+      text = '很喜欢，但超预算了。先收藏，下次再来。';
+    } else {
+      text = '今天在「' + s.shopName + '」试了几套，记录一下。';
+    }
+    s.feed = s.feed || [];
+    s.feedUid = s.feedUid || 1;
+    var post = {
+      id: 'f' + s.feedUid,
+      day: s.day,
+      customerId: customer.id,
+      customerName: customer.name,
+      outfit: (pr.itemIds || []).slice(0, 4),
+      score: score,
+      outcome: pr.outcome,
+      text: text,
+      likes: 3 + Math.round(score / 12) + (pr.outcome === 'perfect' ? 4 : 0),
+      liked: false,
+      createdAt: Date.now()
+    };
+    s.feedUid += 1;
+    s.feed.unshift(post);
+    if (s.feed.length > 24) { s.feed = s.feed.slice(0, 24); }
+    pr.feedId = post.id;
+    return post;
+  };
+
+  Engine.getFeed = function (limit) {
+    var s = Engine.state;
+    if (!s || !Array.isArray(s.feed)) { return []; }
+    return s.feed.slice(0, limit || 6);
+  };
+
+  Engine.getFeedPost = function (id) {
+    var s = Engine.state;
+    if (!s || !Array.isArray(s.feed)) { return null; }
+    for (var i = 0; i < s.feed.length; i++) {
+      if (s.feed[i].id === id) { return s.feed[i]; }
+    }
+    return null;
+  };
+
+  Engine.likeFeedPost = function (id) {
+    var post = Engine.getFeedPost(id);
+    if (!post) { return false; }
+    post.liked = !post.liked;
+    post.likes = Math.max(0, (post.likes || 0) + (post.liked ? 1 : -1));
+    Engine.save();
+    return post.liked;
   };
 
   Engine.advanceQueue = function () {

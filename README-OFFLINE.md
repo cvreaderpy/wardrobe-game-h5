@@ -131,7 +131,7 @@ https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
 ```json
 {
   "app": "yijian-xiaorizi",
-  "version": 16,
+  "version": 17,
   "exportedAt": "2026-11-26T08:00:00.000Z",
   "state": { "...": "完整游戏状态" }
 }
@@ -140,7 +140,7 @@ https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
 导入时会：
 
 - 校验 `app`，拒绝其他游戏的 JSON
-- 校验版本：比当前版本新会拒绝；旧版本自动走迁移（v15 → v16 等）
+- 校验版本：比当前版本新会拒绝；旧版本自动走迁移（v15 → v17 等）
 - 覆盖前把当前存档写入备份 key，导错了还有机会找回
 - 设计款、自定义版型、32×32 印花、设计单都会保留
 

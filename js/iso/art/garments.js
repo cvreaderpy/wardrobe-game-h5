@@ -521,12 +521,72 @@
     return 'url(#' + id + ')';
   }
 
+  function materialPattern(ctx, m, color) {
+    if (!m) { return null; }
+    ctx._matPat = ctx._matPat || {};
+    var key = m + '|' + color;
+    if (ctx._matPat[key]) { return ctx._matPat[key]; }
+    var ink = lum(color) < 0.42 ? Iso.shade(color, 1.32) : Iso.shade(color, 0.86);
+    var ink2 = lum(color) < 0.42 ? Iso.shade(color, 1.5) : Iso.shade(color, 1.12);
+    var tile = 7;
+    var body = '';
+    switch (m) {
+      case 'satin':
+      case 'silk':
+      case 'velvet':
+        tile = 9;
+        body = '<path d="M-3 9L9 -3M0 12L12 0" stroke="' + ink2 + '" stroke-width="1.6" opacity=".42" fill="none"/>' +
+          '<path d="M2 10L10 2" stroke="' + ink + '" stroke-width=".9" opacity=".3" fill="none"/>';
+        break;
+      case 'leather':
+      case 'suede':
+        tile = 10;
+        body = '<path d="M1 2L3 2.6M6 1L7 2M2 7L4 7.4M7 6L8.5 6.6M4 9L5 8.4" stroke="' + ink + '" stroke-width=".8" opacity=".42" fill="none"/>' +
+          '<path d="M2 4L3 4.6M7 8L8 8.4" stroke="' + ink2 + '" stroke-width=".7" opacity=".34" fill="none"/>';
+        break;
+      case 'wool':
+      case 'tweed':
+        tile = 8;
+        body = '<path d="M0 2L2 3M4 0L5 1.4M1 6L3 7M6 5L7.5 6M3 9L4 8" stroke="' + ink + '" stroke-width=".75" opacity=".4" fill="none"/>' +
+          '<path d="M5 2L6 2.6M2 4L3 4.4M7 7L8 7.4" stroke="' + ink2 + '" stroke-width=".65" opacity=".32" fill="none"/>';
+        break;
+      case 'knit':
+        tile = 3;
+        body = '<rect x="0" y="0" width=".55" height="3" fill="' + ink + '" opacity=".35"/>' +
+          '<rect x="1.65" y="0" width=".3" height="3" fill="' + ink2 + '" opacity=".22"/>';
+        break;
+      case 'denim':
+        tile = 4;
+        body = '<path d="M-1 4L4 -1M0 5L5 0" stroke="' + ink2 + '" stroke-width=".65" opacity=".36" fill="none"/>';
+        break;
+      case 'cotton':
+      case 'canvas':
+      case 'linen':
+        tile = 5;
+        body = '<path d="M0 0H5M0 0V5" stroke="' + ink + '" stroke-width=".4" opacity=".24" fill="none"/>';
+        break;
+      case 'nylon':
+      case 'mesh':
+        tile = 4;
+        body = '<path d="M0 0H4M0 0V4" stroke="' + ink2 + '" stroke-width=".5" opacity=".26" fill="none"/>';
+        break;
+      default:
+        return null;
+    }
+    var id = uid(ctx, 'mat');
+    addDef(ctx, '<pattern id="' + id + '" width="' + tile + '" height="' + tile + '" patternUnits="userSpaceOnUse">' + body + '</pattern>');
+    ctx._matPat[key] = 'url(#' + id + ')';
+    return ctx._matPat[key];
+  }
+
   function fabricPattern(ctx, look, color) {
     if (look && look.print) {
       var pp = printPattern(ctx, look.print);
       if (pp) { return pp; }
     }
-    return pattern(ctx, look && look.p, color);
+    var p = pattern(ctx, look && look.p, color);
+    if (p) { return p; }
+    return materialPattern(ctx, look && look.m, color);
   }
 
   function customCloth(ctx, look, color, cat) {

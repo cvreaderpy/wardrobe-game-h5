@@ -600,7 +600,66 @@
       story: '下周开庭，想穿得让客户放心。',
       request: '帮我搭一套有气场但不咄咄逼人的。',
       portrait: { skin: '#F5DCC6', hair: '#2E2A27', hairStyle: 'bob', top: '#2E2A27', expression: 'calm', accessory: 'glasses' }
+    },
+    // 常客第二次来访（不占固定预约，满足条件时由引擎注入）
+    {
+      id: 'lin2', name: '林小满', age: 24, job: '广告公司新人', occasion: '入职第一天',
+      formality: 4, budget: 700, styles: ['work', 'minimal'], avoid: ['sweet', 'sporty'],
+      bodyNeed: 'tall', bodyLabel: '想显得可靠、不老气', colorPref: 'neutral', styling: true, reserveDay: 0,
+      regularFirst: 'lin', appearanceOf: 'lin',
+      wish: 'polish', wishLine: '第一天上班，不想被当成来实习的。',
+      story: '上次那套面试战袍真的拿到了 offer。今天入职，想穿得像个能开会的人。',
+      request: '帮我搭一套入职第一天的衣服，专业但别像主管。',
+      portrait: { skin: '#F2D3B8', hair: '#2E2A27', hairStyle: 'bob', top: '#E8E2D6', expression: 'calm', accessory: 'glasses' }
+    },
+    {
+      id: 'zhou2', name: '周雨', age: 28, job: '品牌设计师', occasion: '第二次约会',
+      formality: 3, budget: 800, styles: ['french', 'sweet'], avoid: ['sporty'],
+      bodyNeed: 'slim', bodyLabel: '显瘦、有氛围', colorPref: 'warm', styling: true, reserveDay: 0,
+      regularFirst: 'zhou', appearanceOf: 'zhou',
+      wish: 'bright', wishLine: '这次想再勇敢一点，但别太用力。',
+      story: '上次约会那套被夸了。这次想再勇敢一点，但别太用力。',
+      request: '帮我搭一套第二次约会的，想让他再看见我一次。',
+      portrait: { skin: '#F5DCC6', hair: '#6B4F3A', hairStyle: 'wavy', top: '#D99A9A', expression: 'happy', accessory: 'earrings' }
+    },
+    {
+      id: 'laochen2', name: '老陈', age: 40, job: '花店老板', occasion: '花店周年',
+      formality: 2, budget: 600, styles: ['vintage', 'minimal'], avoid: ['y2k'],
+      bodyNeed: 'dirty', bodyLabel: '耐脏、方便搬花', colorPref: 'warm', styling: false, reserveDay: 0,
+      regularFirst: 'laochen', appearanceOf: 'laochen',
+      wish: 'practical', wishLine: '搬花和拍照，最好一套搞定。',
+      story: '花店开满一年了，想在门口拍张照，也想穿得舒服。',
+      request: '帮我配一套能搬花、也能上镜的。',
+      portrait: { skin: '#D9B08C', hair: '#2E2A27', hairStyle: 'short', top: '#6B4F3A', expression: 'calm', accessory: 'none' }
+    },
+    {
+      id: 'xiaolu2', name: '小鹿', age: 19, job: '大一学生', occasion: '社团招新',
+      formality: 2, budget: 450, styles: ['sweet', 'sporty'], avoid: ['work'],
+      bodyNeed: 'photo', bodyLabel: '上镜、显高', colorPref: 'cool', styling: false, reserveDay: 0,
+      regularFirst: 'xiaolu', appearanceOf: 'xiaolu',
+      wish: 'budget', wishLine: '预算不多，但想被记住。',
+      story: '开学那套被学姐问链接了。社团招新想再亮一点。',
+      request: '预算不多，想搭一套招新时能被记住的。',
+      portrait: { skin: '#F2D3B8', hair: '#6B4F3A', hairStyle: 'pixie', top: '#D99A9A', expression: 'happy', accessory: 'none' }
+    },
+    {
+      id: 'chen2', name: '陈姐', age: 35, job: '全职妈妈', occasion: '重返职场',
+      formality: 4, budget: 800, styles: ['work', 'minimal'], avoid: ['y2k'],
+      bodyNeed: 'cover', bodyLabel: '遮肉、得体', colorPref: 'neutral', styling: true, reserveDay: 0,
+      regularFirst: 'chen', appearanceOf: 'chen',
+      wish: 'polish', wishLine: '想穿回那个能开会、能提案的自己。',
+      story: '上次那套日常装让她想起自己。这次要去面试，想穿回职场的样子。',
+      request: '帮我搭一套面试的，得体但别太凶。',
+      portrait: { skin: '#EBC9A9', hair: '#2E2A27', hairStyle: 'bun', top: '#8A9A7B', expression: 'calm', accessory: 'none' }
     }
+  ];
+
+  D.REGULAR_RETURNS = [
+    { first: 'lin', next: 'lin2', day: 3 },
+    { first: 'zhou', next: 'zhou2', day: 4 },
+    { first: 'laochen', next: 'laochen2', day: 5 },
+    { first: 'xiaolu', next: 'xiaolu2', day: 6 },
+    { first: 'chen', next: 'chen2', day: 7 }
   ];
 
   D.CUSTOMERS_BY_ID = {};

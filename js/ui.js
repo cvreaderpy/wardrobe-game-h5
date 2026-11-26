@@ -836,6 +836,25 @@
       '</div>';
   }
 
+  function feedCardHtml(post, customer) {
+    if (!post || !customer) { return ''; }
+    return '<div class="card feed-card">' +
+      '<div class="feed-head">' +
+      '<div class="avatar tiny-avatar">' + avatarSvg(customer) + '</div>' +
+      '<div class="feed-meta"><strong>' + esc(customer.name) + '</strong>' +
+      '<span>' + esc(customer.occasion) + ' · DAY ' + post.day + '</span></div>' +
+      '<span class="feed-score">' + post.score + ' 分</span>' +
+      '</div>' +
+      '<div class="feed-text">“' + esc(post.text) + '”</div>' +
+      '<div class="feed-items">' + (post.outfit || []).map(miniItem).join('') + '</div>' +
+      '<div class="feed-foot">' +
+      '<button type="button" class="feed-like' + (post.liked ? ' liked' : '') + '" data-action="like-post" data-id="' + post.id + '">' +
+      (post.liked ? '♥ ' : '♡ ') + post.likes + '</button>' +
+      '<span class="small muted">顾客晒单</span>' +
+      '</div>' +
+      '</div>';
+  }
+
   function customerMiniBar(s, c) {
     return '<div class="customer-mini">' +
       '<div class="avatar tiny-avatar">' + avatarSvg(c) + '</div>' +
@@ -885,7 +904,8 @@
       html += '<div class="appointment-row">' +
         '<div class="avatar small">' + avatarSvg(c) + '</div>' +
         '<div class="appointment-info">' +
-        '<div class="appointment-name">' + esc(c.name) + ' <span class="small muted">' + esc(c.occasion) + '</span></div>' +
+        '<div class="appointment-name">' + esc(c.name) + ' <span class="small muted">' + esc(c.occasion) + '</span>' +
+        (c.regularFirst ? ' <span class="tag sage">回头客</span>' : '') + '</div>' +
         '<div class="small muted">预算 ' + money(c.budget) + ' · 偏好 ' + styleLabels(c.styles).join(' / ') + '</div>' +
         '</div></div>';
     });
@@ -2852,6 +2872,11 @@
     var beat = E.getChatBeat();
     var html = header(s, '接待中');
     html += queueStrip(s);
+    var mem = E.getRegularMemory(c);
+    if (mem) {
+      html += '<div class="card soft regular-memory-card"><div class="regular-memory-kicker">回头客 · 上次 DAY ' + mem.firstDay + '</div>' +
+        esc(mem.line) + '</div>';
+    }
     html += '<div class="chat-stats">' + affinityBar(s) + patienceHearts(s) + '</div>';
     html += wishCard(s, c);
 
@@ -3166,6 +3191,10 @@
         '</div>';
     }
 
+    var feedPost = pr.feedId ? E.getFeedPost(pr.feedId) : null;
+    if (feedPost) { html += feedCardHtml(feedPost, c); }
+    html += '<button type="button" class="btn secondary small mt10" data-action="photo">拍照留念</button>';
+
     html += staffLogHtml();
 
     if (pr.canDiscount && !pr.resolved) {
@@ -3235,6 +3264,15 @@
 
     if (ds.loan) {
       html += '<div class="hint-box warn mt10">现金流告急，你临时借了 ¥3,000，口碑 -5。下一天要更小心。</div>';
+    }
+
+    var dayFeed = E.getFeed(4);
+    if (dayFeed.length) {
+      html += '<div class="section-head mt14"><h3>小店动态</h3><span class="small">今天顾客晒了 ' + dayFeed.length + ' 条</span></div>';
+      dayFeed.forEach(function (post) {
+        var pc = customerById(post.customerId);
+        if (pc) { html += feedCardHtml(post, pc); }
+      });
     }
 
     if (E.isSeasonEnd(s.day)) {
@@ -4041,6 +4079,25 @@
     }
   };
 
+  UI.openPhoto = function () {
+    var url = window.Scene && Scene.snapshot ? Scene.snapshot() : null;
+    if (!url) {
+      UI.toast('先切到等距店铺舞台再拍照');
+      return;
+    }
+    UI.lastShareDataUrl = url;
+    var s = E.state;
+    var day = s ? 'DAY ' + s.day + ' · ' + (E.state.shopName || '衣间小日子') : '衣间小日子';
+    UI.modal('<div class="modal-title">拍照留念</div>' +
+      '<img src="' + url + '" alt="店铺照片" style="width:100%;display:block;margin-top:10px;border:2px solid #5B4636;border-radius:12px">' +
+      '<div class="small muted" style="text-align:center;margin-top:6px">' + esc(day) + '</div>' +
+      '<div class="btn-row mt10">' +
+      '<button type="button" class="btn small" data-action="download-share">保存照片</button>' +
+      (canShareImage() ? '<button type="button" class="btn secondary small" data-action="share-share">分享</button>' : '') +
+      '<button type="button" class="btn ghost small" data-action="close-modal">关上</button>' +
+      '</div>');
+  };
+
   UI.saveShareImage = function () {
     if (!UI.lastShareDataUrl) { return; }
     var xhs = window.xhs && (window.xhs.miniTool || window.xhs);
@@ -4753,6 +4810,13 @@
         break;
       case 'share-share':
         UI.shareShareImage();
+        break;
+      case 'like-post':
+        E.likeFeedPost(id);
+        UI.render();
+        break;
+      case 'photo':
+        UI.openPhoto();
         break;
       case 'replay':
         E.reset();

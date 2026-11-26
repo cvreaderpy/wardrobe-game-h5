@@ -23,7 +23,7 @@
 
   Iso.character.appearance = function (customer) {
     var p = (customer && customer.portrait) || {};
-    var id = (customer && customer.id) || 'guest';
+    var id = (customer && (customer.appearanceOf || customer.id)) || 'guest';
     var h = 1 + ((hash(id) % 5) - 2) * 0.03;
     var hn = hash(id);
     var faces = ['oval', 'round', 'heart', 'long'];

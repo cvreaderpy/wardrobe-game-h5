@@ -1191,6 +1191,11 @@
 
   Scene._isoOn = false;
 
+  Scene.snapshot = function () {
+    if (Scene._isoOn && window.Iso && Iso.snapshot) { return Iso.snapshot(); }
+    return null;
+  };
+
   Scene.setAudioScene = function (s, key) {
     var season = 'spring';
     var weather = 'sunny';

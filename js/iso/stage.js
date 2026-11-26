@@ -1908,6 +1908,16 @@
     r._talkUntil = now + (ms || 1000);
   };
 
+  Iso.snapshot = function () {
+    if (!st.ready || !st.app || !st.app.renderer) { return null; }
+    try {
+      var canvas = st.app.renderer.extract.canvas(st.app.stage);
+      return canvas.toDataURL('image/png');
+    } catch (e) {
+      return null;
+    }
+  };
+
   Iso.camPulse = function (amount) {
     if (Iso.reducedMotion) { return; }
     st.camKick = Math.max(st.camKick || 0, amount || 0.02);

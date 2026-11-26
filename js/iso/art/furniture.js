@@ -65,6 +65,16 @@
     var c = p(x + w * 0.91, y + d * 0.44, bodyH + 14);
     s += '<path d="M' + c[0].toFixed(1) + ' ' + c[1].toFixed(1) + 'q-6 -1 -7 -7 q6 0 7 7Z" fill="#8A9A7B" stroke="' + LINE + '" stroke-width="1"/>';
     s += '<path d="M' + c[0].toFixed(1) + ' ' + c[1].toFixed(1) + 'q6 -1 7 -7 q-6 0 -7 7Z" fill="#9CAF8C" stroke="' + LINE + '" stroke-width="1"/>';
+    // 小票 + 笔
+    s += poly([
+      p(x + w * 0.45, y + d * 0.48, bodyH + 7),
+      p(x + w * 0.56, y + d * 0.48, bodyH + 7),
+      p(x + w * 0.56, y + d * 0.62, bodyH + 7),
+      p(x + w * 0.45, y + d * 0.62, bodyH + 7)
+    ], '#FFF9EF', { sw: 0.8 });
+    s += line(p(x + w * 0.47, y + d * 0.52, bodyH + 8), p(x + w * 0.54, y + d * 0.52, bodyH + 8), { sw: 0.7, opacity: 0.35, stroke: '#B98D69' });
+    s += line(p(x + w * 0.47, y + d * 0.55, bodyH + 8), p(x + w * 0.52, y + d * 0.55, bodyH + 8), { sw: 0.6, opacity: 0.28, stroke: '#B98D69' });
+    s += line(p(x + w * 0.47, y + d * 0.66, bodyH + 8), p(x + w * 0.53, y + d * 0.69, bodyH + 8), { sw: 1.4, stroke: '#C97B63', cap: 'round' });
     return s;
   }
 
@@ -127,6 +137,13 @@
     // 上身
     s += poly([[c[0] - 11, c[1] - 84], [c[0] + 11, c[1] - 84], [c[0] + 13, c[1] - 64], [c[0] - 13, c[1] - 64]], '#C9BCD8', { sw: 1.6 });
     s += line([c[0], c[1] - 84], [c[0], c[1] - 18], { sw: 1, opacity: 0.35, stroke: '#9C8FAE' });
+    // 腰带 + 项链 + 吊牌
+    s += line([c[0] - 12.5, c[1] - 64], [c[0] + 12.5, c[1] - 64], { sw: 2.4, stroke: '#8A6A52', cap: 'round' });
+    s += '<rect x="' + (c[0] - 2.5).toFixed(1) + '" y="' + (c[1] - 66).toFixed(1) + '" width="5" height="4" rx="1" fill="#E3B23C" stroke="' + LINE + '" stroke-width=".8"/>';
+    s += '<path d="M' + (c[0] - 7).toFixed(1) + ' ' + (c[1] - 80).toFixed(1) + 'Q' + c[0].toFixed(1) + ' ' + (c[1] - 75).toFixed(1) + ' ' + (c[0] + 7).toFixed(1) + ' ' + (c[1] - 80).toFixed(1) + '" fill="none" stroke="#E3B23C" stroke-width="1.1"/>';
+    s += '<circle cx="' + c[0].toFixed(1) + '" cy="' + (c[1] - 76).toFixed(1) + '" r="1.3" fill="#E3B23C" stroke="' + LINE + '" stroke-width=".5"/>';
+    s += line([c[0] + 11, c[1] - 70], [c[0] + 17, c[1] - 66], { sw: 0.8, stroke: '#8A6A52' });
+    s += poly([[c[0] + 16, c[1] - 68], [c[0] + 22, c[1] - 68], [c[0] + 22, c[1] - 61], [c[0] + 16, c[1] - 61]], '#FFF9EF', { sw: 0.8 });
     s += '<circle cx="' + c[0].toFixed(1) + '" cy="' + (c[1] - 88).toFixed(1) + '" r="4.5" fill="#F1E3D3" stroke="' + LINE + '" stroke-width="1.4"/>';
     return s;
   }
