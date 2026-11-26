@@ -89,6 +89,12 @@ python3 -m http.server 8080
 https://cvreaderpy.github.io/wardrobe-game-h5/
 ```
 
+单文件直接下载（适合发给别人 / 桌面双击）：
+
+```
+https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
+```
+
 ### 安装
 
 - **Android Chrome**：打开网址 → 菜单 → “安装应用” / “添加到主屏幕”
