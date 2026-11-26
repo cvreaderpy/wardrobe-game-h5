@@ -11,7 +11,7 @@
  */
 'use strict';
 
-var CACHE_VERSION = 'malt-hops-5f3682b72636';
+var CACHE_VERSION = 'malt-hops-7555983788c4';
 var CACHE_PREFIX = 'malt-hops-';
 var PRECACHE = [
   './',
