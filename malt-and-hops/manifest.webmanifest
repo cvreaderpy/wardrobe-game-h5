@@ -1,0 +1,26 @@
+{
+  "name": "麦芽与酒花 · 精酿啤酒厂",
+  "short_name": "麦芽与酒花",
+  "description": "回合制精酿啤酒厂经营模拟：管人、管钱、做取舍。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14110e",
+  "theme_color": "#14110e",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
