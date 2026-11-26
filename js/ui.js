@@ -4644,6 +4644,8 @@
       }
       case 'toggle-sound': {
         var on = window.Scene ? Scene.toggleSound() : false;
+        var soundBtn = document.querySelector('.iso-zoom .iso-sound');
+        if (soundBtn) { soundBtn.textContent = on ? '🔊' : '🔇'; }
         UI._stageSig = '';
         UI.render();
         UI.toast(on ? '声音已打开' : '声音已关闭');

@@ -20026,7 +20026,9 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       st.zoomBar.className = 'iso-zoom';
       st.zoomBar.innerHTML = '<button type="button" data-zoom="out" title="缩小">−</button>' +
         '<button type="button" data-zoom="reset" title="看全店">全景</button>' +
-        '<button type="button" data-zoom="in" title="放大">＋</button>';
+        '<button type="button" data-zoom="in" title="放大">＋</button>' +
+        '<button type="button" class="iso-sound" data-action="toggle-sound" title="声音开关">' +
+        (window.Scene && Scene.isSoundOn && Scene.isSoundOn() ? '🔊' : '🔇') + '</button>';
       st.zoomBar.addEventListener('click', function (e) {
         var b = e.target;
         while (b && b !== st.zoomBar && !(b.getAttribute && b.getAttribute('data-zoom'))) { b = b.parentNode; }
@@ -27441,6 +27443,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       }
       case 'toggle-sound': {
         var on = window.Scene ? Scene.toggleSound() : false;
+        var soundBtn = document.querySelector('.iso-zoom .iso-sound');
+        if (soundBtn) { soundBtn.textContent = on ? '🔊' : '🔇'; }
         UI._stageSig = '';
         UI.render();
         UI.toast(on ? '声音已打开' : '声音已关闭');

@@ -423,7 +423,9 @@
       st.zoomBar.className = 'iso-zoom';
       st.zoomBar.innerHTML = '<button type="button" data-zoom="out" title="缩小">−</button>' +
         '<button type="button" data-zoom="reset" title="看全店">全景</button>' +
-        '<button type="button" data-zoom="in" title="放大">＋</button>';
+        '<button type="button" data-zoom="in" title="放大">＋</button>' +
+        '<button type="button" class="iso-sound" data-action="toggle-sound" title="声音开关">' +
+        (window.Scene && Scene.isSoundOn && Scene.isSoundOn() ? '🔊' : '🔇') + '</button>';
       st.zoomBar.addEventListener('click', function (e) {
         var b = e.target;
         while (b && b !== st.zoomBar && !(b.getAttribute && b.getAttribute('data-zoom'))) { b = b.parentNode; }
