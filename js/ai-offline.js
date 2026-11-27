@@ -91,8 +91,13 @@
       '<div class="ai-look-stack' + (opts.cls ? ' ' + opts.cls : '') + '">' + body + '</div></div>';
   };
 
+  A.failedPortraits = {};
+  A.markPortraitFailed = function (customerId) {
+    if (customerId) { A.failedPortraits[customerId] = true; }
+  };
+
   A.portraitUrl = function (customerId) {
-    if (!A.ready()) { return ''; }
+    if (!A.ready() || A.failedPortraits[customerId]) { return ''; }
     var m = window.AI_OFFLINE;
     var c = m.customers && customerId && m.customers[customerId];
     if (!c || !c.portrait) { return ''; }
@@ -134,9 +139,16 @@
     return a ? ((window.AI_OFFLINE_BASE_PATH || '') + a.file) : '';
   };
 
+  A.failedStaffPortraits = {};
+  A.markStaffPortraitFailed = function (m) {
+    var a = A.staffAsset(m);
+    if (a && a.file) { A.failedStaffPortraits[a.file] = true; }
+  };
+
   A.staffPortraitUrl = function (m) {
     var a = A.staffAsset(m);
-    return a ? ((window.AI_OFFLINE_BASE_PATH || '') + a.portrait) : '';
+    if (!a || A.failedStaffPortraits[a.file]) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + a.portrait;
   };
 
   A.keeperUrl = function () {

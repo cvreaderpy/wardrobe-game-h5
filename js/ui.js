@@ -459,11 +459,26 @@
   /* ---------------- 人物头像 SVG ---------------- */
 
   function avatarSvg(customer) {
-    var p = customer.portrait || {};
     var aiPortrait = window.AILook && AILook.portraitUrl && AILook.portraitUrl(customer.id);
     if (aiPortrait) {
-      return '<img class="ai-avatar" src="' + esc(aiPortrait) + '" alt="' + esc(customer.name) + '" loading="lazy" decoding="async">';
+      return '<img class="ai-avatar" src="' + esc(aiPortrait) + '" alt="" loading="lazy" decoding="async"' +
+        ' data-avatar-id="' + esc(customer.id) + '" onerror="UI.avatarError(this)">';
     }
+    return avatarVectorSvg(customer);
+  }
+
+  UI.avatarError = function (img) {
+    if (!img) { return; }
+    var id = img.getAttribute('data-avatar-id');
+    if (window.AILook && AILook.markPortraitFailed) { AILook.markPortraitFailed(id); }
+    var customer = id && D.CUSTOMERS_BY_ID[id];
+    if (customer && img.parentNode) {
+      img.parentNode.innerHTML = avatarVectorSvg(customer);
+    }
+  };
+
+  function avatarVectorSvg(customer) {
+    var p = customer.portrait || {};
     if (p.image) {
       return '<img src="' + esc(p.image) + '" alt="' + esc(customer.name) + '" style="width:100%;height:100%;object-fit:cover;display:block">';
     }
@@ -2302,11 +2317,30 @@
   }
 
   /** 员工头像：优先用等距人物拆件拼一个全身像，失败时退回首字头像 */
+  UI._staffPortraitCache = {};
   UI.staffPortrait = function (m) {
     var ai = window.AILook && AILook.staffPortraitUrl && AILook.staffPortraitUrl(m);
     if (ai) {
-      return '<img class="ai-staff-avatar" src="' + esc(ai) + '" alt="' + esc((m && m.name) || '店员') + '" loading="lazy" decoding="async">';
+      var key = String((m && (m.uid || m.name)) || 'staff');
+      UI._staffPortraitCache[key] = m;
+      return '<img class="ai-staff-avatar" src="' + esc(ai) + '" alt="" loading="lazy" decoding="async"' +
+        ' data-staff-key="' + esc(key) + '" onerror="UI.staffPortraitError(this)">';
     }
+    return UI.staffPortraitVector(m);
+  };
+
+  UI.staffPortraitError = function (img) {
+    if (!img) { return; }
+    var key = img.getAttribute('data-staff-key');
+    var m = key && UI._staffPortraitCache[key];
+    if (window.AILook && AILook.markStaffPortraitFailed) { AILook.markStaffPortraitFailed(m); }
+    if (img.parentNode) {
+      img.parentNode.innerHTML = m ? UI.staffPortraitVector(m)
+        : '<span class="staff-portrait-fallback">' + esc(String(key || '?').slice(0, 1)) + '</span>';
+    }
+  };
+
+  UI.staffPortraitVector = function (m) {
     if (window.Iso && Iso.character && Iso.character.staffAppearance) {
       try {
         var app = Iso.character.staffAppearance(m);

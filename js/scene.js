@@ -911,7 +911,7 @@
       var clipId = 'shop2face_' + customer.id;
       face = '<defs><clipPath id="' + clipId + '"><ellipse cx="60" cy="47" rx="18" ry="20"/></clipPath></defs>' +
         '<ellipse cx="60" cy="47" rx="18" ry="20" fill="' + skin + '"' + st + '/>' +
-        '<image href="' + esc(p.image) + '" x="42" y="27" width="36" height="40" clip-path="url(#' + clipId + ')" preserveAspectRatio="xMidYMid slice"/>' +
+        '<image href="' + esc(p.image) + '" x="42" y="27" width="36" height="40" clip-path="url(#' + clipId + ')" preserveAspectRatio="xMidYMid slice" onerror="this.style.display=\'none\'"/>' +
         '<ellipse cx="60" cy="47" rx="18" ry="20" fill="none" stroke="#5B4636" stroke-width="2.2"/>';
     }
 
