@@ -113,6 +113,7 @@
     var tone = toneFor(customerId);
     var cats = catOf(ids);
     var layers = [];
+    var def = m.defaults && m.defaults.safetyShorts;
     if (cats.dresses) {
       layers.push(m.dresses[cats.dresses]);
       pushSkin(layers, m.dresses[cats.dresses], tone);
@@ -120,6 +121,10 @@
       if (cats.bottoms) {
         layers.push(m.bottoms[cats.bottoms]);
         pushSkin(layers, m.bottoms[cats.bottoms], tone);
+      } else if (def) {
+        // 从裙子切到上衣、又没选下装时，默认补一条安全裤，避免下半身透明
+        layers.push(def);
+        pushSkin(layers, def, tone);
       }
       if (cats.tops) {
         layers.push(m.tops[cats.tops]);

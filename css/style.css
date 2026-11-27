@@ -836,10 +836,12 @@ h3 {
   overflow: hidden;
 }
 
-.mini-item svg {
+.mini-item svg,
+.mini-item .ai-item-img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .marketing-grid {

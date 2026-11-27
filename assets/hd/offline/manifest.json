@@ -540,6 +540,76 @@
    "h": 256,
    "ax": 192,
    "ay": 160
+  },
+  "g_tote": {
+   "file": "assets/hd/offline/icons/g_tote.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_black": {
+   "file": "assets/hd/offline/icons/g_black.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_mini": {
+   "file": "assets/hd/offline/icons/g_mini.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_bucket": {
+   "file": "assets/hd/offline/icons/g_bucket.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_shoulder": {
+   "file": "assets/hd/offline/icons/g_shoulder.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_saddle": {
+   "file": "assets/hd/offline/icons/g_saddle.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_backpack": {
+   "file": "assets/hd/offline/icons/g_backpack.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_clutch": {
+   "file": "assets/hd/offline/icons/g_clutch.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_sheer": {
+   "file": "assets/hd/offline/icons/h_sheer.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_opaque": {
+   "file": "assets/hd/offline/icons/h_opaque.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_fishnet": {
+   "file": "assets/hd/offline/icons/h_fishnet.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_knee": {
+   "file": "assets/hd/offline/icons/h_knee.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_ankle": {
+   "file": "assets/hd/offline/icons/h_ankle.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_legging": {
+   "file": "assets/hd/offline/icons/h_legging.webp?v=28",
+   "w": 256,
+   "h": 256
   }
  },
  "bottoms": {
@@ -1587,6 +1657,48 @@
   },
   "s_sneaker": {
    "file": "assets/hd/offline/swatches/s_sneaker.webp?v=28"
+  },
+  "g_tote": {
+   "file": "assets/hd/offline/swatches/g_tote.webp?v=28"
+  },
+  "g_black": {
+   "file": "assets/hd/offline/swatches/g_black.webp?v=28"
+  },
+  "g_mini": {
+   "file": "assets/hd/offline/swatches/g_mini.webp?v=28"
+  },
+  "g_bucket": {
+   "file": "assets/hd/offline/swatches/g_bucket.webp?v=28"
+  },
+  "g_shoulder": {
+   "file": "assets/hd/offline/swatches/g_shoulder.webp?v=28"
+  },
+  "g_saddle": {
+   "file": "assets/hd/offline/swatches/g_saddle.webp?v=28"
+  },
+  "g_backpack": {
+   "file": "assets/hd/offline/swatches/g_backpack.webp?v=28"
+  },
+  "g_clutch": {
+   "file": "assets/hd/offline/swatches/g_clutch.webp?v=28"
+  },
+  "h_sheer": {
+   "file": "assets/hd/offline/swatches/h_sheer.webp?v=28"
+  },
+  "h_opaque": {
+   "file": "assets/hd/offline/swatches/h_opaque.webp?v=28"
+  },
+  "h_fishnet": {
+   "file": "assets/hd/offline/swatches/h_fishnet.webp?v=28"
+  },
+  "h_knee": {
+   "file": "assets/hd/offline/swatches/h_knee.webp?v=28"
+  },
+  "h_ankle": {
+   "file": "assets/hd/offline/swatches/h_ankle.webp?v=28"
+  },
+  "h_legging": {
+   "file": "assets/hd/offline/swatches/h_legging.webp?v=28"
   }
  },
  "details": {
@@ -1769,6 +1881,70 @@
   },
   "s_sneaker": {
    "file": "assets/hd/offline/detail/s_sneaker.webp?v=28"
+  },
+  "g_tote": {
+   "file": "assets/hd/offline/detail/g_tote.webp?v=28"
+  },
+  "g_black": {
+   "file": "assets/hd/offline/detail/g_black.webp?v=28"
+  },
+  "g_mini": {
+   "file": "assets/hd/offline/detail/g_mini.webp?v=28"
+  },
+  "g_bucket": {
+   "file": "assets/hd/offline/detail/g_bucket.webp?v=28"
+  },
+  "g_shoulder": {
+   "file": "assets/hd/offline/detail/g_shoulder.webp?v=28"
+  },
+  "g_saddle": {
+   "file": "assets/hd/offline/detail/g_saddle.webp?v=28"
+  },
+  "g_backpack": {
+   "file": "assets/hd/offline/detail/g_backpack.webp?v=28"
+  },
+  "g_clutch": {
+   "file": "assets/hd/offline/detail/g_clutch.webp?v=28"
+  },
+  "h_sheer": {
+   "file": "assets/hd/offline/detail/h_sheer.webp?v=28"
+  },
+  "h_opaque": {
+   "file": "assets/hd/offline/detail/h_opaque.webp?v=28"
+  },
+  "h_fishnet": {
+   "file": "assets/hd/offline/detail/h_fishnet.webp?v=28"
+  },
+  "h_knee": {
+   "file": "assets/hd/offline/detail/h_knee.webp?v=28"
+  },
+  "h_ankle": {
+   "file": "assets/hd/offline/detail/h_ankle.webp?v=28"
+  },
+  "h_legging": {
+   "file": "assets/hd/offline/detail/h_legging.webp?v=28"
+  }
+ },
+ "defaults": {
+  "safetyShorts": {
+   "file": "assets/hd/offline/defaults/safety-shorts.webp?v=28",
+   "x": 248,
+   "y": 413,
+   "w": 258,
+   "h": 590,
+   "skin": {
+    "x": 272,
+    "y": 614,
+    "w": 215,
+    "h": 392,
+    "tones": {
+     "t1": "assets/hd/offline/defaults/safety-shorts-skin-t1.webp?v=28",
+     "t2": "assets/hd/offline/defaults/safety-shorts-skin-t2.webp?v=28",
+     "t3": "assets/hd/offline/defaults/safety-shorts-skin-t3.webp?v=28",
+     "t4": "assets/hd/offline/defaults/safety-shorts-skin-t4.webp?v=28",
+     "t5": "assets/hd/offline/defaults/safety-shorts-skin-t5.webp?v=28"
+    }
+   }
   }
  }
 }
