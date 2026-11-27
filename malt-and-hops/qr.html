@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1512">
+<meta name="description" content="回合制精酿啤酒厂经营模拟。管人、管钱、做取舍，从家庭作坊做到世界金奖酒厂。">
+<title>麦芽与酒花</title>
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="robots" content="index, follow">
+<style>
+  :root {
+    --bg: #0f1512; --panel: #18211d; --ink: #e8e4d8;
+    --dim: #9aa79f; --faint: #6b7a72; --amber: #d9a441;
+    --amber-soft: #8a6d2f; --line: #2a3833;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 16px calc(32px + env(safe-area-inset-bottom));
+    background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6; -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  header { margin-bottom: 22px; }
+  .brand { font-size: 12px; letter-spacing: 0.28em; color: var(--amber-soft); text-transform: uppercase; }
+  h1 { margin: 6px 0 8px; font-size: 22px; letter-spacing: 0.05em; color: var(--amber); }
+  .lede { margin: 0; font-size: 13px; color: var(--dim); }
+  .game {
+    display: flex; gap: 16px; align-items: center;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; margin-bottom: 14px;
+  }
+  .game.primary { border-left: 3px solid var(--amber); }
+  .game-info { flex: 1; min-width: 0; }
+  .game-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 5px; }
+  .game-desc { font-size: 12px; color: var(--dim); margin-bottom: 10px; }
+  .game-link { font-size: 12.5px; color: var(--amber); text-decoration: none; border-bottom: 1px solid var(--amber-soft); }
+  .game-link:hover { color: var(--ink); }
+  .game-qr { flex-shrink: 0; text-align: center; }
+  .game-qr img {
+    display: block; width: 168px; height: 168px;
+    /* 二维码必须有浅色底，深色主题下直接贴会扫不出来 */
+    background: #fff; padding: 8px; border-radius: 6px;
+    image-rendering: pixelated;
+  }
+  .qr-hint { margin-top: 6px; font-size: 11px; color: var(--faint); }
+  footer {
+    margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-size: 11px; color: var(--faint); line-height: 1.8;
+  }
+  footer code { color: var(--dim); }
+
+  /* 手机上二维码左右并排会挤，改成上下 */
+  @media (max-width: 430px) {
+    .game { flex-direction: column; align-items: stretch; }
+    .game-qr { align-self: center; margin-top: 4px; }
+    .game-qr img { width: 190px; height: 190px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">扫码即玩</div>
+    <h1>麦芽与酒花</h1>
+    <p class="lede">回合制精酿啤酒厂经营模拟。管人、管钱、做取舍，从家庭作坊做到世界金奖酒厂。</p>
+  </header>
+
+      <div class="game primary">
+        <div class="game-info">
+          <div class="game-title">麦芽与酒花</div>
+          <div class="game-desc">从月产几百升的家庭作坊，做到世界知名的传奇酒厂。</div>
+          <a class="game-link" href="./">直接打开 →</a>
+        </div>
+        <div class="game-qr">
+          <img src="data:image/png;base64,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" alt="扫码打开「麦芽与酒花」" width="168" height="168">
+          <div class="qr-hint">手机扫码打开</div>
+        </div>
+      </div>
+  <footer>
+    版本 <code>0.17.0</code> · 构建于 2026-11-27 · 提交 <code>7125b7b</code><br>
+    页面上的二维码可以直接长按保存，贴到海报或分享卡片里。
+  </footer>
+</div>
+</body>
+</html>
