@@ -78,9 +78,8 @@
     if (!item.image && window.AILook && AILook.iconUrl) {
       var aiIcon = AILook.iconUrl(item.id);
       if (aiIcon) {
-        // 图标必须 eager：进货页是切 tab 后才有 DOM，lazy 在部分手机浏览器里
-        // 看不到「进入视口」的时机，会一直停在白板。
-        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="" loading="eager" decoding="async"' +
+        // 图标是人台目录图，按需加载；加载失败会回退矢量图
+        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="" loading="lazy" decoding="async"' +
           ' data-item-icon="' + esc(item.id) + '" onerror="UI.itemIconError(this)">';
       }
     }
@@ -89,6 +88,17 @@
     var html = buildItemSvg(item);
     if (!item.image) { svgCache[key] = html; }
     return html;
+  }
+
+  // 商品图 + 面料色卡 + 「看细节」入口。色卡和细节图只在 people / all 模式出现。
+  function itemArtHtml(item, withZoom) {
+    var swatch = window.AILook && AILook.swatchUrl ? AILook.swatchUrl(item.id) : '';
+    var zoom = withZoom
+      ? '<span class="item-zoom" title="看细节" data-action="item-detail" data-id="' + esc(item.id) + '">⌕</span>'
+      : '';
+    return '<div class="item-art">' + itemSvg(item) +
+      (swatch ? '<img class="item-swatch" src="' + esc(swatch) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
+      zoom + '</div>';
   }
 
   UI.clearSvgCache = function () { svgCache = {}; };
@@ -1009,7 +1019,7 @@
     var cls = 'item-card' + (selected ? ' selected' : '') + (qty === 0 && !entry.incoming ? ' out' : '');
     return '<' + tag + attrs + ' class="' + cls + '">' +
       (opts.badge ? '<span class="window-badge">' + opts.badge + '</span>' : (selected ? '<span class="selected-mark">✓</span>' : '')) +
-      '<div class="item-art">' + itemSvg(item) + '</div>' +
+      itemArtHtml(item, true) +
       '<div class="item-name">' + esc(item.name) + '</div>' +
       '<div class="item-sub"><span class="price">' + money(E.getEffectivePrice(item)) + '</span>' +
       (qty != null ? '<span class="qty">' + (entry.incoming && !qty ? '到货 ' + entry.incoming : '库存 ' + qty) + '</span>' : '<span class="qty">' + esc(D.STYLE_LABELS[item.style[0]]) + '</span>') +
@@ -2084,7 +2094,7 @@
     var seasonTag = entry.season === 'in' ? '<span class="season-tag in">应季</span>'
       : entry.season === 'off' ? '<span class="season-tag off">过季</span>' : '';
     return '<div class="supply-card' + (inCart ? ' in-cart' : '') + '">' +
-      '<div class="item-art">' + itemSvg(item) + '</div>' +
+      itemArtHtml(item, true) +
       '<div class="item-name">' + esc(item.name) + '</div>' +
       '<div class="item-sub"><span class="price">' + money(price) + '</span>' +
       '<span class="qty">进 ' + money(cost) + '</span></div>' +
@@ -3218,8 +3228,11 @@
 
   UI.fittingItemCard = function (item, selected) {
     var cls = 'fit-item' + (selected ? ' selected' : '');
+    var swatch = window.AILook && AILook.swatchUrl ? AILook.swatchUrl(item.id) : '';
     return '<button type="button" class="' + cls + '" data-action="fitting-item" data-id="' + esc(item.id) + '">' +
-      '<span class="fit-item-art">' + itemSvg(item) + '</span>' +
+      '<span class="fit-item-art">' + itemSvg(item) +
+      (swatch ? '<img class="item-swatch fit-swatch" src="' + esc(swatch) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
+      '</span>' +
       '<span class="fit-item-name">' + esc(item.name) + '</span>' +
       '</button>';
   };
@@ -3916,11 +3929,35 @@
     if (root) { root.innerHTML = ''; }
   };
 
+  // 点商品图右上角的放大镜：按需加载 384px 干净单品图，看面料 / 版型细节。
+  UI.openItemDetail = function (id) {
+    var item = itemById(id);
+    if (!item) { return; }
+    var url = window.AILook && AILook.detailUrl ? AILook.detailUrl(id) : '';
+    var art = url
+      ? '<img class="item-detail-img" src="' + esc(url) + '" alt="" onerror="this.style.display=\'none\'">'
+      : itemSvg(item);
+    var tags = (item.style || []).map(function (s) { return D.STYLE_LABELS[s] || s; });
+    if (item.color) { tags.push(D.COLOR_LABELS[item.color] || item.color); }
+    var tagHtml = tags.length
+      ? '<div class="item-detail-tags">' + tags.map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div>'
+      : '';
+    UI.modal('<div class="item-detail">' +
+      '<div class="item-detail-art">' + art + '</div>' +
+      '<div class="item-detail-name">' + esc(item.name) + '</div>' +
+      tagHtml +
+      (item.desc ? '<div class="item-detail-desc">' + esc(item.desc) + '</div>' : '') +
+      '<div class="item-detail-price">' + money(E.getEffectivePrice(item)) + '</div>' +
+      '<button type="button" class="btn ghost" data-action="close-modal">关上</button>' +
+      '</div>');
+  };
+
   UI.openLook = function () {
     var s = E.state;
     var c = E.currentCustomer();
     if (!s || !c) { return; }
     var ids = lookIdsFor(s);
+    if (window.AILook && AILook.preload) { AILook.preload(c.id, ids); }
     var names = ids.map(function (id) {
       var it = itemById(id);
       return it ? it.name : '';
@@ -4861,12 +4898,14 @@
         break;
       case 'start-fitting-room':
         E.startFittingRoom();
+        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
         if (window.Scene) { Scene.play('page'); }
         UI.render();
         UI.scrollTop();
         break;
       case 'skip-chat':
         E.startFittingRoom();
+        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
         if (window.Scene) { Scene.play('page'); }
         UI.render();
         UI.scrollTop();
@@ -4926,6 +4965,7 @@
         if (!tryRes.ok) {
           UI.toast(tryRes.message);
         } else {
+          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
           if (window.Scene) { Scene.play('hanger'); }
           UI.toast('她试了试：' + tryRes.hint);
           UI.render();
@@ -4998,6 +5038,7 @@
           UI.toast('先选几件衣服再试穿');
         } else {
           var fitRes = E.startTryOn(s.selectedItems);
+          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
           if (window.Scene) { Scene.play('curtain'); }
           if (fitRes && fitRes.waiting) { UI.toast('试衣间满了，先排个队'); }
           UI.render();
@@ -5138,6 +5179,9 @@
           UI.overrideScreen = null;
           UI.render();
         }
+        break;
+      case 'item-detail':
+        UI.openItemDetail(id);
         break;
       case 'close-modal':
         UI.closeModal();

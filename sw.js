@@ -6,12 +6,14 @@
  *   - 单个资源失败不会让整次安装失败（旧 cache.addAll 会全有全无）
  *   - 导航请求：网络优先，失败回退缓存（离线打开）
  *   - 静态资源：缓存优先，命中后不再请求网络
+ *   - 代码缓存和美术缓存分开：发版只清代码，试衣间图层不用重下
  *   - 新版本 skipWaiting + clients.claim，下一次导航由页面自愈脚本刷新
  *   - 只处理同源 GET 请求
  */
 'use strict';
 
-var CACHE_VERSION = 'wardrobe-game-0a1cc0d552f8';
+var CACHE_VERSION = 'wardrobe-game-ee65fe8eb4fb';
+var ASSET_CACHE = 'wardrobe-assets-v28';
 var PRECACHE = [
   "./",
   "./index.html",
@@ -53,6 +55,17 @@ var PRECACHE = [
 var SCOPE_URL = new URL('./', self.location.href).href;
 var INDEX_URL = new URL('index.html', SCOPE_URL).href;
 
+// 只把图片放进长期美术缓存；manifest.js / manifest.json 必须跟着代码版本走，
+// 否则发版后会读到旧的图层清单。
+function isArtwork(url) {
+  return url.pathname.indexOf('/assets/hd/offline/') >= 0 &&
+    /\.(webp|png|jpe?g)$/i.test(url.pathname);
+}
+
+function cacheFor(url) {
+  return isArtwork(url) ? ASSET_CACHE : CACHE_VERSION;
+}
+
 // 逐个缓存并吞掉单个文件的失败。cache.addAll 是全有全无：
 // 300 多张 AI 图里只要一张网络失败，新 SW 就永远装不上，
 // 用户会被旧缓存钉在旧版本上。
@@ -87,7 +100,9 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
       return Promise.all(keys.map(function (key) {
-        if (key !== CACHE_VERSION && key.indexOf('wardrobe-game-') === 0) {
+        var codeCache = key.indexOf('wardrobe-game-') === 0 && key !== CACHE_VERSION;
+        var assetCache = key.indexOf('wardrobe-assets-') === 0 && key !== ASSET_CACHE;
+        if (codeCache || assetCache) {
           return caches.delete(key);
         }
       }));
@@ -134,17 +149,25 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  // 静态资源：缓存优先
+  // 静态资源：缓存优先。美术图走独立缓存，发版不失效。
+  var target = cacheFor(url);
   event.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(function (hit) {
-      if (hit) { return hit; }
-      return fetch(req).then(function (res) {
-        if (res && res.ok && res.type === 'basic') {
-          var copy = res.clone();
-          caches.open(CACHE_VERSION).then(function (cache) { cache.put(req, copy); });
-        }
-        return res;
-      });
-    })
+    caches.open(target)
+      .then(function (cache) { return cache.match(req, { ignoreSearch: true }); })
+      .then(function (hit) {
+        if (hit) { return hit; }
+        // 核心预缓存里可能已经有 base/generic.webp，跨缓存兜底一次
+        return caches.match(req, { ignoreSearch: true });
+      })
+      .then(function (hit) {
+        if (hit) { return hit; }
+        return fetch(req).then(function (res) {
+          if (res && res.ok && res.type === 'basic') {
+            var copy = res.clone();
+            caches.open(target).then(function (cache) { cache.put(req, copy); });
+          }
+          return res;
+        });
+      })
   );
 });

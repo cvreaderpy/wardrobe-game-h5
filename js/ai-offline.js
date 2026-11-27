@@ -6,24 +6,47 @@
 (function () {
   var A = window.AILook = window.AILook || {};
 
-  // AI 大图默认只在试衣间 / 结果页启用。
-  //   ?ai=all  ：恢复旧行为（列表头像、单品图标、店员、店主都用 AI 图）
-  //   ?ai=off  ：全部用矢量图
-  // 列表里几十张 AI 头像/图标是手机首屏变慢和白板的主要原因。
+  // AI 使用范围：
+  //   people（默认）：顾客 / 店员 / 店主用 AI，商品图标用人台目录图
+  //   fit          ：只有试衣间 / 结果页用 AI，其余矢量
+  //   off          ：全部矢量
+  //   all          ：兼容旧链接，等同 people
   A.mode = (function () {
     var q = null;
     try {
-      var m = /[?&]ai=(all|fit|off)\b/.exec((window.location && window.location.search) || '');
+      var m = /[?&]ai=(people|all|fit|off)\b/.exec((window.location && window.location.search) || '');
       q = m ? m[1] : null;
     } catch (e) {}
-    return q === 'all' || q === 'off' ? q : 'fit';
+    return (q === 'people' || q === 'all' || q === 'fit' || q === 'off') ? q : 'people';
   })();
   A.lookEnabled = function () { return A.mode !== 'off'; };
-  A.extraEnabled = function () { return A.mode === 'all'; };
+  A.peopleEnabled = function () { return A.mode === 'people' || A.mode === 'all'; };
+  A.iconsEnabled = function () { return A.mode === 'people' || A.mode === 'all'; };
 
   A.failed = false;
   A.ready = function () {
     return A.lookEnabled() && !!(window.AI_OFFLINE && window.AI_OFFLINE.base) && !A.failed;
+  };
+
+  // 点「试穿 / 进试衣间」时先把底图和当前搭配的图层拉下来并解码。
+  // 走进试衣间的动画结束时，图通常已经在缓存里了。
+  A._preloaded = {};
+  A.preload = function (customerId, ids) {
+    if (!A.lookEnabled()) { return; }
+    var data = A.look(customerId, ids);
+    if (!data) { return; }
+    var prefix = window.AI_OFFLINE_BASE_PATH || '';
+    var files = [data.base.file];
+    data.layers.forEach(function (l) { files.push(l.file); });
+    files.forEach(function (file) {
+      var url = prefix + file;
+      if (A._preloaded[url]) { return; }
+      A._preloaded[url] = true;
+      var im = new Image();
+      im.decoding = 'async';
+      im.src = url;
+      if (im.decode) { im.decode().catch(function () {}); }
+    });
   };
 
   function catOf(ids) {
@@ -52,8 +75,22 @@
     var h = layer.h / base.h * 100;
     return '<img class="' + (cls || '') + '" src="' + prefix + layer.file + '" alt="" ' +
       'style="left:' + left.toFixed(4) + '%;top:' + top.toFixed(4) + '%;width:' + w.toFixed(4) + '%;height:' + h.toFixed(4) + '%" ' +
-      'onerror="this.style.display=\'none\'">';
+      'onload="AILook.layerReady(this)" ' +
+      'onerror="this.style.display=\'none\';AILook.layerReady(this)">';
   }
+
+  // 一张图加载完 / 失败都计数；全部到齐后整摞淡入，矢量垫底再淡出。
+  A.layerReady = function (img) {
+    var stack = img && img.parentNode;
+    if (!stack || !stack.getAttribute) { return; }
+    var total = parseInt(stack.getAttribute('data-total'), 10) || 0;
+    var loaded = (parseInt(stack.getAttribute('data-loaded'), 10) || 0) + 1;
+    stack.setAttribute('data-loaded', String(loaded));
+    if (loaded < total) { return; }
+    stack.classList.add('is-ready');
+    var frame = stack.parentNode;
+    if (frame && frame.classList) { frame.classList.add('is-ready'); }
+  };
 
   function toneFor(customerId) {
     var m = window.AI_OFFLINE || {};
@@ -107,11 +144,19 @@
     if (!data) { return ''; }
     opts = opts || {};
     var b = data.base;
+    var total = 1 + data.layers.length;
     var body = '<img class="ai-base" src="' + (window.AI_OFFLINE_BASE_PATH || '') + b.file + '" alt="" ' +
-      'style="left:0;top:0;width:100%;height:100%" onerror="if(window.UI&&UI.lookError)UI.lookError(this)">';
+      'style="left:0;top:0;width:100%;height:100%" ' +
+      'onload="AILook.layerReady(this)" ' +
+      'onerror="if(window.UI&&UI.lookError)UI.lookError(this)">';
     data.layers.forEach(function (l) { body += imgFor(l, b, 'ai-layer'); });
+    // 矢量全身图先垫底（data URI，零请求），AI 图层解码完再淡入。
+    var placeholder = opts.fallback
+      ? '<img class="ai-look-vector" src="' + attr(opts.fallback) + '" alt="">'
+      : '';
     return '<div class="ai-look-frame" data-fallback="' + attr(opts.fallback || '') + '" style="aspect-ratio:' + b.w + '/' + b.h + '">' +
-      '<div class="ai-look-stack' + (opts.cls ? ' ' + opts.cls : '') + '">' + body + '</div></div>';
+      placeholder +
+      '<div class="ai-look-stack' + (opts.cls ? ' ' + opts.cls : '') + '" data-total="' + total + '" data-loaded="0">' + body + '</div></div>';
   };
 
   A.failedPortraits = {};
@@ -120,7 +165,7 @@
   };
 
   A.portraitUrl = function (customerId) {
-    if (!A.extraEnabled() || A.failedPortraits[customerId]) { return ''; }
+    if (!A.peopleEnabled() || A.failedPortraits[customerId]) { return ''; }
     var m = window.AI_OFFLINE;
     var c = m.customers && customerId && m.customers[customerId];
     if (!c || !c.portrait) { return ''; }
@@ -128,7 +173,7 @@
   };
 
   A.spriteUrl = function (customerId) {
-    if (!A.extraEnabled()) { return ''; }
+    if (!A.peopleEnabled()) { return ''; }
     var m = window.AI_OFFLINE;
     var c = m.customers && customerId && m.customers[customerId];
     if (!c || !c.sprite) { return ''; }
@@ -145,7 +190,7 @@
   };
 
   A.staffAsset = function (m) {
-    if (!A.extraEnabled() || !m) { return null; }
+    if (!A.peopleEnabled() || !m) { return null; }
     var staff = window.AI_OFFLINE.staff;
     if (!staff) { return null; }
     var named = STAFF_BY_NAME[m.name];
@@ -175,17 +220,17 @@
   };
 
   A.keeperUrl = function () {
-    if (!A.extraEnabled() || !window.AI_OFFLINE.keeper) { return ''; }
+    if (!A.peopleEnabled() || !window.AI_OFFLINE.keeper) { return ''; }
     return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.keeper.file;
   };
 
   A.ownerSpriteUrl = function () {
-    if (!A.extraEnabled() || !window.AI_OFFLINE.owner) { return ''; }
+    if (!A.peopleEnabled() || !window.AI_OFFLINE.owner) { return ''; }
     return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.owner.file;
   };
 
   A.ownerPortraitUrl = function () {
-    if (!A.extraEnabled() || !window.AI_OFFLINE.owner) { return ''; }
+    if (!A.peopleEnabled() || !window.AI_OFFLINE.owner) { return ''; }
     return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.owner.portrait;
   };
 
@@ -195,11 +240,25 @@
   };
 
   A.iconUrl = function (id) {
-    if (!A.extraEnabled() || (id && A.failedIcons[id])) { return ''; }
+    if (!A.iconsEnabled() || (id && A.failedIcons[id])) { return ''; }
     var m = window.AI_OFFLINE;
     var e = m.icons && id && m.icons[id];
     if (!e) { return ''; }
     return (window.AI_OFFLINE_BASE_PATH || '') + e.file;
+  };
+
+  A.swatchUrl = function (id) {
+    if (!A.iconsEnabled() || !id) { return ''; }
+    var m = window.AI_OFFLINE;
+    var e = m.swatches && m.swatches[id];
+    return e ? (window.AI_OFFLINE_BASE_PATH || '') + e.file : '';
+  };
+
+  A.detailUrl = function (id) {
+    if (!A.iconsEnabled() || !id) { return ''; }
+    var m = window.AI_OFFLINE;
+    var e = m.details && m.details[id];
+    return e ? (window.AI_OFFLINE_BASE_PATH || '') + e.file : '';
   };
 
   A.idsFor = function (selected) { return (selected || []).slice(); };

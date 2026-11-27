@@ -1396,12 +1396,45 @@
       Iso.updateStaffTags();
     }
 
+    function buildVectorOwner() {
+      var m = { uid: 'owner', name: '店主', personality: 'outgoing', skills: {} };
+      var app = Iso.character.staffAppearance(m);
+      var outfit = Iso.character.staffOutfit(m);
+      var bodyKey = 'owner|' + Iso.character.appearanceKey(app) + '|' + Iso.character.outfitKey(outfit);
+      var headKey = headKeyOf(app);
+      var jobs = [
+        loadTex('ob:' + bodyKey, Iso.character.body(app, outfit), true).then(function (r) { return { k: 'body', r: r }; }),
+        loadTex('oh:' + headKey + ':calm', Iso.character.head(app, 'calm'), true).then(function (r) { return { k: 'calm', r: r }; }),
+        loadTex('oshadow', Iso.character.shadow(), true).then(function (r) { return { k: 'shadow', r: r }; })
+      ];
+      var back = Iso.character.backHair(app);
+      if (back) { jobs.push(loadTex('oback:' + Iso.character.appearanceKey(app), back, true).then(function (r) { return { k: 'back', r: r }; })); }
+      Promise.all(jobs).then(function (res) {
+        var texs = { heads: {} };
+        res.forEach(function (o) {
+          if (!o.r.tex) { return; }
+          if (o.k === 'body') { texs.body = o.r.tex; }
+          else if (o.k === 'back') { texs.back = o.r.tex; }
+          else if (o.k === 'shadow') { texs.shadow = o.r.tex; }
+          else { texs.heads[o.k] = o.r.tex; }
+        });
+        if (!texs.body || !texs.heads.calm) { return; }
+        var rig = new PIXI.Container();
+        var parts = addAvatarParts(rig, texs, 'calm');
+        rig.scale.set(0.72);
+        attach(rig, parts.avatar, null);
+      });
+    }
+
     if (url) {
       Promise.all([
         loadImageTex('owner', url),
         loadTex('oshadow', Iso.character.shadow(), true)
       ]).then(function (res) {
-        if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) { return; }
+        if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) {
+          buildVectorOwner();
+          return;
+        }
         var rig = new PIXI.Container();
         var base = Iso.texSpriteScale ? Iso.texSpriteScale() : 0.5;
         var sh = new PIXI.Sprite(res[1].tex);
@@ -1424,34 +1457,8 @@
       return;
     }
 
-    // 默认 fit 模式：店主用矢量小人，不再额外下载一张 AI 全身图
-    var m = { uid: 'owner', name: '店主', personality: 'outgoing', skills: {} };
-    var app = Iso.character.staffAppearance(m);
-    var outfit = Iso.character.staffOutfit(m);
-    var bodyKey = 'owner|' + Iso.character.appearanceKey(app) + '|' + Iso.character.outfitKey(outfit);
-    var headKey = headKeyOf(app);
-    var jobs = [
-      loadTex('ob:' + bodyKey, Iso.character.body(app, outfit), true).then(function (r) { return { k: 'body', r: r }; }),
-      loadTex('oh:' + headKey + ':calm', Iso.character.head(app, 'calm'), true).then(function (r) { return { k: 'calm', r: r }; }),
-      loadTex('oshadow', Iso.character.shadow(), true).then(function (r) { return { k: 'shadow', r: r }; })
-    ];
-    var back = Iso.character.backHair(app);
-    if (back) { jobs.push(loadTex('oback:' + Iso.character.appearanceKey(app), back, true).then(function (r) { return { k: 'back', r: r }; })); }
-    Promise.all(jobs).then(function (res) {
-      var texs = { heads: {} };
-      res.forEach(function (o) {
-        if (!o.r.tex) { return; }
-        if (o.k === 'body') { texs.body = o.r.tex; }
-        else if (o.k === 'back') { texs.back = o.r.tex; }
-        else if (o.k === 'shadow') { texs.shadow = o.r.tex; }
-        else { texs.heads[o.k] = o.r.tex; }
-      });
-      if (!texs.body || !texs.heads.calm) { return; }
-      var rig = new PIXI.Container();
-      var parts = addAvatarParts(rig, texs, 'calm');
-      rig.scale.set(0.72);
-      attach(rig, parts.avatar, null);
-    });
+    // fit / off 模式，或 AI 图加载失败：店主用矢量小人
+    buildVectorOwner();
   }
 
   function buildQueue(placed) {
