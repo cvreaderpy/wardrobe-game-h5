@@ -6161,4 +6161,5 @@ body.prep-active .debug-panel {
 }
 .ai-look-stack { position: absolute; inset: 0; }
 .ai-look-stack img { position: absolute; display: block; }
+.ai-look-frame > .ai-look-vector { display: block; width: 100%; height: 100%; object-fit: contain; }
 .fitting-ai-stage > img { max-width: 100%; max-height: 44vh; }

@@ -3188,12 +3188,23 @@
 
   UI.lookHtml = function (c, ids, opts) {
     opts = opts || {};
+    var fb = UI.vectorLookUrl(c, ids, 'stand', 'calm');
     if (!UI.aiOnline && window.AILook && AILook.ready()) {
-      return AILook.html(c && c.id, ids || [], opts);
+      var html = AILook.html(c && c.id, ids || [], { cls: opts.cls, fallback: fb });
+      if (html) { return html; }
     }
     if (UI.aiOnline) { return UI.aiLookImg(c, ids, opts.id, opts.cls); }
-    var fb = UI.vectorLookUrl(c, ids, 'stand', 'calm');
     return fb ? '<img' + (opts.id ? ' id="' + opts.id + '"' : '') + ' class="' + (opts.cls || '') + '" src="' + esc(fb) + '" alt="">' : '';
+  };
+
+  // AI 大图底图加载失败时，整块换成矢量全身图，避免试衣间白板
+  UI.lookError = function (img) {
+    if (!img) { return; }
+    var frame = img.closest ? img.closest('.ai-look-frame') : null;
+    if (!frame) { return; }
+    var fb = frame.getAttribute('data-fallback');
+    if (!fb) { return; }
+    frame.innerHTML = '<img class="ai-look-vector" src="' + esc(fb) + '" alt="">';
   };
 
   UI.aiLookImg = function (c, ids, id, cls) {

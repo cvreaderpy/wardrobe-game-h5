@@ -38,7 +38,12 @@
   Iso.texScale = function () {
     if (Iso.lowQuality) { return 2; }
     var dpr = (window.devicePixelRatio || 1);
-    return Math.max(2, Math.min(3, Math.ceil(dpr)));
+    var max = 3;
+    // 手机 / 平板的粗指针：3× 矢量纹理收益很小，内存和首帧开销却翻倍
+    try {
+      if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) { max = 2; }
+    } catch (e) {}
+    return Math.max(2, Math.min(max, Math.ceil(dpr)));
   };
 
   Iso.texSpriteScale = function () {

@@ -206,7 +206,7 @@
 
   // 用离线 AI 图层合成玩家选中的整套 look，盖住结果舞台上的矢量身体
   function attachAiLook(rig, customerId, ids, token) {
-    if (!rig || !window.AILook || !AILook.look || !ids || !ids.length) { return; }
+    if (!rig || !window.AILook || !AILook.look || !AILook.lookEnabled || !AILook.lookEnabled() || !ids || !ids.length) { return; }
     var data = AILook.look(customerId, ids);
     if (!data || !data.base) { return; }
     var prefix = window.AI_OFFLINE_BASE_PATH || '';
@@ -1359,10 +1359,11 @@
   }
 
   function buildOwner(placed) {
-    if (!st.ready || !window.AILook || !AILook.ownerSpriteUrl) { return; }
+    if (!st.ready || !window.Iso || !Iso.character) { return; }
     var counter = findCounter(placed);
     if (!counter) { removeOwner(); return; }
-    var sig = [counter.x, counter.y, counter.w, counter.h, st.key].join('|');
+    var aiMode = (window.AILook && AILook.mode) || 'fit';
+    var sig = [counter.x, counter.y, counter.w, counter.h, st.key, aiMode].join('|');
     if (st.owner && st.owner.sig === sig) { return; }
     removeOwner();
     var prefs = [
@@ -1373,34 +1374,13 @@
     var spot = firstFree(placed, prefs, st.staffSpots || []) || Iso.findSpot(placed, st.staffSpots || []);
     if (!spot) { return; }
     var pos = Iso.P(spot.gx, spot.gy, 0);
-    var url = AILook.ownerSpriteUrl();
-    if (!url) { return; }
-    Promise.all([
-      loadImageTex('owner', url),
-      loadTex('oshadow', Iso.character.shadow(), true)
-    ]).then(function (res) {
-      if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) { return; }
-      var rig = new PIXI.Container();
+    var url = window.AILook && AILook.ownerSpriteUrl ? AILook.ownerSpriteUrl() : '';
+
+    function attach(rig, avatar, sp) {
       rig.x = pos.x;
       rig.y = pos.y;
       rig.zIndex = Iso.sortKey(spot.gx, spot.gy, 1, 1) * 100 + 40;
-      var base = Iso.texSpriteScale ? Iso.texSpriteScale() : 0.5;
-      var sh = new PIXI.Sprite(res[1].tex);
-      sh.anchor.set(0.5, 0.5);
-      sh.scale.set(base);
-      sh.y = 1;
-      sh._baseScale = base;
-      rig._shadow = sh;
-      rig.addChild(sh);
-      var avatar = new PIXI.Container();
-      rig.addChild(avatar);
-      var sp = new PIXI.Sprite(res[0].tex);
-      sp.anchor.set(0.5, 1);
-      sp.scale.set(168 / res[0].tex.height);
-      sp.y = 2;
-      avatar.addChild(sp);
       rig.avatar = avatar;
-      rig.scale.set(0.72);
       rig._phase = 1.7;
       st.world.addChild(rig);
       var tag = null;
@@ -1414,6 +1394,63 @@
       st.ownerSpot = spot;
       if (st.staffSpots) { st.staffSpots.push(spot); }
       Iso.updateStaffTags();
+    }
+
+    if (url) {
+      Promise.all([
+        loadImageTex('owner', url),
+        loadTex('oshadow', Iso.character.shadow(), true)
+      ]).then(function (res) {
+        if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) { return; }
+        var rig = new PIXI.Container();
+        var base = Iso.texSpriteScale ? Iso.texSpriteScale() : 0.5;
+        var sh = new PIXI.Sprite(res[1].tex);
+        sh.anchor.set(0.5, 0.5);
+        sh.scale.set(base);
+        sh.y = 1;
+        sh._baseScale = base;
+        rig._shadow = sh;
+        rig.addChild(sh);
+        var avatar = new PIXI.Container();
+        rig.addChild(avatar);
+        var sp = new PIXI.Sprite(res[0].tex);
+        sp.anchor.set(0.5, 1);
+        sp.scale.set(168 / res[0].tex.height);
+        sp.y = 2;
+        avatar.addChild(sp);
+        rig.scale.set(0.72);
+        attach(rig, avatar, sp);
+      });
+      return;
+    }
+
+    // 默认 fit 模式：店主用矢量小人，不再额外下载一张 AI 全身图
+    var m = { uid: 'owner', name: '店主', personality: 'outgoing', skills: {} };
+    var app = Iso.character.staffAppearance(m);
+    var outfit = Iso.character.staffOutfit(m);
+    var bodyKey = 'owner|' + Iso.character.appearanceKey(app) + '|' + Iso.character.outfitKey(outfit);
+    var headKey = headKeyOf(app);
+    var jobs = [
+      loadTex('ob:' + bodyKey, Iso.character.body(app, outfit), true).then(function (r) { return { k: 'body', r: r }; }),
+      loadTex('oh:' + headKey + ':calm', Iso.character.head(app, 'calm'), true).then(function (r) { return { k: 'calm', r: r }; }),
+      loadTex('oshadow', Iso.character.shadow(), true).then(function (r) { return { k: 'shadow', r: r }; })
+    ];
+    var back = Iso.character.backHair(app);
+    if (back) { jobs.push(loadTex('oback:' + Iso.character.appearanceKey(app), back, true).then(function (r) { return { k: 'back', r: r }; })); }
+    Promise.all(jobs).then(function (res) {
+      var texs = { heads: {} };
+      res.forEach(function (o) {
+        if (!o.r.tex) { return; }
+        if (o.k === 'body') { texs.body = o.r.tex; }
+        else if (o.k === 'back') { texs.back = o.r.tex; }
+        else if (o.k === 'shadow') { texs.shadow = o.r.tex; }
+        else { texs.heads[o.k] = o.r.tex; }
+      });
+      if (!texs.body || !texs.heads.calm) { return; }
+      var rig = new PIXI.Container();
+      var parts = addAvatarParts(rig, texs, 'calm');
+      rig.scale.set(0.72);
+      attach(rig, parts.avatar, null);
     });
   }
 

@@ -220,6 +220,13 @@ https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
 - 用 `ipconfig` / `ifconfig` 确认真实局域网 IP
 - 公司网络可能禁止设备互访
 
+**手机加载慢 / 头像和衣服白板**
+
+- 默认 `?ai=fit`：列表头像、商品图标、店员、店主、队列都用矢量图，只有试衣间 / 结果页加载 AI 大图
+- 想更快：`?ai=off` 全部矢量；想恢复完整 AI 外观：`?ai=all`
+- 触屏设备默认把矢量纹理封顶在 2×；还可以加 `?quality=low` 强制低画质
+- 低端机（`deviceMemory <= 2` 或核心数 <= 2）会自动使用低画质
+
 **手机发热 / 掉帧**
 
 - 在网址后加 `?quality=low`（会记住），纹理从最高 3× 降到 2×
