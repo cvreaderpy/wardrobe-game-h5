@@ -154,8 +154,13 @@
     return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.owner.portrait;
   };
 
+  A.failedIcons = {};
+  A.markIconFailed = function (id) {
+    if (id) { A.failedIcons[id] = true; }
+  };
+
   A.iconUrl = function (id) {
-    if (!A.ready()) { return ''; }
+    if (!A.ready() || (id && A.failedIcons[id])) { return ''; }
     var m = window.AI_OFFLINE;
     var e = m.icons && id && m.icons[id];
     if (!e) { return ''; }

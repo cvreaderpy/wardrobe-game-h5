@@ -78,7 +78,10 @@
     if (!item.image && window.AILook && AILook.iconUrl) {
       var aiIcon = AILook.iconUrl(item.id);
       if (aiIcon) {
-        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="' + esc(item.name) + '" loading="lazy" decoding="async">';
+        // 图标必须 eager：进货页是切 tab 后才有 DOM，lazy 在部分手机浏览器里
+        // 看不到「进入视口」的时机，会一直停在白板。
+        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="" loading="eager" decoding="async"' +
+          ' data-item-icon="' + esc(item.id) + '" onerror="UI.itemIconError(this)">';
       }
     }
     var key = item.id || item.name;
@@ -90,8 +93,20 @@
 
   UI.clearSvgCache = function () { svgCache = {}; };
 
-  function buildItemSvg(item) {
-    if (item.image) {
+  // AI 单品图标加载失败时，退回矢量单品图，并把该单品标记为失败，
+  // 后面再渲染就不必重复请求一张已经 404 的图。
+  UI.itemIconError = function (img) {
+    if (!img) { return; }
+    var id = img.getAttribute('data-item-icon');
+    if (window.AILook && AILook.markIconFailed) { AILook.markIconFailed(id); }
+    var item = id && D.ITEMS_BY_ID[id];
+    if (item && img.parentNode) {
+      img.parentNode.innerHTML = buildItemSvg(item, true);
+    }
+  };
+
+  function buildItemSvg(item, forceVector) {
+    if (item.image && !forceVector) {
       return '<img src="' + esc(item.image) + '" alt="' + esc(item.name) + '" style="width:100%;height:100%;object-fit:contain;display:block">';
     }
     var fill = D.COLOR_HEX[item.color] || '#D8C9B8';
