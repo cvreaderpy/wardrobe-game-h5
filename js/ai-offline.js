@@ -113,6 +113,12 @@
     var tone = toneFor(customerId);
     var cats = catOf(ids);
     var layers = [];
+    // 底图只到躯干；先把按肤色映射的手臂/前臂垫在衣服下面，
+    // 短袖、无袖和连衣裙才不会露出空的前臂。
+    var arms = m.arms;
+    if (arms && arms.tones && arms.tones[tone]) {
+      layers.push({ file: arms.tones[tone], x: arms.x, y: arms.y, w: arms.w, h: arms.h });
+    }
     var def = m.defaults && m.defaults.safetyShorts;
     if (cats.dresses) {
       layers.push(m.dresses[cats.dresses]);
