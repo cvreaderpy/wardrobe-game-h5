@@ -248,3 +248,14 @@ python3 -m http.server 8080
 ```
 
 `localhost` 是安全上下文，可以验证 Service Worker、离线刷新和安装提示。
+
+---
+
+## AI 试衣间与离线资产
+
+试衣间默认使用预生成的 AI 图层，完全离线，不需要 5090 服务。
+
+- `dist/` 文件夹版 / PWA / 本地服务器版：包含 `assets/hd/offline/`（约 5.3MB：图层 + 5 档肤色层 + 60 张商品小图 + 15 张 AI 头像 + 15 张店内 AI 精灵 + 12 套店员 AI 精灵 + 店主/玩家手臂），AI 试衣间可用。
+- `dist/wardrobe-game.html` 单文件版：不包含 WebP 图层；检测不到资产时会自动回退到旧矢量人物。
+  想要 AI 试衣间，请用文件夹版，或把 `assets/hd/offline/` 放在单文件旁边。
+

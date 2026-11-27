@@ -3775,6 +3775,40 @@
     Engine.save();
   };
 
+  Engine.startFittingRoom = function () {
+    var s = Engine.state;
+    var customer = Engine.currentCustomer();
+    if (!s || !customer) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
+    var defaults = [];
+    ['top', 'bottom', 'shoes'].forEach(function (cat) {
+      var items = Engine.getInventoryItems(cat);
+      if (items && items.length) { defaults.push(items[0].id); }
+    });
+    s.selectedItems = defaults;
+    s.serviceMode = 'styling';
+    s.quickOptions = [];
+    s.activeCategory = 'all';
+    s.accessorySlot = 'all';
+    s.styleFilter = 'all';
+    s.lastTry = null;
+    s.itemReaction = null;
+    s.expression = 'calm';
+    s.screen = 'fitting';
+    var rec = queueRecord(s.servingCustomerId);
+    var rooms = Engine.getFittingRooms();
+    var occupied = Engine.getFittingOccupied();
+    var waiting = rooms > 0 && occupied >= rooms;
+    if (rec) {
+      rec.status = waiting ? 'fittingWait' : 'fitting';
+      rec.noRoom = rooms <= 0;
+      rec.itemIds = defaults.slice();
+      rec.fitStarted = s.day;
+    }
+    Engine.buildPendingResult(defaults);
+    Engine.save();
+    return { ok: true, items: defaults.slice(), waiting: waiting, noRoom: rooms <= 0 };
+  };
+
   Engine.previewOption = function (index) {
     var s = Engine.state;
     var customer = Engine.currentCustomer();
@@ -4340,6 +4374,7 @@
     if (!s) { return { ok: false }; }
     var pr = Engine.buildPendingResult(itemIds);
     if (!pr) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
+    s.selectedItems = (itemIds || []).slice();
     var rec = queueRecord(s.servingCustomerId);
     if (rec) { rec.itemIds = (itemIds || []).slice(); }
     var rooms = Engine.getFittingRooms();
@@ -4390,7 +4425,9 @@
 
   Engine.completeFitting = function () {
     var s = Engine.state;
-    if (!s || !s.pendingResult) { return { ok: false }; }
+    if (!s) { return { ok: false }; }
+    if (!s.pendingResult) { Engine.buildPendingResult(s.selectedItems); }
+    if (!s.pendingResult) { return { ok: false }; }
     var rec = queueRecord(s.servingCustomerId);
     if (rec) { rec.status = 'done'; rec.fitDone = true; }
     Engine.finalizePending();

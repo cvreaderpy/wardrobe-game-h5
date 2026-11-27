@@ -187,6 +187,88 @@
     });
   }
 
+  function loadImageTex(key, url) {
+    return new Promise(function (resolve) {
+      Iso.tex.image(key, url, function (tex) { resolve({ tex: tex }); });
+    });
+  }
+
+  function detachAiSprite(rig) {
+    if (!rig || !rig.aiRoot) { return; }
+    var ai = rig.aiRoot;
+    rig.aiRoot = null;
+    if (ai.parent) { ai.parent.removeChild(ai); }
+    ai.destroy({ children: true, texture: false, baseTexture: false });
+    for (var i = 0; i < rig.children.length; i++) { rig.children[i].visible = true; }
+  }
+
+  // 用离线 AI 图层合成玩家选中的整套 look，盖住结果舞台上的矢量身体
+  function attachAiLook(rig, customerId, ids, token) {
+    if (!rig || !window.AILook || !AILook.look || !ids || !ids.length) { return; }
+    var data = AILook.look(customerId, ids);
+    if (!data || !data.base) { return; }
+    var prefix = window.AI_OFFLINE_BASE_PATH || '';
+    var entries = [data.base].concat(data.layers || []);
+    var jobs = entries.map(function (e, i) { return loadImageTex('ral:' + customerId + ':' + i, prefix + e.file); });
+    Promise.all(jobs).then(function (res) {
+      if (!rig.parent || token !== st.charToken) { return; }
+      for (var i = 0; i < res.length; i++) { if (!res[i] || !res[i].tex) { return; } }
+      if (rig.aiRoot) { detachAiSprite(rig); }
+      var root = new PIXI.Container();
+      var fit = new PIXI.Container();
+      entries.forEach(function (e, i) {
+        var sp = new PIXI.Sprite(res[i].tex);
+        sp.x = e.x - data.base.x;
+        sp.y = e.y - data.base.y;
+        fit.addChild(sp);
+      });
+      fit.scale.set(168 / data.base.h);
+      fit.pivot.set(data.base.w / 2, data.base.h);
+      fit.y = 0;
+      root.addChild(fit);
+      root.y = 2;
+      rig.addChild(root);
+      rig.aiRoot = root;
+      for (var j = 0; j < rig.children.length; j++) {
+        var ch = rig.children[j];
+        if (ch === rig._shadow || ch === root) { continue; }
+        ch.visible = false;
+      }
+    });
+  }
+
+  // 用一张 AI 全身精灵盖住矢量小人；矢量 rig 仍负责走位/呼吸/换装数据
+  function attachAiImage(rig, url, key, token, scope, targetH) {
+    if (!rig || !url) { return; }
+    loadImageTex(key, url).then(function (res) {
+      if (!res || !res.tex || !rig.parent) { return; }
+      if (scope === 'staff') { if (token !== st.staffToken) { return; } }
+      else if (scope === 'queue') { if (token !== st.queueToken) { return; } }
+      else if (token !== st.charToken) { return; }
+      if (rig.aiRoot) { return; }
+      var aiRoot = new PIXI.Container();
+      var sp = new PIXI.Sprite(res.tex);
+      sp.anchor.set(0.5, 1);
+      var h = targetH || 168;
+      sp.scale.set(h / res.tex.height);
+      sp.y = 2;
+      aiRoot.addChild(sp);
+      rig.addChild(aiRoot);
+      rig.aiRoot = aiRoot;
+      for (var i = 0; i < rig.children.length; i++) {
+        var ch = rig.children[i];
+        if (ch === rig._shadow || ch === aiRoot) { continue; }
+        ch.visible = false;
+      }
+    });
+  }
+
+  function attachAiSprite(rig, customerId, prefix, token, isCurrent) {
+    if (!rig || !window.AILook || !AILook.spriteUrl) { return; }
+    var url = AILook.spriteUrl(customerId);
+    if (url) { attachAiImage(rig, url, prefix + customerId, token, isCurrent ? 'char' : 'queue', 168); }
+  }
+
   /* ---------------- 相机 ---------------- */
 
   Iso.resize = function () {
@@ -956,6 +1038,7 @@
     }
 
     buildStaff(placed);
+    buildOwner(placed);
     buildQueue(placed);
     ensureCat(placed);
     buildAmbient(placed);
@@ -986,6 +1069,7 @@
       Iso.updateCameraTarget();
       return;
     }
+    if (key !== 'chat' && st.char && st.char.rig && st.char.rig.aiRoot) { detachAiSprite(st.char.rig); }
     var cs = customerState(s, key, customer);
     var isNewCustomer = customer.id !== st.lastCustomerId;
     st.speechHold = !!(key === 'chat' && isNewCustomer);
@@ -998,6 +1082,9 @@
       st.char.expr = cs.expr;
       st.char.rig.baseExpr = cs.expr;
       st.char.rig.head.texture = st.char.rig.heads[cs.expr] || st.char.rig.heads.calm;
+      if (key === 'result' && s.pendingResult && s.pendingResult.itemIds) {
+        attachAiLook(st.char.rig, customer.id, s.pendingResult.itemIds, st.charToken);
+      }
       Iso.updateCameraTarget();
       return;
     }
@@ -1100,6 +1187,10 @@
       st.world.addChild(rig);
       st.lastCustomerId = customer.id;
       st.char = { rig: rig, gx: spot.gx, gy: spot.gy, app: cs.app, outfit: cs.outfit, expr: cs.expr, pose: cs.pose, bodyKey: bodyKey, headKey: headKey };
+      if (key === 'chat') { attachAiSprite(rig, customer.id, 'cai:', ct, true); }
+      if (key === 'result' && s.pendingResult && s.pendingResult.itemIds) {
+        attachAiLook(rig, customer.id, s.pendingResult.itemIds, ct);
+      }
       if (key === 'result' && s.pendingResult && s.pendingResult.result) {
         var score = s.pendingResult.result.score;
         var bkey = s.day + '|' + customer.id + '|' + score + '|' + (s.pendingResult.itemIds || []).join(',');
@@ -1189,6 +1280,75 @@
     return prefs;
   }
 
+  function removeOwner() {
+    var o = st.owner;
+    if (!o) { return; }
+    if (o.rig && o.rig.parent) { o.rig.parent.removeChild(o.rig); }
+    if (o.rig) { o.rig.destroy({ children: true, texture: false, baseTexture: false }); }
+    if (o.tag && o.tag.parentNode) { o.tag.parentNode.removeChild(o.tag); }
+    st.owner = null;
+    st.ownerSpot = null;
+  }
+
+  function buildOwner(placed) {
+    if (!st.ready || !window.AILook || !AILook.ownerSpriteUrl) { return; }
+    var counter = findCounter(placed);
+    if (!counter) { removeOwner(); return; }
+    var sig = [counter.x, counter.y, counter.w, counter.h, st.key].join('|');
+    if (st.owner && st.owner.sig === sig) { return; }
+    removeOwner();
+    var prefs = [
+      [counter.x + counter.w / 2, counter.y - 1.0],
+      [counter.x + counter.w / 2, counter.y - 0.65],
+      [counter.x - 0.9, counter.y + counter.h * 0.5]
+    ];
+    var spot = firstFree(placed, prefs, st.staffSpots || []) || Iso.findSpot(placed, st.staffSpots || []);
+    if (!spot) { return; }
+    var pos = Iso.P(spot.gx, spot.gy, 0);
+    var url = AILook.ownerSpriteUrl();
+    if (!url) { return; }
+    Promise.all([
+      loadImageTex('owner', url),
+      loadTex('oshadow', Iso.character.shadow(), true)
+    ]).then(function (res) {
+      if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) { return; }
+      var rig = new PIXI.Container();
+      rig.x = pos.x;
+      rig.y = pos.y;
+      rig.zIndex = Iso.sortKey(spot.gx, spot.gy, 1, 1) * 100 + 40;
+      var base = Iso.texSpriteScale ? Iso.texSpriteScale() : 0.5;
+      var sh = new PIXI.Sprite(res[1].tex);
+      sh.anchor.set(0.5, 0.5);
+      sh.scale.set(base);
+      sh.y = 1;
+      sh._baseScale = base;
+      rig._shadow = sh;
+      rig.addChild(sh);
+      var avatar = new PIXI.Container();
+      rig.addChild(avatar);
+      var sp = new PIXI.Sprite(res[0].tex);
+      sp.anchor.set(0.5, 1);
+      sp.scale.set(168 / res[0].tex.height);
+      sp.y = 2;
+      avatar.addChild(sp);
+      rig.avatar = avatar;
+      rig.scale.set(0.72);
+      rig._phase = 1.7;
+      st.world.addChild(rig);
+      var tag = null;
+      if (st.tags) {
+        tag = document.createElement('div');
+        tag.className = 'iso-staff-tag owner';
+        tag.textContent = '店主';
+        st.tags.appendChild(tag);
+      }
+      st.owner = { rig: rig, avatar: avatar, sp: sp, tag: tag, sig: sig };
+      st.ownerSpot = spot;
+      if (st.staffSpots) { st.staffSpots.push(spot); }
+      Iso.updateStaffTags();
+    });
+  }
+
   function buildQueue(placed) {
     if (!st.ready || !window.Engine || !Engine.getQueue) { return; }
     var servingId = (Engine.state && Engine.state.servingCustomerId) || '';
@@ -1261,6 +1421,7 @@
         rig._lookDir = 0;
         st.world.addChild(rig);
         st.queueRigs.push({ id: r.id, status: r.status, patience: r.patience, rig: rig, gx: spot.gx, gy: spot.gy });
+        if (r.status === 'waiting') { attachAiSprite(rig, r.id, 'qai:', token, false); }
       });
     });
   }
@@ -1351,6 +1512,10 @@
         rec.rig = rig;
         if (rec.tag) { rec.tag.style.display = 'block'; }
         st.staffList[index] = rec;
+        if (window.AILook && AILook.staffSpriteUrl) {
+          var staffUrl = AILook.staffSpriteUrl(m);
+          if (staffUrl) { attachAiImage(rig, staffUrl, 'sai:' + m.uid, token, 'staff', 168); }
+        }
         if (index === 0) { st.staff = rec; }
         if (!rec._taskAt) {
           var taskNow = (window.performance && performance.now) ? performance.now() : Date.now();
@@ -1377,6 +1542,13 @@
       var sy = st.cam.y + (r.y - 127 * r.scale.y) * st.cam.scale;
       rec.tag.style.left = sx.toFixed(1) + 'px';
       rec.tag.style.top = sy.toFixed(1) + 'px';
+    }
+    if (st.owner && st.owner.rig && st.owner.tag) {
+      var or = st.owner.rig;
+      var ox = st.cam.x + or.x * st.cam.scale;
+      var oy = st.cam.y + (or.y - 127 * or.scale.y) * st.cam.scale;
+      st.owner.tag.style.left = ox.toFixed(1) + 'px';
+      st.owner.tag.style.top = oy.toFixed(1) + 'px';
     }
   };
 
@@ -1608,6 +1780,12 @@
       r.avatar.x = sway + lean;
       r.avatar.scale.y = breathe;
       r.avatar.scale.x = 1 - (breathe - 1) * 0.6;
+      if (r.aiRoot) {
+        r.aiRoot.y = r.avatar.y;
+        r.aiRoot.x = r.avatar.x;
+        r.aiRoot.rotation = r.avatar.rotation;
+        r.aiRoot.scale.set(r.avatar.scale.x, r.avatar.scale.y);
+      }
 
       var tilt = Math.sin(t * 0.9 + phase) * 0.016 + (r._lookDir || 0) * 0.05 * lookW;
       if (base === 'hesitant') { tilt -= 0.07; }
@@ -1717,6 +1895,11 @@
         taskTilt -= Math.sin(Math.min(1, (now - rec._greet.waitStart) / 320) * Math.PI) * 0.1;
       }
       sr.avatar.rotation = taskTilt;
+      if (sr.aiRoot) {
+        sr.aiRoot.y = sr.avatar.y;
+        sr.aiRoot.x = sr.avatar.x;
+        sr.aiRoot.rotation = sr.avatar.rotation;
+      }
       if (now < sr._blinkUntil) {
         sr.head.texture = sr.heads.blink || sr.heads.calm;
       } else {
@@ -1732,6 +1915,13 @@
       updateShadow(sr);
     }
 
+    // 店主：站在柜台后，轻微呼吸
+    if (st.owner && st.owner.avatar) {
+      var op = st.owner.rig._phase || 0;
+      st.owner.avatar.y = Math.sin(t * 1.3 + op) * 0.7;
+      st.owner.avatar.x = Math.sin(t * 0.7 + op) * 0.3;
+    }
+
     // 排队中的顾客：轻微呼吸 / 眨眼 / 看当前顾客
     for (var qi = 0; qi < st.queueRigs.length; qi++) {
       var qrec = st.queueRigs[qi];
@@ -1743,6 +1933,12 @@
       var qb = 1 + Math.sin(t * 2.0 + qp) * 0.006;
       qr.avatar.scale.y = qb;
       qr.avatar.scale.x = 1 - (qb - 1) * 0.5;
+      if (qr.aiRoot) {
+        qr.aiRoot.y = qr.avatar.y;
+        qr.aiRoot.x = qr.avatar.x;
+        qr.aiRoot.rotation = qr.avatar.rotation;
+        qr.aiRoot.scale.set(qr.avatar.scale.x, qr.avatar.scale.y);
+      }
       if (!qr._lookAt) { qr._lookAt = now + 2100 + Math.random() * 2600; }
       if (now > qr._lookAt) {
         qr._lookDir = Math.random() < 0.6 ? 1 : -1;

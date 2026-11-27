@@ -438,6 +438,53 @@ h3 {
   box-shadow: 0 0 0 3px rgba(201, 123, 99, .15);
 }
 
+.qr-play {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 420px;
+  margin: 12px auto 0;
+  padding: 10px 12px;
+  border: 1.5px dashed var(--line);
+  border-radius: 14px;
+  background: #FFF9EF;
+}
+
+.qr-play img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  flex: 0 0 auto;
+}
+
+.qr-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+
+.qr-copy strong {
+  font-size: 13px;
+  color: var(--cocoa);
+}
+
+.qr-copy span {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.qr-copy code {
+  font-size: 9px;
+  color: #8C765F;
+  word-break: break-all;
+}
+
+@media (max-width: 760px) {
+  .qr-play { display: none; }
+}
+
 .footer-note {
   margin-top: 18px;
   text-align: center;
@@ -919,10 +966,12 @@ h3 {
   border-width: 1.5px;
 }
 
-.avatar svg {
+.avatar svg,
+.avatar .ai-avatar {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .customer-meta {
@@ -1064,7 +1113,7 @@ h3 {
 
 .item-art {
   width: 100%;
-  height: 76px;
+  height: 88px;
   overflow: hidden;
 }
 
@@ -1072,6 +1121,14 @@ h3 {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.item-art .ai-item-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 3px rgba(91, 70, 54, .16));
 }
 
 .item-name {
@@ -2942,11 +2999,13 @@ h3 {
   pointer-events: none;
 }
 
-.shop2-person svg {
+.shop2-person svg,
+.shop2-person .ai-shop-sprite {
   display: block;
   height: 100%;
   width: auto;
   overflow: visible;
+  object-fit: contain;
 }
 
 .shop2-person.position-service {
@@ -3061,11 +3120,31 @@ h3 {
   animation: shop2KeeperBreathe 4s ease-in-out infinite;
 }
 
-.shop2-keeper svg {
+.shop2-keeper svg,
+.shop2-keeper .ai-keeper-arm {
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.shop2-keeper .ai-keeper-arm {
+  transform-origin: 24% 94%;
+  transition: transform .35s cubic-bezier(.2, .8, .3, 1);
+}
+
+.shop2-keeper.gesture-lean .ai-keeper-arm {
+  transform: rotate(-3deg) translate(2px, -4px);
+}
+
+.shop2-keeper.gesture-point .ai-keeper-arm {
+  transform: rotate(-8deg) translate(8px, -10px);
+}
+
+.shop2-keeper.gesture-joke .ai-keeper-arm {
+  transform: rotate(3deg) translateY(2px);
 }
 
 .shop2-keeper .shop2-arm {
@@ -3478,6 +3557,12 @@ h3 {
   display: block;
   width: 100%;
   height: auto;
+}
+.shop2-ghost .ai-item-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 3px 3px rgba(91, 70, 54, .2));
 }
 
 
@@ -4122,10 +4207,12 @@ h3 {
   border-radius: 14px;
 }
 
-.staff-portrait-svg {
+.staff-portrait-svg,
+.staff-portrait .ai-staff-avatar {
   width: 100%;
   height: 100%;
   display: block;
+  object-fit: cover;
 }
 
 .staff-portrait-fallback {
@@ -4753,6 +4840,12 @@ h3 {
   inset: 0;
   z-index: 26;
   pointer-events: none;
+}
+
+.iso-staff-tag.owner {
+  background: #C97B63;
+  color: #FFF9EF;
+  border-color: #8F4E3A;
 }
 
 .iso-staff-tag {
@@ -5460,12 +5553,14 @@ body.prep-active .debug-panel {
 }
 
 .result-look {
+  position: relative;
   width: 210px;
   height: 380px;
   margin: 0 auto 4px;
 }
 
 .look-modal-figure {
+  position: relative;
   width: 100%;
   height: 50vh;
   max-height: 420px;
@@ -5808,6 +5903,186 @@ body.prep-active .debug-panel {
   border-color: #D99A9A;
   background: #FFF3F0;
 }
+
+/* ============================================================
+   AI 试衣间：放大人物 + 拖拽换装
+   ============================================================ */
+.app.is-fitting .stage-root { display: none !important; }
+.app.is-fitting .screens { padding-top: 0; }
+.fitting-ai {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  margin: 8px 0 10px;
+}
+.fitting-ai-stage {
+  position: relative;
+  flex: 1 1 58%;
+  min-width: 0;
+  min-height: 46vh;
+  border: 2px solid #5B4636;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 18%, #FFF9EF 0%, #F6E8D7 52%, #EAD5BE 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  box-shadow: inset 0 0 0 5px rgba(255,249,239,.6), 0 6px 0 rgba(91,70,54,.08);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.fitting-ai-stage.is-over {
+  border-color: #C97B63;
+  box-shadow: inset 0 0 0 5px rgba(255,249,239,.7), 0 0 0 4px rgba(201,123,99,.22);
+}
+.fitting-ai-stage > img {
+  display: block;
+  max-width: 100%;
+  max-height: 44vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transform-origin: bottom center;
+}
+.fitting-ai-loading {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255,249,239,.72);
+  color: #6B4F3A;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  backdrop-filter: blur(1.5px);
+  z-index: 3;
+}
+.fitting-ai-stage.is-loading .fitting-ai-loading { display: flex; }
+.fit-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #D8C9B8;
+  border-top-color: #C97B63;
+  animation: fit-spin .8s linear infinite;
+}
+@keyframes fit-spin { to { transform: rotate(360deg); } }
+.fitting-ai-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255,249,239,.82);
+  border: 1px solid #DCCBB4;
+  color: #8C765F;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.fitting-wardrobe {
+  flex: none;
+  min-width: 0;
+  max-height: 30vh;
+  overflow: auto;
+  border: 2px solid #5B4636;
+  border-radius: 16px;
+  background: #FFF9EF;
+  padding: 10px;
+  box-shadow: 0 5px 0 rgba(91,70,54,.08);
+}
+.fit-wardrobe-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px dashed #DCCBB4;
+  margin-bottom: 8px;
+}
+.fit-wardrobe-head strong { font-size: 13px; color: #6B4F3A; }
+.fit-wardrobe-head span { font-size: 10px; color: #9A8067; }
+.fit-cat { margin-bottom: 10px; }
+.fit-cat-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: #9A8067;
+  letter-spacing: .08em;
+  margin-bottom: 5px;
+}
+.fit-items {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+.fit-item {
+  flex: 0 0 86px;
+  border: 1.5px solid #DCCBB4;
+  border-radius: 12px;
+  background: #FBF2E4;
+  padding: 4px 4px 5px;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+.fit-item:active { cursor: grabbing; }
+.fit-item.selected {
+  border-color: #C97B63;
+  background: #FFF4E4;
+  box-shadow: 0 0 0 3px rgba(201,123,99,.18);
+}
+.fit-item-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 74px;
+  overflow: hidden;
+}
+.fit-item-art svg { display: block; width: 100%; height: 100%; }
+.fit-item-art .ai-item-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(91, 70, 54, .16));
+}
+.fit-item-name {
+  display: block;
+  font-size: 9px;
+  line-height: 1.2;
+  color: #6B4F3A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+@media (max-width: 760px) {
+  .fitting-ai { flex-direction: column; }
+  .fitting-ai-stage { flex: none; min-height: 44vh; }
+  .fitting-ai-stage img { max-height: 48vh; }
+  .fitting-wardrobe { flex: none; max-height: 34vh; }
+}
+.result-look img, .look-modal-figure img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* 离线 AI 图层 */
+.ai-look-frame {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  max-width: 100%;
+}
+.ai-look-stack { position: absolute; inset: 0; }
+.ai-look-stack img { position: absolute; display: block; }
+.fitting-ai-stage > img { max-width: 100%; max-height: 44vh; }
 
 </style>
   <!-- 单文件离线版：CSS/JS/图标全部内联，不注册 Service Worker（file:// 不支持） -->
@@ -11214,6 +11489,40 @@ body.prep-active .debug-panel {
     Engine.save();
   };
 
+  Engine.startFittingRoom = function () {
+    var s = Engine.state;
+    var customer = Engine.currentCustomer();
+    if (!s || !customer) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
+    var defaults = [];
+    ['top', 'bottom', 'shoes'].forEach(function (cat) {
+      var items = Engine.getInventoryItems(cat);
+      if (items && items.length) { defaults.push(items[0].id); }
+    });
+    s.selectedItems = defaults;
+    s.serviceMode = 'styling';
+    s.quickOptions = [];
+    s.activeCategory = 'all';
+    s.accessorySlot = 'all';
+    s.styleFilter = 'all';
+    s.lastTry = null;
+    s.itemReaction = null;
+    s.expression = 'calm';
+    s.screen = 'fitting';
+    var rec = queueRecord(s.servingCustomerId);
+    var rooms = Engine.getFittingRooms();
+    var occupied = Engine.getFittingOccupied();
+    var waiting = rooms > 0 && occupied >= rooms;
+    if (rec) {
+      rec.status = waiting ? 'fittingWait' : 'fitting';
+      rec.noRoom = rooms <= 0;
+      rec.itemIds = defaults.slice();
+      rec.fitStarted = s.day;
+    }
+    Engine.buildPendingResult(defaults);
+    Engine.save();
+    return { ok: true, items: defaults.slice(), waiting: waiting, noRoom: rooms <= 0 };
+  };
+
   Engine.previewOption = function (index) {
     var s = Engine.state;
     var customer = Engine.currentCustomer();
@@ -11779,6 +12088,7 @@ body.prep-active .debug-panel {
     if (!s) { return { ok: false }; }
     var pr = Engine.buildPendingResult(itemIds);
     if (!pr) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
+    s.selectedItems = (itemIds || []).slice();
     var rec = queueRecord(s.servingCustomerId);
     if (rec) { rec.itemIds = (itemIds || []).slice(); }
     var rooms = Engine.getFittingRooms();
@@ -11829,7 +12139,9 @@ body.prep-active .debug-panel {
 
   Engine.completeFitting = function () {
     var s = Engine.state;
-    if (!s || !s.pendingResult) { return { ok: false }; }
+    if (!s) { return { ok: false }; }
+    if (!s.pendingResult) { Engine.buildPendingResult(s.selectedItems); }
+    if (!s.pendingResult) { return { ok: false }; }
     var rec = queueRecord(s.servingCustomerId);
     if (rec) { rec.status = 'done'; rec.fitDone = true; }
     Engine.finalizePending();
@@ -14992,10 +15304,40 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     img.src = url;
   };
 
+  Iso.tex.image = function (key, url, done) {
+    var ck = key + '@img';
+    var hit = cache[ck];
+    if (hit) {
+      hit.used = Date.now();
+      if (hit.tex) { done(hit.tex); return; }
+      if (hit.cbs) { hit.cbs.push(done); }
+      return;
+    }
+    if (pending[ck]) { pending[ck].push(done); return; }
+    pending[ck] = [done];
+    var img = new Image();
+    img.decoding = 'async';
+    img.onload = function () {
+      var tex = null;
+      try { tex = PIXI.Texture.from(img); } catch (e) { tex = null; }
+      cache[ck] = { key: key, tex: tex, used: Date.now(), cbs: [] };
+      var cbs = pending[ck] || [];
+      delete pending[ck];
+      cbs.forEach(function (cb) { cb(tex); });
+    };
+    img.onerror = function () {
+      cache[ck] = { key: key, tex: null, used: Date.now(), cbs: [] };
+      var cbs = pending[ck] || [];
+      delete pending[ck];
+      cbs.forEach(function (cb) { cb(null); });
+    };
+    img.src = url;
+  };
+
   Iso.tex.trimLRU = function (maxEntries) {
     var now = Date.now();
     var list = [];
-    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow'];
+    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow', 'cai:', 'qai:', 'ral:'];
     for (var k in cache) {
       if (!cache[k] || !cache[k].tex) { continue; }
       var isChar = false;
@@ -15017,7 +15359,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
   };
 
   Iso.tex.dropCharacter = function () {
-    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow'];
+    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow', 'cai:', 'qai:', 'ral:'];
     for (var k in cache) {
       var bk = (cache[k] && cache[k].key) || k;
       var hit = false;
@@ -19601,6 +19943,1479 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
 </script>
   <script>
+window.AI_OFFLINE = {
+ "base": {
+  "file": "assets/hd/offline/base/generic.webp",
+  "x": 238,
+  "y": 28,
+  "w": 275,
+  "h": 1100
+ },
+ "tops": {
+  "t_blouse": {
+   "file": "assets/hd/offline/tops/t_blouse.webp?v=22",
+   "x": 246,
+   "y": 187,
+   "w": 267,
+   "h": 326
+  },
+  "t_cami": {
+   "file": "assets/hd/offline/tops/t_cami.webp?v=22",
+   "x": 256,
+   "y": 193,
+   "w": 243,
+   "h": 255
+  },
+  "t_cardigan": {
+   "file": "assets/hd/offline/tops/t_cardigan.webp?v=22",
+   "x": 231,
+   "y": 187,
+   "w": 291,
+   "h": 431
+  },
+  "t_corset": {
+   "file": "assets/hd/offline/tops/t_corset.webp?v=22",
+   "x": 256,
+   "y": 193,
+   "w": 243,
+   "h": 255
+  },
+  "t_crop": {
+   "file": "assets/hd/offline/tops/t_crop.webp?v=22",
+   "x": 251,
+   "y": 193,
+   "w": 250,
+   "h": 320
+  },
+  "t_hoodie": {
+   "file": "assets/hd/offline/tops/t_hoodie.webp?v=22",
+   "x": 208,
+   "y": 178,
+   "w": 338,
+   "h": 440
+  },
+  "t_knit": {
+   "file": "assets/hd/offline/tops/t_knit.webp?v=22",
+   "x": 219,
+   "y": 187,
+   "w": 315,
+   "h": 431
+  },
+  "t_knitvest": {
+   "file": "assets/hd/offline/tops/t_knitvest.webp?v=22",
+   "x": 255,
+   "y": 193,
+   "w": 245,
+   "h": 265
+  },
+  "t_oversize": {
+   "file": "assets/hd/offline/tops/t_oversize.webp?v=22",
+   "x": 218,
+   "y": 187,
+   "w": 320,
+   "h": 431
+  },
+  "t_polo": {
+   "file": "assets/hd/offline/tops/t_polo.webp?v=22",
+   "x": 251,
+   "y": 187,
+   "w": 251,
+   "h": 326
+  },
+  "t_satin": {
+   "file": "assets/hd/offline/tops/t_satin.webp?v=22",
+   "x": 227,
+   "y": 186,
+   "w": 301,
+   "h": 432
+  },
+  "t_shirt": {
+   "file": "assets/hd/offline/tops/t_shirt.webp?v=22",
+   "x": 237,
+   "y": 187,
+   "w": 277,
+   "h": 431
+  },
+  "t_tee": {
+   "file": "assets/hd/offline/tops/t_tee.webp?v=22",
+   "x": 251,
+   "y": 187,
+   "w": 254,
+   "h": 326
+  },
+  "t_tube": {
+   "file": "assets/hd/offline/tops/t_tube.webp?v=22",
+   "x": 255,
+   "y": 193,
+   "w": 245,
+   "h": 260
+  },
+  "t_turtle": {
+   "file": "assets/hd/offline/tops/t_turtle.webp?v=22",
+   "x": 237,
+   "y": 186,
+   "w": 277,
+   "h": 432
+  },
+  "t_vest": {
+   "file": "assets/hd/offline/tops/t_vest.webp?v=22",
+   "x": 254,
+   "y": 193,
+   "w": 246,
+   "h": 270
+  }
+ },
+ "icons": {
+  "t_blouse": {
+   "file": "assets/hd/offline/icons/t_blouse.webp?v=22",
+   "w": 305,
+   "h": 364
+  },
+  "t_cami": {
+   "file": "assets/hd/offline/icons/t_cami.webp?v=22",
+   "w": 273,
+   "h": 285
+  },
+  "t_cardigan": {
+   "file": "assets/hd/offline/icons/t_cardigan.webp?v=22",
+   "w": 341,
+   "h": 481
+  },
+  "t_corset": {
+   "file": "assets/hd/offline/icons/t_corset.webp?v=22",
+   "w": 273,
+   "h": 285
+  },
+  "t_crop": {
+   "file": "assets/hd/offline/icons/t_crop.webp?v=22",
+   "w": 288,
+   "h": 358
+  },
+  "t_hoodie": {
+   "file": "assets/hd/offline/icons/t_hoodie.webp?v=22",
+   "w": 390,
+   "h": 492
+  },
+  "t_knit": {
+   "file": "assets/hd/offline/icons/t_knit.webp?v=22",
+   "w": 365,
+   "h": 481
+  },
+  "t_knitvest": {
+   "file": "assets/hd/offline/icons/t_knitvest.webp?v=22",
+   "w": 275,
+   "h": 295
+  },
+  "t_oversize": {
+   "file": "assets/hd/offline/icons/t_oversize.webp?v=22",
+   "w": 370,
+   "h": 481
+  },
+  "t_polo": {
+   "file": "assets/hd/offline/icons/t_polo.webp?v=22",
+   "w": 289,
+   "h": 364
+  },
+  "t_satin": {
+   "file": "assets/hd/offline/icons/t_satin.webp?v=22",
+   "w": 351,
+   "h": 482
+  },
+  "t_shirt": {
+   "file": "assets/hd/offline/icons/t_shirt.webp?v=22",
+   "w": 327,
+   "h": 481
+  },
+  "t_tee": {
+   "file": "assets/hd/offline/icons/t_tee.webp?v=22",
+   "w": 292,
+   "h": 364
+  },
+  "t_tube": {
+   "file": "assets/hd/offline/icons/t_tube.webp?v=22",
+   "w": 275,
+   "h": 290
+  },
+  "t_turtle": {
+   "file": "assets/hd/offline/icons/t_turtle.webp?v=22",
+   "w": 327,
+   "h": 482
+  },
+  "t_vest": {
+   "file": "assets/hd/offline/icons/t_vest.webp?v=22",
+   "w": 278,
+   "h": 302
+  },
+  "b_cargo": {
+   "file": "assets/hd/offline/icons/b_cargo.webp?v=22",
+   "w": 324,
+   "h": 660
+  },
+  "b_denimskirt": {
+   "file": "assets/hd/offline/icons/b_denimskirt.webp?v=22",
+   "w": 289,
+   "h": 336
+  },
+  "b_jeans": {
+   "file": "assets/hd/offline/icons/b_jeans.webp?v=22",
+   "w": 323,
+   "h": 660
+  },
+  "b_leather": {
+   "file": "assets/hd/offline/icons/b_leather.webp?v=22",
+   "w": 326,
+   "h": 660
+  },
+  "b_pleat": {
+   "file": "assets/hd/offline/icons/b_pleat.webp?v=22",
+   "w": 287,
+   "h": 237
+  },
+  "b_shorts": {
+   "file": "assets/hd/offline/icons/b_shorts.webp?v=22",
+   "w": 288,
+   "h": 222
+  },
+  "b_skirt": {
+   "file": "assets/hd/offline/icons/b_skirt.webp?v=22",
+   "w": 355,
+   "h": 524
+  },
+  "b_tailoredshorts": {
+   "file": "assets/hd/offline/icons/b_tailoredshorts.webp?v=22",
+   "w": 285,
+   "h": 231
+  },
+  "b_tier": {
+   "file": "assets/hd/offline/icons/b_tier.webp?v=22",
+   "w": 294,
+   "h": 230
+  },
+  "b_wide": {
+   "file": "assets/hd/offline/icons/b_wide.webp?v=22",
+   "w": 327,
+   "h": 660
+  },
+  "b_widejeans": {
+   "file": "assets/hd/offline/icons/b_widejeans.webp?v=22",
+   "w": 324,
+   "h": 660
+  },
+  "s_ballet": {
+   "file": "assets/hd/offline/icons/s_ballet.webp?v=22",
+   "w": 266,
+   "h": 137
+  },
+  "s_boot": {
+   "file": "assets/hd/offline/icons/s_boot.webp?v=22",
+   "w": 269,
+   "h": 145
+  },
+  "s_chelsea": {
+   "file": "assets/hd/offline/icons/s_chelsea.webp?v=22",
+   "w": 267,
+   "h": 140
+  },
+  "s_heel": {
+   "file": "assets/hd/offline/icons/s_heel.webp?v=22",
+   "w": 228,
+   "h": 137
+  },
+  "s_kitten": {
+   "file": "assets/hd/offline/icons/s_kitten.webp?v=22",
+   "w": 244,
+   "h": 143
+  },
+  "s_loafer": {
+   "file": "assets/hd/offline/icons/s_loafer.webp?v=22",
+   "w": 263,
+   "h": 133
+  },
+  "s_mary": {
+   "file": "assets/hd/offline/icons/s_mary.webp?v=22",
+   "w": 262,
+   "h": 135
+  },
+  "s_platform": {
+   "file": "assets/hd/offline/icons/s_platform.webp?v=22",
+   "w": 262,
+   "h": 139
+  },
+  "s_runner": {
+   "file": "assets/hd/offline/icons/s_runner.webp?v=22",
+   "w": 277,
+   "h": 139
+  },
+  "s_sandal": {
+   "file": "assets/hd/offline/icons/s_sandal.webp?v=22",
+   "w": 227,
+   "h": 138
+  },
+  "s_slipper": {
+   "file": "assets/hd/offline/icons/s_slipper.webp?v=22",
+   "w": 276,
+   "h": 136
+  },
+  "s_sneaker": {
+   "file": "assets/hd/offline/icons/s_sneaker.webp?v=22",
+   "w": 266,
+   "h": 133
+  },
+  "d_black": {
+   "file": "assets/hd/offline/icons/d_black.webp?v=22",
+   "w": 309,
+   "h": 498
+  },
+  "d_cn": {
+   "file": "assets/hd/offline/icons/d_cn.webp?v=22",
+   "w": 327,
+   "h": 706
+  },
+  "d_flower": {
+   "file": "assets/hd/offline/icons/d_flower.webp?v=22",
+   "w": 418,
+   "h": 807
+  },
+  "d_knit": {
+   "file": "assets/hd/offline/icons/d_knit.webp?v=22",
+   "w": 348,
+   "h": 793
+  },
+  "d_pinafore": {
+   "file": "assets/hd/offline/icons/d_pinafore.webp?v=22",
+   "w": 312,
+   "h": 494
+  },
+  "d_qipao": {
+   "file": "assets/hd/offline/icons/d_qipao.webp?v=22",
+   "w": 355,
+   "h": 906
+  },
+  "d_shirt": {
+   "file": "assets/hd/offline/icons/d_shirt.webp?v=22",
+   "w": 355,
+   "h": 612
+  },
+  "d_slip": {
+   "file": "assets/hd/offline/icons/d_slip.webp?v=22",
+   "w": 342,
+   "h": 776
+  },
+  "d_sundress": {
+   "file": "assets/hd/offline/icons/d_sundress.webp?v=22",
+   "w": 352,
+   "h": 554
+  },
+  "d_wrap": {
+   "file": "assets/hd/offline/icons/d_wrap.webp?v=22",
+   "w": 363,
+   "h": 758
+  },
+  "d_y2k": {
+   "file": "assets/hd/offline/icons/d_y2k.webp?v=22",
+   "w": 357,
+   "h": 905
+  },
+  "o_blazer": {
+   "file": "assets/hd/offline/icons/o_blazer.webp?v=22",
+   "w": 342,
+   "h": 525
+  },
+  "o_cape": {
+   "file": "assets/hd/offline/icons/o_cape.webp?v=22",
+   "w": 459,
+   "h": 879
+  },
+  "o_cardigan": {
+   "file": "assets/hd/offline/icons/o_cardigan.webp?v=22",
+   "w": 370,
+   "h": 526
+  },
+  "o_denim": {
+   "file": "assets/hd/offline/icons/o_denim.webp?v=22",
+   "w": 343,
+   "h": 520
+  },
+  "o_denimvest": {
+   "file": "assets/hd/offline/icons/o_denimvest.webp?v=22",
+   "w": 324,
+   "h": 520
+  },
+  "o_puffer": {
+   "file": "assets/hd/offline/icons/o_puffer.webp?v=22",
+   "w": 377,
+   "h": 525
+  },
+  "o_quilt": {
+   "file": "assets/hd/offline/icons/o_quilt.webp?v=22",
+   "w": 359,
+   "h": 525
+  },
+  "o_tailored": {
+   "file": "assets/hd/offline/icons/o_tailored.webp?v=22",
+   "w": 335,
+   "h": 526
+  },
+  "o_trench": {
+   "file": "assets/hd/offline/icons/o_trench.webp?v=22",
+   "w": 445,
+   "h": 868
+  },
+  "o_trenchshort": {
+   "file": "assets/hd/offline/icons/o_trenchshort.webp?v=22",
+   "w": 367,
+   "h": 525
+  }
+ },
+ "bottoms": {
+  "b_cargo": {
+   "file": "assets/hd/offline/bottoms/b_cargo.webp?v=22",
+   "x": 250,
+   "y": 413,
+   "w": 254,
+   "h": 590
+  },
+  "b_denimskirt": {
+   "file": "assets/hd/offline/bottoms/b_denimskirt.webp?v=22",
+   "x": 251,
+   "y": 413,
+   "w": 253,
+   "h": 590,
+   "skin": {
+    "x": 292,
+    "y": 710,
+    "w": 187,
+    "h": 296,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_denimskirt-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_denimskirt-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_denimskirt-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_denimskirt-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_denimskirt-t5.webp?v=22"
+    }
+   }
+  },
+  "b_jeans": {
+   "file": "assets/hd/offline/bottoms/b_jeans.webp?v=22",
+   "x": 251,
+   "y": 413,
+   "w": 253,
+   "h": 590
+  },
+  "b_leather": {
+   "file": "assets/hd/offline/bottoms/b_leather.webp?v=22",
+   "x": 248,
+   "y": 413,
+   "w": 256,
+   "h": 590
+  },
+  "b_pleat": {
+   "file": "assets/hd/offline/bottoms/b_pleat.webp?v=22",
+   "x": 247,
+   "y": 413,
+   "w": 257,
+   "h": 590,
+   "skin": {
+    "x": 274,
+    "y": 617,
+    "w": 222,
+    "h": 389,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_pleat-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_pleat-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_pleat-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_pleat-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_pleat-t5.webp?v=22"
+    }
+   }
+  },
+  "b_shorts": {
+   "file": "assets/hd/offline/bottoms/b_shorts.webp?v=22",
+   "x": 248,
+   "y": 413,
+   "w": 258,
+   "h": 590,
+   "skin": {
+    "x": 272,
+    "y": 602,
+    "w": 215,
+    "h": 404,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_shorts-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_shorts-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_shorts-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_shorts-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_shorts-t5.webp?v=22"
+    }
+   }
+  },
+  "b_skirt": {
+   "file": "assets/hd/offline/bottoms/b_skirt.webp?v=22",
+   "x": 231,
+   "y": 413,
+   "w": 299,
+   "h": 590,
+   "skin": {
+    "x": 291,
+    "y": 878,
+    "w": 189,
+    "h": 128,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_skirt-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_skirt-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_skirt-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_skirt-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_skirt-t5.webp?v=22"
+    }
+   }
+  },
+  "b_tailoredshorts": {
+   "file": "assets/hd/offline/bottoms/b_tailoredshorts.webp?v=22",
+   "x": 250,
+   "y": 413,
+   "w": 255,
+   "h": 590,
+   "skin": {
+    "x": 272,
+    "y": 611,
+    "w": 211,
+    "h": 395,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_tailoredshorts-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_tailoredshorts-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_tailoredshorts-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_tailoredshorts-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_tailoredshorts-t5.webp?v=22"
+    }
+   }
+  },
+  "b_tier": {
+   "file": "assets/hd/offline/bottoms/b_tier.webp?v=22",
+   "x": 213,
+   "y": 413,
+   "w": 343,
+   "h": 590,
+   "skin": {
+    "x": 212,
+    "y": 610,
+    "w": 347,
+    "h": 396,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_tier-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/b_tier-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/b_tier-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/b_tier-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/b_tier-t5.webp?v=22"
+    }
+   }
+  },
+  "b_wide": {
+   "file": "assets/hd/offline/bottoms/b_wide.webp?v=22",
+   "x": 248,
+   "y": 413,
+   "w": 257,
+   "h": 590
+  },
+  "b_widejeans": {
+   "file": "assets/hd/offline/bottoms/b_widejeans.webp?v=22",
+   "x": 250,
+   "y": 413,
+   "w": 254,
+   "h": 590
+  }
+ },
+ "shoes": {
+  "s_ballet": {
+   "file": "assets/hd/offline/shoes/s_ballet.webp?v=22",
+   "x": 265,
+   "y": 1022,
+   "w": 238,
+   "h": 109
+  },
+  "s_boot": {
+   "file": "assets/hd/offline/shoes/s_boot.webp?v=22",
+   "x": 266,
+   "y": 1019,
+   "w": 241,
+   "h": 117
+  },
+  "s_chelsea": {
+   "file": "assets/hd/offline/shoes/s_chelsea.webp?v=22",
+   "x": 266,
+   "y": 1020,
+   "w": 239,
+   "h": 112
+  },
+  "s_heel": {
+   "file": "assets/hd/offline/shoes/s_heel.webp?v=22",
+   "x": 285,
+   "y": 1021,
+   "w": 204,
+   "h": 113
+  },
+  "s_kitten": {
+   "file": "assets/hd/offline/shoes/s_kitten.webp?v=22",
+   "x": 280,
+   "y": 1021,
+   "w": 218,
+   "h": 117
+  },
+  "s_loafer": {
+   "file": "assets/hd/offline/shoes/s_loafer.webp?v=22",
+   "x": 268,
+   "y": 1022,
+   "w": 235,
+   "h": 105
+  },
+  "s_mary": {
+   "file": "assets/hd/offline/shoes/s_mary.webp?v=22",
+   "x": 268,
+   "y": 1023,
+   "w": 234,
+   "h": 107
+  },
+  "s_platform": {
+   "file": "assets/hd/offline/shoes/s_platform.webp?v=22",
+   "x": 269,
+   "y": 1022,
+   "w": 234,
+   "h": 111
+  },
+  "s_runner": {
+   "file": "assets/hd/offline/shoes/s_runner.webp?v=22",
+   "x": 260,
+   "y": 1022,
+   "w": 249,
+   "h": 111
+  },
+  "s_sandal": {
+   "file": "assets/hd/offline/shoes/s_sandal.webp?v=22",
+   "x": 285,
+   "y": 1022,
+   "w": 203,
+   "h": 114
+  },
+  "s_slipper": {
+   "file": "assets/hd/offline/shoes/s_slipper.webp?v=22",
+   "x": 261,
+   "y": 1022,
+   "w": 248,
+   "h": 108
+  },
+  "s_sneaker": {
+   "file": "assets/hd/offline/shoes/s_sneaker.webp?v=22",
+   "x": 266,
+   "y": 1022,
+   "w": 238,
+   "h": 105
+  }
+ },
+ "dresses": {
+  "d_black": {
+   "file": "assets/hd/offline/dresses/d_black.webp?v=22",
+   "x": 248,
+   "y": 193,
+   "w": 257,
+   "h": 810,
+   "skin": {
+    "x": 279,
+    "y": 636,
+    "w": 203,
+    "h": 370,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_black-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_black-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_black-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_black-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_black-t5.webp?v=22"
+    }
+   }
+  },
+  "d_cn": {
+   "file": "assets/hd/offline/dresses/d_cn.webp?v=22",
+   "x": 251,
+   "y": 193,
+   "w": 253,
+   "h": 810,
+   "skin": {
+    "x": 316,
+    "y": 822,
+    "w": 131,
+    "h": 184,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_cn-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_cn-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_cn-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_cn-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_cn-t5.webp?v=22"
+    }
+   }
+  },
+  "d_flower": {
+   "file": "assets/hd/offline/dresses/d_flower.webp?v=22",
+   "x": 218,
+   "y": 193,
+   "w": 332,
+   "h": 810,
+   "skin": {
+    "x": 295,
+    "y": 911,
+    "w": 184,
+    "h": 95,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_flower-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_flower-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_flower-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_flower-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_flower-t5.webp?v=22"
+    }
+   }
+  },
+  "d_knit": {
+   "file": "assets/hd/offline/dresses/d_knit.webp?v=22",
+   "x": 244,
+   "y": 193,
+   "w": 264,
+   "h": 810,
+   "skin": {
+    "x": 297,
+    "y": 899,
+    "w": 177,
+    "h": 107,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_knit-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_knit-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_knit-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_knit-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_knit-t5.webp?v=22"
+    }
+   }
+  },
+  "d_pinafore": {
+   "file": "assets/hd/offline/dresses/d_pinafore.webp?v=22",
+   "x": 245,
+   "y": 193,
+   "w": 260,
+   "h": 810,
+   "skin": {
+    "x": 279,
+    "y": 632,
+    "w": 208,
+    "h": 374,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_pinafore-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_pinafore-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_pinafore-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_pinafore-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_pinafore-t5.webp?v=22"
+    }
+   }
+  },
+  "d_qipao": {
+   "file": "assets/hd/offline/dresses/d_qipao.webp?v=22",
+   "x": 245,
+   "y": 193,
+   "w": 259,
+   "h": 810,
+   "skin": {
+    "x": 289,
+    "y": 740,
+    "w": 193,
+    "h": 266,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_qipao-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_qipao-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_qipao-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_qipao-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_qipao-t5.webp?v=22"
+    }
+   }
+  },
+  "d_shirt": {
+   "file": "assets/hd/offline/dresses/d_shirt.webp?v=22",
+   "x": 231,
+   "y": 193,
+   "w": 291,
+   "h": 810,
+   "skin": {
+    "x": 290,
+    "y": 738,
+    "w": 191,
+    "h": 268,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_shirt-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_shirt-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_shirt-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_shirt-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_shirt-t5.webp?v=22"
+    }
+   }
+  },
+  "d_slip": {
+   "file": "assets/hd/offline/dresses/d_slip.webp?v=22",
+   "x": 245,
+   "y": 193,
+   "w": 260,
+   "h": 810,
+   "skin": {
+    "x": 291,
+    "y": 884,
+    "w": 190,
+    "h": 122,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_slip-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_slip-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_slip-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_slip-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_slip-t5.webp?v=22"
+    }
+   }
+  },
+  "d_sundress": {
+   "file": "assets/hd/offline/dresses/d_sundress.webp?v=22",
+   "x": 235,
+   "y": 194,
+   "w": 294,
+   "h": 809,
+   "skin": {
+    "x": 291,
+    "y": 687,
+    "w": 183,
+    "h": 319,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_sundress-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_sundress-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_sundress-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_sundress-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_sundress-t5.webp?v=22"
+    }
+   }
+  },
+  "d_wrap": {
+   "file": "assets/hd/offline/dresses/d_wrap.webp?v=22",
+   "x": 237,
+   "y": 193,
+   "w": 283,
+   "h": 810,
+   "skin": {
+    "x": 293,
+    "y": 868,
+    "w": 185,
+    "h": 138,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_wrap-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_wrap-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_wrap-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_wrap-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_wrap-t5.webp?v=22"
+    }
+   }
+  },
+  "d_y2k": {
+   "file": "assets/hd/offline/dresses/d_y2k.webp?v=22",
+   "x": 245,
+   "y": 193,
+   "w": 261,
+   "h": 810,
+   "skin": {
+    "x": 279,
+    "y": 644,
+    "w": 209,
+    "h": 362,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_y2k-t1.webp?v=22",
+     "t2": "assets/hd/offline/skins/d_y2k-t2.webp?v=22",
+     "t3": "assets/hd/offline/skins/d_y2k-t3.webp?v=22",
+     "t4": "assets/hd/offline/skins/d_y2k-t4.webp?v=22",
+     "t5": "assets/hd/offline/skins/d_y2k-t5.webp?v=22"
+    }
+   }
+  }
+ },
+ "outers": {
+  "o_blazer": {
+   "file": "assets/hd/offline/outers/o_blazer.webp?v=22",
+   "x": 234,
+   "y": 188,
+   "w": 286,
+   "h": 469
+  },
+  "o_cape": {
+   "file": "assets/hd/offline/outers/o_cape.webp?v=22",
+   "x": 198,
+   "y": 188,
+   "w": 365,
+   "h": 785
+  },
+  "o_cardigan": {
+   "file": "assets/hd/offline/outers/o_cardigan.webp?v=22",
+   "x": 219,
+   "y": 188,
+   "w": 314,
+   "h": 470
+  },
+  "o_denim": {
+   "file": "assets/hd/offline/outers/o_denim.webp?v=22",
+   "x": 231,
+   "y": 188,
+   "w": 289,
+   "h": 466
+  },
+  "o_denimvest": {
+   "file": "assets/hd/offline/outers/o_denimvest.webp?v=22",
+   "x": 237,
+   "y": 188,
+   "w": 270,
+   "h": 466
+  },
+  "o_puffer": {
+   "file": "assets/hd/offline/outers/o_puffer.webp?v=22",
+   "x": 216,
+   "y": 188,
+   "w": 321,
+   "h": 469
+  },
+  "o_quilt": {
+   "file": "assets/hd/offline/outers/o_quilt.webp?v=22",
+   "x": 224,
+   "y": 188,
+   "w": 303,
+   "h": 469
+  },
+  "o_tailored": {
+   "file": "assets/hd/offline/outers/o_tailored.webp?v=22",
+   "x": 236,
+   "y": 188,
+   "w": 279,
+   "h": 470
+  },
+  "o_trench": {
+   "file": "assets/hd/offline/outers/o_trench.webp?v=22",
+   "x": 202,
+   "y": 188,
+   "w": 353,
+   "h": 776
+  },
+  "o_trenchshort": {
+   "file": "assets/hd/offline/outers/o_trenchshort.webp?v=22",
+   "x": 220,
+   "y": 188,
+   "w": 311,
+   "h": 469
+  }
+ },
+ "customers": {
+  "lin": {
+   "file": "assets/hd/offline/customers/c01.webp?v=22",
+   "x": 238,
+   "y": 34,
+   "w": 274,
+   "h": 1093,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c01.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c01.webp?v=24"
+  },
+  "lin2": {
+   "file": "assets/hd/offline/customers/c01.webp?v=22",
+   "x": 238,
+   "y": 34,
+   "w": 274,
+   "h": 1093,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c01.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c01.webp?v=24"
+  },
+  "guo": {
+   "file": "assets/hd/offline/customers/c02.webp?v=22",
+   "x": 238,
+   "y": 37,
+   "w": 273,
+   "h": 1090,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c02.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c02.webp?v=24"
+  },
+  "zhou": {
+   "file": "assets/hd/offline/customers/c03.webp?v=22",
+   "x": 238,
+   "y": 31,
+   "w": 273,
+   "h": 1096,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c03.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c03.webp?v=24"
+  },
+  "zhou2": {
+   "file": "assets/hd/offline/customers/c03.webp?v=22",
+   "x": 238,
+   "y": 31,
+   "w": 273,
+   "h": 1096,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c03.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c03.webp?v=24"
+  },
+  "laochen": {
+   "file": "assets/hd/offline/customers/c04.webp?v=22",
+   "x": 238,
+   "y": 36,
+   "w": 273,
+   "h": 1091,
+   "tone": "t5",
+   "portrait": "assets/hd/offline/portraits/c04.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c04.webp?v=24"
+  },
+  "laochen2": {
+   "file": "assets/hd/offline/customers/c04.webp?v=22",
+   "x": 238,
+   "y": 36,
+   "w": 273,
+   "h": 1091,
+   "tone": "t5",
+   "portrait": "assets/hd/offline/portraits/c04.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c04.webp?v=24"
+  },
+  "chen": {
+   "file": "assets/hd/offline/customers/c05.webp?v=22",
+   "x": 238,
+   "y": 34,
+   "w": 273,
+   "h": 1092,
+   "tone": "t4",
+   "portrait": "assets/hd/offline/portraits/c05.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c05.webp?v=24"
+  },
+  "qi": {
+   "file": "assets/hd/offline/customers/c05.webp?v=22",
+   "x": 238,
+   "y": 34,
+   "w": 273,
+   "h": 1092,
+   "tone": "t4",
+   "portrait": "assets/hd/offline/portraits/c05.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c05.webp?v=24"
+  },
+  "chen2": {
+   "file": "assets/hd/offline/customers/c05.webp?v=22",
+   "x": 238,
+   "y": 34,
+   "w": 273,
+   "h": 1092,
+   "tone": "t4",
+   "portrait": "assets/hd/offline/portraits/c05.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c05.webp?v=24"
+  },
+  "xiaolu": {
+   "file": "assets/hd/offline/customers/c06.webp?v=22",
+   "x": 238,
+   "y": 33,
+   "w": 273,
+   "h": 1094,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c06.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c06.webp?v=24"
+  },
+  "xiaolu2": {
+   "file": "assets/hd/offline/customers/c06.webp?v=22",
+   "x": 238,
+   "y": 33,
+   "w": 273,
+   "h": 1094,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c06.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c06.webp?v=24"
+  },
+  "ali": {
+   "file": "assets/hd/offline/customers/c07.webp?v=22",
+   "x": 238,
+   "y": 26,
+   "w": 273,
+   "h": 1101,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c07.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c07.webp?v=24"
+  },
+  "xiaok": {
+   "file": "assets/hd/offline/customers/c08.webp?v=22",
+   "x": 238,
+   "y": 30,
+   "w": 273,
+   "h": 1097,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c08.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c08.webp?v=24"
+  },
+  "he": {
+   "file": "assets/hd/offline/customers/c09.webp?v=22",
+   "x": 238,
+   "y": 36,
+   "w": 274,
+   "h": 1091,
+   "tone": "t1",
+   "portrait": "assets/hd/offline/portraits/c09.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c09.webp?v=24"
+  },
+  "tang": {
+   "file": "assets/hd/offline/customers/c10.webp?v=22",
+   "x": 238,
+   "y": 31,
+   "w": 273,
+   "h": 1095,
+   "tone": "t4",
+   "portrait": "assets/hd/offline/portraits/c10.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c10.webp?v=24"
+  },
+  "nana": {
+   "file": "assets/hd/offline/customers/c11.webp?v=22",
+   "x": 238,
+   "y": 31,
+   "w": 273,
+   "h": 1096,
+   "tone": "t2",
+   "portrait": "assets/hd/offline/portraits/c11.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c11.webp?v=24"
+  },
+  "wang": {
+   "file": "assets/hd/offline/customers/c12.webp?v=22",
+   "x": 238,
+   "y": 35,
+   "w": 273,
+   "h": 1091,
+   "tone": "t4",
+   "portrait": "assets/hd/offline/portraits/c12.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c12.webp?v=24"
+  },
+  "su": {
+   "file": "assets/hd/offline/customers/c13.webp?v=22",
+   "x": 238,
+   "y": 32,
+   "w": 273,
+   "h": 1095,
+   "tone": "t1",
+   "portrait": "assets/hd/offline/portraits/c13.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c13.webp?v=24"
+  },
+  "mimi": {
+   "file": "assets/hd/offline/customers/c14.webp?v=22",
+   "x": 238,
+   "y": 30,
+   "w": 273,
+   "h": 1097,
+   "tone": "t3",
+   "portrait": "assets/hd/offline/portraits/c14.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c14.webp?v=24"
+  },
+  "gu": {
+   "file": "assets/hd/offline/customers/c15.webp?v=22",
+   "x": 238,
+   "y": 35,
+   "w": 274,
+   "h": 1092,
+   "tone": "t1",
+   "portrait": "assets/hd/offline/portraits/c15.webp?v=23",
+   "sprite": "assets/hd/offline/sprites/c15.webp?v=24"
+  }
+ },
+ "tones": {
+  "t1": {
+   "name": "瓷白",
+   "rgb": [
+    248,
+    214,
+    189
+   ]
+  },
+  "t2": {
+   "name": "冷白",
+   "rgb": [
+    247,
+    209,
+    181
+   ]
+  },
+  "t3": {
+   "name": "暖白",
+   "rgb": [
+    248,
+    203,
+    170
+   ]
+  },
+  "t4": {
+   "name": "蜜色",
+   "rgb": [
+    242,
+    185,
+    140
+   ]
+  },
+  "t5": {
+   "name": "小麦",
+   "rgb": [
+    209,
+    143,
+    91
+   ]
+  }
+ },
+ "sprites": {
+  "c01": "assets/hd/offline/sprites/c01.webp?v=24",
+  "c02": "assets/hd/offline/sprites/c02.webp?v=24",
+  "c03": "assets/hd/offline/sprites/c03.webp?v=24",
+  "c04": "assets/hd/offline/sprites/c04.webp?v=24",
+  "c05": "assets/hd/offline/sprites/c05.webp?v=24",
+  "c06": "assets/hd/offline/sprites/c06.webp?v=24",
+  "c07": "assets/hd/offline/sprites/c07.webp?v=24",
+  "c08": "assets/hd/offline/sprites/c08.webp?v=24",
+  "c09": "assets/hd/offline/sprites/c09.webp?v=24",
+  "c10": "assets/hd/offline/sprites/c10.webp?v=24",
+  "c11": "assets/hd/offline/sprites/c11.webp?v=24",
+  "c12": "assets/hd/offline/sprites/c12.webp?v=24",
+  "c13": "assets/hd/offline/sprites/c13.webp?v=24",
+  "c14": "assets/hd/offline/sprites/c14.webp?v=24",
+  "c15": "assets/hd/offline/sprites/c15.webp?v=24"
+ },
+ "staff": {
+  "s01": {
+   "file": "assets/hd/offline/staff/s01.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s01-portrait.webp?v=25"
+  },
+  "s02": {
+   "file": "assets/hd/offline/staff/s02.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s02-portrait.webp?v=25"
+  },
+  "s03": {
+   "file": "assets/hd/offline/staff/s03.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s03-portrait.webp?v=25"
+  },
+  "s04": {
+   "file": "assets/hd/offline/staff/s04.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s04-portrait.webp?v=25"
+  },
+  "s05": {
+   "file": "assets/hd/offline/staff/s05.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s05-portrait.webp?v=25"
+  },
+  "s06": {
+   "file": "assets/hd/offline/staff/s06.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s06-portrait.webp?v=25"
+  },
+  "s07": {
+   "file": "assets/hd/offline/staff/s07.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s07-portrait.webp?v=25"
+  },
+  "s08": {
+   "file": "assets/hd/offline/staff/s08.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s08-portrait.webp?v=25"
+  },
+  "s09": {
+   "file": "assets/hd/offline/staff/s09.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s09-portrait.webp?v=25"
+  },
+  "s10": {
+   "file": "assets/hd/offline/staff/s10.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s10-portrait.webp?v=25"
+  },
+  "s11": {
+   "file": "assets/hd/offline/staff/s11.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s11-portrait.webp?v=25"
+  },
+  "s12": {
+   "file": "assets/hd/offline/staff/s12.webp?v=25",
+   "portrait": "assets/hd/offline/staff/s12-portrait.webp?v=25"
+  }
+ },
+ "owner": {
+  "file": "assets/hd/offline/owner/owner.webp?v=26",
+  "portrait": "assets/hd/offline/owner/owner-portrait.webp?v=26"
+ },
+ "keeper": {
+  "file": "assets/hd/offline/keeper/arm.webp?v=26"
+ }
+};
+
+</script>
+  <script>
+/* 衣间小日子 — 离线 AI 图层合成
+ *
+ * 运行时不请求任何服务：只把 assets/hd/offline 里的 WebP 图层
+ * 按 manifest.js 的偏移叠在统一底图上。
+ */
+(function () {
+  var A = window.AILook = window.AILook || {};
+
+  A.failed = false;
+  A.ready = function () {
+    return !!(window.AI_OFFLINE && window.AI_OFFLINE.base) && !A.failed;
+  };
+
+  function catOf(ids) {
+    var out = {};
+    var m = window.AI_OFFLINE || {};
+    (ids || []).forEach(function (id) {
+      ['tops', 'bottoms', 'shoes', 'dresses', 'outers'].forEach(function (cat) {
+        if (m[cat] && m[cat][id]) { out[cat] = id; }
+      });
+    });
+    return out;
+  }
+
+  function baseFor(customerId) {
+    var m = window.AI_OFFLINE;
+    if (m.customers && customerId && m.customers[customerId]) { return m.customers[customerId]; }
+    return m.base;
+  }
+
+  function imgFor(layer, base, cls) {
+    if (!layer) { return ''; }
+    var prefix = window.AI_OFFLINE_BASE_PATH || '';
+    var left = (layer.x - base.x) / base.w * 100;
+    var top = (layer.y - base.y) / base.h * 100;
+    var w = layer.w / base.w * 100;
+    var h = layer.h / base.h * 100;
+    return '<img class="' + (cls || '') + '" src="' + prefix + layer.file + '" alt="" ' +
+      'style="left:' + left.toFixed(4) + '%;top:' + top.toFixed(4) + '%;width:' + w.toFixed(4) + '%;height:' + h.toFixed(4) + '%">';
+  }
+
+  function toneFor(customerId) {
+    var m = window.AI_OFFLINE || {};
+    var c = m.customers && customerId && m.customers[customerId];
+    return (c && c.tone) || 't3';
+  }
+
+  function pushSkin(layers, layer, tone) {
+    if (!layer || !layer.skin || !layer.skin.tones) { return; }
+    var file = layer.skin.tones[tone] || layer.skin.tones.t3;
+    if (!file) { return; }
+    layers.push({ file: file, x: layer.skin.x, y: layer.skin.y, w: layer.skin.w, h: layer.skin.h });
+  }
+
+  A.look = function (customerId, ids) {
+    if (!A.ready()) { return null; }
+    var m = window.AI_OFFLINE;
+    var b = baseFor(customerId);
+    var tone = toneFor(customerId);
+    var cats = catOf(ids);
+    var layers = [];
+    if (cats.dresses) {
+      layers.push(m.dresses[cats.dresses]);
+      pushSkin(layers, m.dresses[cats.dresses], tone);
+    } else {
+      if (cats.bottoms) {
+        layers.push(m.bottoms[cats.bottoms]);
+        pushSkin(layers, m.bottoms[cats.bottoms], tone);
+      }
+      if (cats.tops) {
+        layers.push(m.tops[cats.tops]);
+        pushSkin(layers, m.tops[cats.tops], tone);
+      }
+    }
+    if (!cats.dresses && cats.outers) {
+      layers.push(m.outers[cats.outers]);
+      pushSkin(layers, m.outers[cats.outers], tone);
+    }
+    if (cats.shoes) { layers.push(m.shoes[cats.shoes]); }
+    return { base: b, tone: tone, layers: layers };
+  };
+
+  A.html = function (customerId, ids, opts) {
+    var data = A.look(customerId, ids);
+    if (!data) { return ''; }
+    opts = opts || {};
+    var b = data.base;
+    var body = '<img class="ai-base" src="' + (window.AI_OFFLINE_BASE_PATH || '') + b.file + '" alt="" style="left:0;top:0;width:100%;height:100%">';
+    data.layers.forEach(function (l) { body += imgFor(l, b, 'ai-layer'); });
+    return '<div class="ai-look-frame" style="aspect-ratio:' + b.w + '/' + b.h + '">' +
+      '<div class="ai-look-stack' + (opts.cls ? ' ' + opts.cls : '') + '">' + body + '</div></div>';
+  };
+
+  A.portraitUrl = function (customerId) {
+    if (!A.ready()) { return ''; }
+    var m = window.AI_OFFLINE;
+    var c = m.customers && customerId && m.customers[customerId];
+    if (!c || !c.portrait) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + c.portrait;
+  };
+
+  A.spriteUrl = function (customerId) {
+    if (!A.ready()) { return ''; }
+    var m = window.AI_OFFLINE;
+    var c = m.customers && customerId && m.customers[customerId];
+    if (!c || !c.sprite) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + c.sprite;
+  };
+
+  var STAFF_F = ['s01', 's03', 's04', 's06', 's07', 's09', 's10', 's11'];
+  var STAFF_M = ['s02', 's05', 's08', 's12'];
+  var STAFF_MALE = { '大熊': 1, '阿哲': 1, '老周': 1 };
+  var STAFF_BY_NAME = {
+    '阿 May': 's01', '小林': 's03', '大熊': 's02', '阿哲': 's05',
+    '小满': 's04', '阿洛': 's06', '桃子': 's07', '安安': 's09',
+    'Kiki': 's10', '老周': 's08', '阿澄': 's11', '小鹿': 's12'
+  };
+
+  A.staffAsset = function (m) {
+    if (!A.ready() || !m) { return null; }
+    var staff = window.AI_OFFLINE.staff;
+    if (!staff) { return null; }
+    var named = STAFF_BY_NAME[m.name];
+    if (named && staff[named]) { return staff[named]; }
+    var pool = STAFF_MALE[m.name] ? STAFF_M : STAFF_F;
+    var s = String(m.uid || m.name || 'staff');
+    var h = 0;
+    for (var i = 0; i < s.length; i++) { h = ((h * 31) + s.charCodeAt(i)) >>> 0; }
+    return staff[pool[h % pool.length]] || null;
+  };
+
+  A.staffSpriteUrl = function (m) {
+    var a = A.staffAsset(m);
+    return a ? ((window.AI_OFFLINE_BASE_PATH || '') + a.file) : '';
+  };
+
+  A.staffPortraitUrl = function (m) {
+    var a = A.staffAsset(m);
+    return a ? ((window.AI_OFFLINE_BASE_PATH || '') + a.portrait) : '';
+  };
+
+  A.keeperUrl = function () {
+    if (!A.ready() || !window.AI_OFFLINE.keeper) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.keeper.file;
+  };
+
+  A.ownerSpriteUrl = function () {
+    if (!A.ready() || !window.AI_OFFLINE.owner) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.owner.file;
+  };
+
+  A.ownerPortraitUrl = function () {
+    if (!A.ready() || !window.AI_OFFLINE.owner) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.owner.portrait;
+  };
+
+  A.iconUrl = function (id) {
+    if (!A.ready()) { return ''; }
+    var m = window.AI_OFFLINE;
+    var e = m.icons && id && m.icons[id];
+    if (!e) { return ''; }
+    return (window.AI_OFFLINE_BASE_PATH || '') + e.file;
+  };
+
+  A.idsFor = function (selected) { return (selected || []).slice(); };
+
+  // 单文件版没有附带 assets/hd/offline 时，自动回退到矢量人物
+  (function preload() {
+    if (!A.ready()) { return; }
+    var img = new Image();
+    img.onerror = function () {
+      A.failed = true;
+      if (window.UI && UI.render) { UI.render(); }
+    };
+    img.src = (window.AI_OFFLINE_BASE_PATH || '') + window.AI_OFFLINE.base.file;
+  })();
+})();
+
+</script>
+  <script>
 /* 衣间小日子 — 等距矢量舞台 */
 (function () {
   var Iso = window.Iso;
@@ -19788,6 +21603,88 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       var scale = hi && Iso.texScale ? Iso.texScale() : 2;
       Iso.tex.get(key, art, function (tex, vb) { resolve({ tex: tex, vb: vb }); }, scale);
     });
+  }
+
+  function loadImageTex(key, url) {
+    return new Promise(function (resolve) {
+      Iso.tex.image(key, url, function (tex) { resolve({ tex: tex }); });
+    });
+  }
+
+  function detachAiSprite(rig) {
+    if (!rig || !rig.aiRoot) { return; }
+    var ai = rig.aiRoot;
+    rig.aiRoot = null;
+    if (ai.parent) { ai.parent.removeChild(ai); }
+    ai.destroy({ children: true, texture: false, baseTexture: false });
+    for (var i = 0; i < rig.children.length; i++) { rig.children[i].visible = true; }
+  }
+
+  // 用离线 AI 图层合成玩家选中的整套 look，盖住结果舞台上的矢量身体
+  function attachAiLook(rig, customerId, ids, token) {
+    if (!rig || !window.AILook || !AILook.look || !ids || !ids.length) { return; }
+    var data = AILook.look(customerId, ids);
+    if (!data || !data.base) { return; }
+    var prefix = window.AI_OFFLINE_BASE_PATH || '';
+    var entries = [data.base].concat(data.layers || []);
+    var jobs = entries.map(function (e, i) { return loadImageTex('ral:' + customerId + ':' + i, prefix + e.file); });
+    Promise.all(jobs).then(function (res) {
+      if (!rig.parent || token !== st.charToken) { return; }
+      for (var i = 0; i < res.length; i++) { if (!res[i] || !res[i].tex) { return; } }
+      if (rig.aiRoot) { detachAiSprite(rig); }
+      var root = new PIXI.Container();
+      var fit = new PIXI.Container();
+      entries.forEach(function (e, i) {
+        var sp = new PIXI.Sprite(res[i].tex);
+        sp.x = e.x - data.base.x;
+        sp.y = e.y - data.base.y;
+        fit.addChild(sp);
+      });
+      fit.scale.set(168 / data.base.h);
+      fit.pivot.set(data.base.w / 2, data.base.h);
+      fit.y = 0;
+      root.addChild(fit);
+      root.y = 2;
+      rig.addChild(root);
+      rig.aiRoot = root;
+      for (var j = 0; j < rig.children.length; j++) {
+        var ch = rig.children[j];
+        if (ch === rig._shadow || ch === root) { continue; }
+        ch.visible = false;
+      }
+    });
+  }
+
+  // 用一张 AI 全身精灵盖住矢量小人；矢量 rig 仍负责走位/呼吸/换装数据
+  function attachAiImage(rig, url, key, token, scope, targetH) {
+    if (!rig || !url) { return; }
+    loadImageTex(key, url).then(function (res) {
+      if (!res || !res.tex || !rig.parent) { return; }
+      if (scope === 'staff') { if (token !== st.staffToken) { return; } }
+      else if (scope === 'queue') { if (token !== st.queueToken) { return; } }
+      else if (token !== st.charToken) { return; }
+      if (rig.aiRoot) { return; }
+      var aiRoot = new PIXI.Container();
+      var sp = new PIXI.Sprite(res.tex);
+      sp.anchor.set(0.5, 1);
+      var h = targetH || 168;
+      sp.scale.set(h / res.tex.height);
+      sp.y = 2;
+      aiRoot.addChild(sp);
+      rig.addChild(aiRoot);
+      rig.aiRoot = aiRoot;
+      for (var i = 0; i < rig.children.length; i++) {
+        var ch = rig.children[i];
+        if (ch === rig._shadow || ch === aiRoot) { continue; }
+        ch.visible = false;
+      }
+    });
+  }
+
+  function attachAiSprite(rig, customerId, prefix, token, isCurrent) {
+    if (!rig || !window.AILook || !AILook.spriteUrl) { return; }
+    var url = AILook.spriteUrl(customerId);
+    if (url) { attachAiImage(rig, url, prefix + customerId, token, isCurrent ? 'char' : 'queue', 168); }
   }
 
   /* ---------------- 相机 ---------------- */
@@ -20559,6 +22456,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     }
 
     buildStaff(placed);
+    buildOwner(placed);
     buildQueue(placed);
     ensureCat(placed);
     buildAmbient(placed);
@@ -20589,6 +22487,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       Iso.updateCameraTarget();
       return;
     }
+    if (key !== 'chat' && st.char && st.char.rig && st.char.rig.aiRoot) { detachAiSprite(st.char.rig); }
     var cs = customerState(s, key, customer);
     var isNewCustomer = customer.id !== st.lastCustomerId;
     st.speechHold = !!(key === 'chat' && isNewCustomer);
@@ -20601,6 +22500,9 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       st.char.expr = cs.expr;
       st.char.rig.baseExpr = cs.expr;
       st.char.rig.head.texture = st.char.rig.heads[cs.expr] || st.char.rig.heads.calm;
+      if (key === 'result' && s.pendingResult && s.pendingResult.itemIds) {
+        attachAiLook(st.char.rig, customer.id, s.pendingResult.itemIds, st.charToken);
+      }
       Iso.updateCameraTarget();
       return;
     }
@@ -20703,6 +22605,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       st.world.addChild(rig);
       st.lastCustomerId = customer.id;
       st.char = { rig: rig, gx: spot.gx, gy: spot.gy, app: cs.app, outfit: cs.outfit, expr: cs.expr, pose: cs.pose, bodyKey: bodyKey, headKey: headKey };
+      if (key === 'chat') { attachAiSprite(rig, customer.id, 'cai:', ct, true); }
+      if (key === 'result' && s.pendingResult && s.pendingResult.itemIds) {
+        attachAiLook(rig, customer.id, s.pendingResult.itemIds, ct);
+      }
       if (key === 'result' && s.pendingResult && s.pendingResult.result) {
         var score = s.pendingResult.result.score;
         var bkey = s.day + '|' + customer.id + '|' + score + '|' + (s.pendingResult.itemIds || []).join(',');
@@ -20792,6 +22698,75 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     return prefs;
   }
 
+  function removeOwner() {
+    var o = st.owner;
+    if (!o) { return; }
+    if (o.rig && o.rig.parent) { o.rig.parent.removeChild(o.rig); }
+    if (o.rig) { o.rig.destroy({ children: true, texture: false, baseTexture: false }); }
+    if (o.tag && o.tag.parentNode) { o.tag.parentNode.removeChild(o.tag); }
+    st.owner = null;
+    st.ownerSpot = null;
+  }
+
+  function buildOwner(placed) {
+    if (!st.ready || !window.AILook || !AILook.ownerSpriteUrl) { return; }
+    var counter = findCounter(placed);
+    if (!counter) { removeOwner(); return; }
+    var sig = [counter.x, counter.y, counter.w, counter.h, st.key].join('|');
+    if (st.owner && st.owner.sig === sig) { return; }
+    removeOwner();
+    var prefs = [
+      [counter.x + counter.w / 2, counter.y - 1.0],
+      [counter.x + counter.w / 2, counter.y - 0.65],
+      [counter.x - 0.9, counter.y + counter.h * 0.5]
+    ];
+    var spot = firstFree(placed, prefs, st.staffSpots || []) || Iso.findSpot(placed, st.staffSpots || []);
+    if (!spot) { return; }
+    var pos = Iso.P(spot.gx, spot.gy, 0);
+    var url = AILook.ownerSpriteUrl();
+    if (!url) { return; }
+    Promise.all([
+      loadImageTex('owner', url),
+      loadTex('oshadow', Iso.character.shadow(), true)
+    ]).then(function (res) {
+      if (!res[0] || !res[0].tex || !res[1] || !res[1].tex) { return; }
+      var rig = new PIXI.Container();
+      rig.x = pos.x;
+      rig.y = pos.y;
+      rig.zIndex = Iso.sortKey(spot.gx, spot.gy, 1, 1) * 100 + 40;
+      var base = Iso.texSpriteScale ? Iso.texSpriteScale() : 0.5;
+      var sh = new PIXI.Sprite(res[1].tex);
+      sh.anchor.set(0.5, 0.5);
+      sh.scale.set(base);
+      sh.y = 1;
+      sh._baseScale = base;
+      rig._shadow = sh;
+      rig.addChild(sh);
+      var avatar = new PIXI.Container();
+      rig.addChild(avatar);
+      var sp = new PIXI.Sprite(res[0].tex);
+      sp.anchor.set(0.5, 1);
+      sp.scale.set(168 / res[0].tex.height);
+      sp.y = 2;
+      avatar.addChild(sp);
+      rig.avatar = avatar;
+      rig.scale.set(0.72);
+      rig._phase = 1.7;
+      st.world.addChild(rig);
+      var tag = null;
+      if (st.tags) {
+        tag = document.createElement('div');
+        tag.className = 'iso-staff-tag owner';
+        tag.textContent = '店主';
+        st.tags.appendChild(tag);
+      }
+      st.owner = { rig: rig, avatar: avatar, sp: sp, tag: tag, sig: sig };
+      st.ownerSpot = spot;
+      if (st.staffSpots) { st.staffSpots.push(spot); }
+      Iso.updateStaffTags();
+    });
+  }
+
   function buildQueue(placed) {
     if (!st.ready || !window.Engine || !Engine.getQueue) { return; }
     var servingId = (Engine.state && Engine.state.servingCustomerId) || '';
@@ -20864,6 +22839,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         rig._lookDir = 0;
         st.world.addChild(rig);
         st.queueRigs.push({ id: r.id, status: r.status, patience: r.patience, rig: rig, gx: spot.gx, gy: spot.gy });
+        if (r.status === 'waiting') { attachAiSprite(rig, r.id, 'qai:', token, false); }
       });
     });
   }
@@ -20954,6 +22930,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         rec.rig = rig;
         if (rec.tag) { rec.tag.style.display = 'block'; }
         st.staffList[index] = rec;
+        if (window.AILook && AILook.staffSpriteUrl) {
+          var staffUrl = AILook.staffSpriteUrl(m);
+          if (staffUrl) { attachAiImage(rig, staffUrl, 'sai:' + m.uid, token, 'staff', 168); }
+        }
         if (index === 0) { st.staff = rec; }
         if (!rec._taskAt) {
           var taskNow = (window.performance && performance.now) ? performance.now() : Date.now();
@@ -20980,6 +22960,13 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       var sy = st.cam.y + (r.y - 127 * r.scale.y) * st.cam.scale;
       rec.tag.style.left = sx.toFixed(1) + 'px';
       rec.tag.style.top = sy.toFixed(1) + 'px';
+    }
+    if (st.owner && st.owner.rig && st.owner.tag) {
+      var or = st.owner.rig;
+      var ox = st.cam.x + or.x * st.cam.scale;
+      var oy = st.cam.y + (or.y - 127 * or.scale.y) * st.cam.scale;
+      st.owner.tag.style.left = ox.toFixed(1) + 'px';
+      st.owner.tag.style.top = oy.toFixed(1) + 'px';
     }
   };
 
@@ -21211,6 +23198,12 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       r.avatar.x = sway + lean;
       r.avatar.scale.y = breathe;
       r.avatar.scale.x = 1 - (breathe - 1) * 0.6;
+      if (r.aiRoot) {
+        r.aiRoot.y = r.avatar.y;
+        r.aiRoot.x = r.avatar.x;
+        r.aiRoot.rotation = r.avatar.rotation;
+        r.aiRoot.scale.set(r.avatar.scale.x, r.avatar.scale.y);
+      }
 
       var tilt = Math.sin(t * 0.9 + phase) * 0.016 + (r._lookDir || 0) * 0.05 * lookW;
       if (base === 'hesitant') { tilt -= 0.07; }
@@ -21320,6 +23313,11 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         taskTilt -= Math.sin(Math.min(1, (now - rec._greet.waitStart) / 320) * Math.PI) * 0.1;
       }
       sr.avatar.rotation = taskTilt;
+      if (sr.aiRoot) {
+        sr.aiRoot.y = sr.avatar.y;
+        sr.aiRoot.x = sr.avatar.x;
+        sr.aiRoot.rotation = sr.avatar.rotation;
+      }
       if (now < sr._blinkUntil) {
         sr.head.texture = sr.heads.blink || sr.heads.calm;
       } else {
@@ -21335,6 +23333,13 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       updateShadow(sr);
     }
 
+    // 店主：站在柜台后，轻微呼吸
+    if (st.owner && st.owner.avatar) {
+      var op = st.owner.rig._phase || 0;
+      st.owner.avatar.y = Math.sin(t * 1.3 + op) * 0.7;
+      st.owner.avatar.x = Math.sin(t * 0.7 + op) * 0.3;
+    }
+
     // 排队中的顾客：轻微呼吸 / 眨眼 / 看当前顾客
     for (var qi = 0; qi < st.queueRigs.length; qi++) {
       var qrec = st.queueRigs[qi];
@@ -21346,6 +23351,12 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       var qb = 1 + Math.sin(t * 2.0 + qp) * 0.006;
       qr.avatar.scale.y = qb;
       qr.avatar.scale.x = 1 - (qb - 1) * 0.5;
+      if (qr.aiRoot) {
+        qr.aiRoot.y = qr.avatar.y;
+        qr.aiRoot.x = qr.avatar.x;
+        qr.aiRoot.rotation = qr.avatar.rotation;
+        qr.aiRoot.scale.set(qr.avatar.scale.x, qr.avatar.scale.y);
+      }
       if (!qr._lookAt) { qr._lookAt = now + 2100 + Math.random() * 2600; }
       if (now > qr._lookAt) {
         qr._lookDir = Math.random() < 0.6 ? 1 : -1;
@@ -22281,6 +24292,11 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   function customerSvg(customer, outfit, expression) {
     var p = customer.portrait || {};
+    var aiPortrait = window.AILook && AILook.portraitUrl && AILook.portraitUrl(customer.id);
+    if (aiPortrait) {
+      p = { skin: p.skin, hair: p.hair, hairStyle: p.hairStyle, top: p.top,
+        expression: p.expression, accessory: p.accessory, image: aiPortrait };
+    }
     var skin = p.skin || '#F2D3B8';
     var hair = p.hair || '#2E2A27';
     var topItem = pickOutfit(outfit, 'top');
@@ -22570,6 +24586,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
   /* ---------------- 过肩店主 ---------------- */
 
   function keeperSvg() {
+    var ai = window.AILook && AILook.keeperUrl && AILook.keeperUrl();
+    if (ai) {
+      return '<img class="ai-keeper-arm" src="' + esc(ai) + '" alt="店主的手臂" loading="lazy" decoding="async">';
+    }
     return '<svg viewBox="0 0 300 220" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<g class="shop2-shoulder">' +
       '<path d="M-20 220 L-20 142 Q12 112 55 128 Q92 142 104 190 L108 220 Z" fill="#C97B63" stroke="#5B4636" stroke-width="2.6"/>' +
@@ -22695,12 +24715,16 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       marketing: 'none'
     };
     var customer = D.CUSTOMERS[0];
+    var aiSpr = window.AILook && AILook.spriteUrl ? AILook.spriteUrl(customer.id) : '';
+    var previewPerson = aiSpr
+      ? '<img class="ai-shop-sprite" src="' + esc(aiSpr) + '" alt="" loading="lazy" decoding="async">'
+      : customerSvg(customer, [], 'neutral');
     return '<div class="shop2 shop2-preview" data-cam="chat">' +
       '<div class="shop2-cam">' +
       '<div class="shop2-layer shop2-back">' + backSvg(s, 'chat') + '</div>' +
       '<div class="shop2-layer shop2-mid">' + midSvg(s) + '</div>' +
       '<div class="shop2-layer shop2-furniture">' + furnitureLayer(s) + '</div>' +
-      (customer ? '<div class="shop2-person position-chat is-neutral look-player">' + customerSvg(customer, [], 'neutral') + '</div>' : '') +
+      (customer ? '<div class="shop2-person position-chat is-neutral look-player">' + previewPerson + '</div>' : '') +
       '<div class="shop2-layer shop2-front">' + frontSvg() + '</div>' +
       '<div class="shop2-keeper">' + keeperSvg() + '</div>' +
       '<div class="shop2-light"></div>' +
@@ -22874,6 +24898,12 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   function itemSvg(item) {
     if (!item) { return ''; }
+    if (!item.image && window.AILook && AILook.iconUrl) {
+      var aiIcon = AILook.iconUrl(item.id);
+      if (aiIcon) {
+        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="' + esc(item.name) + '" loading="lazy" decoding="async">';
+      }
+    }
     var key = item.id || item.name;
     if (!item.image && svgCache[key]) { return svgCache[key]; }
     var html = buildItemSvg(item);
@@ -23238,6 +25268,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   function avatarSvg(customer) {
     var p = customer.portrait || {};
+    var aiPortrait = window.AILook && AILook.portraitUrl && AILook.portraitUrl(customer.id);
+    if (aiPortrait) {
+      return '<img class="ai-avatar" src="' + esc(aiPortrait) + '" alt="' + esc(customer.name) + '" loading="lazy" decoding="async">';
+    }
     if (p.image) {
       return '<img src="' + esc(p.image) + '" alt="' + esc(customer.name) + '" style="width:100%;height:100%;object-fit:cover;display:block">';
     }
@@ -24703,6 +26737,12 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       '</div>' +
       '<input id="save-import-file" type="file" accept=".json,application/json" style="display:none">' +
       '</div>' +
+      '<div class="qr-play">' +
+      '<img src="assets/qr-play.png" alt="手机扫码直接玩">' +
+      '<div class="qr-copy"><strong>手机扫码直接玩</strong>' +
+      '<span>微信 / 浏览器扫一下，免安装</span>' +
+      '<code>cvreaderpy.github.io/wardrobe-game-h5</code></div>' +
+      '</div>' +
       '<div class="footer-note">2.5D 手账风 · 经营 + 搭配 · 单局 5–10 分钟</div>' +
       (window.__WARDROBE_H5_BUILD__ ? '' : '<a class="proto-link" href="prototype.html">打开 1 位顾客的互动样片 →</a>');
   };
@@ -25045,6 +27085,10 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   /** 员工头像：优先用等距人物拆件拼一个全身像，失败时退回首字头像 */
   UI.staffPortrait = function (m) {
+    var ai = window.AILook && AILook.staffPortraitUrl && AILook.staffPortraitUrl(m);
+    if (ai) {
+      return '<img class="ai-staff-avatar" src="' + esc(ai) + '" alt="' + esc((m && m.name) || '店员') + '" loading="lazy" decoding="async">';
+    }
     if (window.Iso && Iso.character && Iso.character.staffAppearance) {
       try {
         var app = Iso.character.staffAppearance(m);
@@ -25687,7 +27731,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       } else {
         html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
       }
-      html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接挑衣服</button>';
+      html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
       return html;
     }
 
@@ -25697,7 +27741,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         (iso ? '' : '<div class="dialogue-line customer">“那……就拜托你了。”</div>') +
         revealChips(s, c) +
         '<div class="hint-box mt10">她愿意试穿 ' + Math.max(1, s.patience) + ' 次。好感越高，越容易听到真话，也更愿意给小费。</div>' +
-        '<button type="button" class="btn mt14" data-action="start-service">开始帮她挑衣服</button>' +
+        '<button type="button" class="btn mt14" data-action="start-fitting-room">带她进试衣间</button>' +
         '</div>';
       return html;
     }
@@ -25719,8 +27763,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
           '<span class="affinity-loss">不太对味 · 好感 ' + s.chatReply.delta + '</span>') +
         '</div>' +
         revealChips(s, c) +
-        '<button type="button" class="btn mt14" data-action="' + (lastBeat ? 'start-service' : 'chat-next') + '">' +
-        (lastBeat ? '好，开始帮她挑衣服' : '继续聊') + '</button>';
+        '<button type="button" class="btn mt14" data-action="' + (lastBeat ? 'start-fitting-room' : 'chat-next') + '">' +
+        (lastBeat ? '带她进试衣间' : '继续聊') + '</button>';
     } else {
       html += '<div class="dialogue-choices">';
       (beat ? beat.choices : []).forEach(function (choice, index) {
@@ -25740,7 +27784,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
     }
 
-    html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接挑衣服</button>';
+    html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
     return html;
   };
 
@@ -25879,20 +27923,160 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
 
   /* ---------------- 结果 ---------------- */
 
+  UI.vectorLookUrl = function (c, ids, pose, expr) {
+    if (!c || !window.Iso || !Iso.character || !Iso.character.imageUrl) { return ''; }
+    var o = Iso.character.outfit({ selectedItems: ids || [] }, c);
+    return Iso.character.imageUrl(Iso.character.appearance(c), o, pose || 'stand', expr || 'calm');
+  };
+
+  UI.aiLookUrl = function (c, ids) {
+    var q = (ids || []).filter(Boolean).join(',');
+    if (!q) { return ''; }
+    var base = window.AI_FITTING_BASE || 'http://127.0.0.1:8124';
+    return base + '/render?ids=' + encodeURIComponent(q) + '&pose=stand';
+  };
+
+  UI.aiOnline = (function () {
+    try { return /[?&]render=online\b/.test(location.search) || !!window.AI_FITTING_ONLINE; } catch (e) { return false; }
+  })();
+
+  UI.lookHtml = function (c, ids, opts) {
+    opts = opts || {};
+    if (!UI.aiOnline && window.AILook && AILook.ready()) {
+      return AILook.html(c && c.id, ids || [], opts);
+    }
+    if (UI.aiOnline) { return UI.aiLookImg(c, ids, opts.id, opts.cls); }
+    var fb = UI.vectorLookUrl(c, ids, 'stand', 'calm');
+    return fb ? '<img' + (opts.id ? ' id="' + opts.id + '"' : '') + ' class="' + (opts.cls || '') + '" src="' + esc(fb) + '" alt="">' : '';
+  };
+
+  UI.aiLookImg = function (c, ids, id, cls) {
+    var ai = UI.aiLookUrl(c, ids);
+    var fallback = UI.vectorLookUrl(c, ids, 'stand', 'calm');
+    var src = ai || fallback;
+    return '<img' + (id ? ' id="' + id + '"' : '') + ' class="' + (cls || '') + '" src="' + esc(src) + '" data-fallback="' + esc(fallback) + '" alt="" ' +
+      'onload="var p=this.closest(\'.fitting-ai-stage\');if(p)p.classList.remove(\'is-loading\')" ' +
+      'onerror="var f=this.dataset.fallback;this.onerror=null;this.src=f;var p=this.closest(\'.fitting-ai-stage\');if(p)p.classList.remove(\'is-loading\')">';
+  };
+
+  UI.fittingItemCard = function (item, selected) {
+    var cls = 'fit-item' + (selected ? ' selected' : '');
+    return '<button type="button" class="' + cls + '" data-action="fitting-item" data-id="' + esc(item.id) + '">' +
+      '<span class="fit-item-art">' + itemSvg(item) + '</span>' +
+      '<span class="fit-item-name">' + esc(item.name) + '</span>' +
+      '</button>';
+  };
+
+  UI.fittingWardrobeHtml = function (s, selected) {
+    var cats = [['top', '上装'], ['bottom', '下装'], ['dress', '连衣裙'], ['outer', '外套'], ['shoes', '鞋']];
+    var html = '<div class="fit-wardrobe-head"><strong>衣架</strong><span>拖到她身上，或点一下</span></div>';
+    var total = 0;
+    cats.forEach(function (pair) {
+      var items = E.getInventoryItems(pair[0]);
+      if (!items.length) { return; }
+      html += '<div class="fit-cat"><div class="fit-cat-title">' + pair[1] + '</div><div class="fit-items">';
+      items.forEach(function (item) {
+        total += 1;
+        html += UI.fittingItemCard(item, (selected || []).indexOf(item.id) >= 0);
+      });
+      html += '</div></div>';
+    });
+    if (!total) { html += '<div class="hint-box">货架上还没有可以试的衣服。</div>'; }
+    return html;
+  };
+
+  UI.fittingToggle = function (id) {
+    var s = E.state;
+    if (!s) { return; }
+    var r = E.toggleItem(id);
+    if (r && !r.ok && r.message) { UI.toast(r.message); }
+    E.buildPendingResult(s.selectedItems);
+    var rec = E.getQueueRecord(s.servingCustomerId);
+    if (rec) { rec.itemIds = (s.selectedItems || []).slice(); }
+    E.save();
+    UI._screenSig = '';
+    UI.render();
+  };
+
+  UI.bindFittingDrag = function () {
+    var drop = document.getElementById('fitting-drop');
+    if (!drop) { return; }
+    var cards = document.querySelectorAll('[data-action="fitting-item"]');
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        card.style.touchAction = 'none';
+        card.addEventListener('pointerdown', function (e) {
+          if (e.button !== undefined && e.button !== 0) { return; }
+          var id = card.getAttribute('data-id');
+          var item = itemById(id);
+          if (!item) { return; }
+          var startX = e.clientX, startY = e.clientY, moved = false;
+          var ghost = document.createElement('div');
+          ghost.className = 'shop2-ghost';
+          ghost.innerHTML = UI.itemSvg(item);
+          document.body.appendChild(ghost);
+          function move(ev) {
+            if (!moved && (Math.abs(ev.clientX - startX) > 7 || Math.abs(ev.clientY - startY) > 7)) {
+              moved = true;
+              ghost.classList.add('show');
+              drop.classList.add('is-over');
+            }
+            if (moved) {
+              ghost.style.left = ev.clientX + 'px';
+              ghost.style.top = ev.clientY + 'px';
+              if (ev.cancelable) { ev.preventDefault(); }
+            }
+          }
+          function cleanup() {
+            document.removeEventListener('pointermove', move);
+            document.removeEventListener('pointerup', up);
+            document.removeEventListener('pointercancel', cleanup);
+            ghost.classList.remove('show');
+            drop.classList.remove('is-over');
+            if (ghost.parentNode) { ghost.parentNode.removeChild(ghost); }
+          }
+          function up(ev) {
+            var rect = drop.getBoundingClientRect();
+            var over = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
+            cleanup();
+            if (!moved) { return; }
+            UI._suppressToggleUntil = Date.now() + 350;
+            if (!over) { return; }
+            UI.fittingToggle(id);
+            if (window.Scene) { Scene.play('cloth'); Scene.pulse('reach'); Scene.gesture('point'); }
+          }
+          document.addEventListener('pointermove', move);
+          document.addEventListener('pointerup', up);
+          document.addEventListener('pointercancel', cleanup);
+        });
+      })(cards[i]);
+    }
+  };
+
   UI.screens.fitting = function (s) {
     var c = E.currentCustomer();
     if (!c) { return UI.screens.settle(s); }
     var rec = E.getQueueRecord(s.servingCustomerId) || {};
     var q = E.getQueueSummary();
     var waiting = rec.status === 'fittingWait';
-    var items = (s.pendingResult && s.pendingResult.itemIds) || rec.itemIds || [];
+    var items = (s.selectedItems && s.selectedItems.length) ? s.selectedItems.slice() : ((rec.itemIds || []).slice());
+    if (!s.selectedItems || !s.selectedItems.length) { s.selectedItems = items.slice(); }
     var names = items.map(function (id) {
       var it = itemById(id);
       return it ? it.name : '';
     }).filter(Boolean);
+    var look = UI.lookHtml(c, items, { id: 'fitting-ai-img' });
     var html = header(s, '试衣间');
     html += queueStrip(s);
-    html += '<div class="fitting-look">' + lookFigure(c, items, s.previewPose || 'stand', 'calm') + '</div>';
+    html += '<div class="fitting-ai">' +
+      '<div class="fitting-ai-stage fit-drop' + (UI.aiOnline ? ' is-loading' : '') + '" id="fitting-drop">' +
+        look +
+        '<div class="fitting-ai-loading"><span class="fit-spinner"></span>正在换装…</div>' +
+        '<div class="fitting-ai-hint">把衣服拖到她身上 · 也可以点衣架上的单品</div>' +
+      '</div>' +
+      '<div class="fitting-wardrobe">' + UI.fittingWardrobeHtml(s, items) + '</div>' +
+    '</div>';
+    html += '<div class="fitting-wish">' + wishCard(s, c) + '</div>';
     html += '<div class="fitting-hero">' +
       '<div class="fitting-copy"><strong>' + esc(c.name) + '</strong>' +
       '<span>' + esc(c.occasion) + ' · 预算 ' + money(c.budget) + '</span>' +
@@ -25906,8 +28090,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         ? '<div class="hint-box warn">前面的顾客还在试衣间里。等一等，或者让她先出来看效果。</div>'
         : (rec.noRoom
           ? '<div class="hint-box warn">店里没有试衣间，只能拉上帘子快速换一下。</div>'
-          : '<div class="hint-box">换好衣服后，她会照镜子看整体效果。</div>')) +
-      poseButtonsHtml(s) +
+          : '<div class="hint-box">把上装、下装和鞋都搭好，她会照镜子看整体效果。</div>')) +
+      '<div class="small muted mt4">AI 试衣暂用自然站姿</div>' +
       '<div class="btn-row mt10">' +
       (waiting
         ? '<button type="button" class="btn secondary small" data-action="wait-fitting">等前一位出来</button>' +
@@ -25939,7 +28123,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     var html = header(s, '试穿结果');
     html += queueStrip(s);
     html += '<div class="result-hero">' +
-      '<div class="result-look">' + lookFigure(c, pr.itemIds, s.previewPose || 'stand', 'calm') + '</div>' +
+      '<div class="result-look">' + UI.lookHtml(c, pr.itemIds, { cls: 'result-look-stack' }) + '</div>' +
       '<div class="result-title">' + esc(title) + '</div>' +
       '<div class="result-sub">' + esc(c.name) + ' · ' + esc(sub) + '</div>' +
       scoreRing(r.score) +
@@ -26198,7 +28382,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     if (s.chatPhase === 'done') {
       return kicker +
         '<div class="iso-choice-hint">她愿意试穿 ' + Math.max(1, s.patience) + ' 次。好感越高，越容易听到真话。</div>' +
-        '<button type="button" class="iso-choice primary" data-action="start-service">开始帮她挑衣服</button>';
+        '<button type="button" class="iso-choice primary" data-action="start-fitting-room">带她进试衣间</button>';
     }
     if (s.chatPhase === 'reply' && s.chatReply) {
       var lastBeat = s.chatStep + 1 >= d.beats.length;
@@ -26208,8 +28392,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         (s.chatReply.match ? '<span class="affinity-gain">说对了 · 好感 +' + s.chatReply.delta + '</span>' :
           '<span class="affinity-loss">不太对味 · 好感 ' + s.chatReply.delta + '</span>') +
         '</div>' +
-        '<button type="button" class="iso-choice primary" data-action="' + (lastBeat ? 'start-service' : 'chat-next') + '">' +
-        (lastBeat ? '好，开始帮她挑衣服' : '继续聊') + '</button>';
+        '<button type="button" class="iso-choice primary" data-action="' + (lastBeat ? 'start-fitting-room' : 'chat-next') + '">' +
+        (lastBeat ? '带她进试衣间' : '继续聊') + '</button>';
     }
     var beat = E.getChatBeat();
     var html = kicker + '<div class="iso-choices-list">';
@@ -26335,6 +28519,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     document.body.classList.toggle('prep-active', key === 'prep');
     var stageScreens = { brief: 1, prep: 1, chat: 1, service: 1, fitting: 1, result: 1, settle: 1 };
     var app = document.getElementById('app');
+    if (app) { app.classList.toggle('is-fitting', key === 'fitting'); }
     var stageRoot = document.getElementById('stage-root');
     if (stageRoot && window.Scene && stageScreens[key] && s) {
       var sig = [
@@ -26378,7 +28563,8 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
     if (active && active !== screen) { active.classList.remove('active'); }
     var sameState = (s === UI._lastStateObj);
     var screenSig = key + '|' + (s ? (s.rev || 0) : 0) +
-      (key === 'prep' ? '|' + (UI._prepTab || 'today') : '');
+      (key === 'prep' ? '|' + (UI._prepTab || 'today') : '') +
+      (key === 'fitting' ? '|' + ((s && s.selectedItems) || []).join(',') : '');
     if (!sameState || screenSig !== UI._screenSig) {
       screen.innerHTML = UI.screens[key](s);
       UI._screenSig = screenSig;
@@ -26396,6 +28582,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       if (Iso.setChoices) { Iso.setChoices(UI.stageChoicesHtml(s, key)); }
     }
     if (key === 'service' && s && s.serviceMode === 'styling') { UI.bindStageDrag(); }
+    if (key === 'fitting') { UI.bindFittingDrag(); }
     if (UI._lastKey !== key) {
       var scroller = document.getElementById('screens');
       if (scroller) { scroller.scrollTop = 0; }
@@ -26481,7 +28668,7 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
       return it ? it.name : '';
     }).filter(Boolean);
     var html = '<div class="modal-title">整体效果</div>' +
-      '<div class="look-modal-figure">' + lookFigure(c, ids, s.previewPose || 'stand', 'calm') + '</div>' +
+      '<div class="look-modal-figure">' + UI.lookHtml(c, ids, { cls: 'look-modal-stack' }) + '</div>' +
       '<div class="look-modal-name">' + esc(c.name) + (names.length ? ' · ' + names.map(esc).join(' + ') : '') + '</div>' +
       poseButtonsHtml(s) +
       '<button type="button" class="btn ghost mt10" data-action="close-modal">关上</button>';
@@ -27414,15 +29601,17 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         UI.render();
         if (window.Scene && s && s.chatPhase !== 'done') { Scene.talk(900); }
         break;
-      case 'start-service':
-        E.serveCustomer();
+      case 'start-fitting-room':
+        E.startFittingRoom();
         if (window.Scene) { Scene.play('page'); }
         UI.render();
+        UI.scrollTop();
         break;
       case 'skip-chat':
-        E.serveCustomer();
+        E.startFittingRoom();
         if (window.Scene) { Scene.play('page'); }
         UI.render();
+        UI.scrollTop();
         break;
       case 'care-water': {
         var care = E.careAction();
@@ -27494,6 +29683,14 @@ Deprecated since v${r}`),console.warn(i))),ty[t]=!0}async function mR(r,t,e=200)
         E.setStyleFilter(id);
         UI.render();
         break;
+      case 'fitting-item': {
+        if (UI._suppressToggleUntil && Date.now() < UI._suppressToggleUntil) {
+          UI._suppressToggleUntil = 0;
+          break;
+        }
+        UI.fittingToggle(id);
+        break;
+      }
       case 'toggle-item': {
         if (UI._suppressToggleUntil && Date.now() < UI._suppressToggleUntil) {
           UI._suppressToggleUntil = 0;

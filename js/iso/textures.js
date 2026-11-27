@@ -83,10 +83,40 @@
     img.src = url;
   };
 
+  Iso.tex.image = function (key, url, done) {
+    var ck = key + '@img';
+    var hit = cache[ck];
+    if (hit) {
+      hit.used = Date.now();
+      if (hit.tex) { done(hit.tex); return; }
+      if (hit.cbs) { hit.cbs.push(done); }
+      return;
+    }
+    if (pending[ck]) { pending[ck].push(done); return; }
+    pending[ck] = [done];
+    var img = new Image();
+    img.decoding = 'async';
+    img.onload = function () {
+      var tex = null;
+      try { tex = PIXI.Texture.from(img); } catch (e) { tex = null; }
+      cache[ck] = { key: key, tex: tex, used: Date.now(), cbs: [] };
+      var cbs = pending[ck] || [];
+      delete pending[ck];
+      cbs.forEach(function (cb) { cb(tex); });
+    };
+    img.onerror = function () {
+      cache[ck] = { key: key, tex: null, used: Date.now(), cbs: [] };
+      var cbs = pending[ck] || [];
+      delete pending[ck];
+      cbs.forEach(function (cb) { cb(null); });
+    };
+    img.src = url;
+  };
+
   Iso.tex.trimLRU = function (maxEntries) {
     var now = Date.now();
     var list = [];
-    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow'];
+    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow', 'cai:', 'qai:', 'ral:'];
     for (var k in cache) {
       if (!cache[k] || !cache[k].tex) { continue; }
       var isChar = false;
@@ -108,7 +138,7 @@
   };
 
   Iso.tex.dropCharacter = function () {
-    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow'];
+    var charPrefixes = ['cb:', 'ch:', 'qb:', 'qh:', 'cback:', 'qback:', 'cshadow', 'qshadow', 'cai:', 'qai:', 'ral:'];
     for (var k in cache) {
       var bk = (cache[k] && cache[k].key) || k;
       var hit = false;

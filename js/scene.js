@@ -719,6 +719,11 @@
 
   function customerSvg(customer, outfit, expression) {
     var p = customer.portrait || {};
+    var aiPortrait = window.AILook && AILook.portraitUrl && AILook.portraitUrl(customer.id);
+    if (aiPortrait) {
+      p = { skin: p.skin, hair: p.hair, hairStyle: p.hairStyle, top: p.top,
+        expression: p.expression, accessory: p.accessory, image: aiPortrait };
+    }
     var skin = p.skin || '#F2D3B8';
     var hair = p.hair || '#2E2A27';
     var topItem = pickOutfit(outfit, 'top');
@@ -1008,6 +1013,10 @@
   /* ---------------- 过肩店主 ---------------- */
 
   function keeperSvg() {
+    var ai = window.AILook && AILook.keeperUrl && AILook.keeperUrl();
+    if (ai) {
+      return '<img class="ai-keeper-arm" src="' + esc(ai) + '" alt="店主的手臂" loading="lazy" decoding="async">';
+    }
     return '<svg viewBox="0 0 300 220" preserveAspectRatio="xMinYMax slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<g class="shop2-shoulder">' +
       '<path d="M-20 220 L-20 142 Q12 112 55 128 Q92 142 104 190 L108 220 Z" fill="#C97B63" stroke="#5B4636" stroke-width="2.6"/>' +
@@ -1133,12 +1142,16 @@
       marketing: 'none'
     };
     var customer = D.CUSTOMERS[0];
+    var aiSpr = window.AILook && AILook.spriteUrl ? AILook.spriteUrl(customer.id) : '';
+    var previewPerson = aiSpr
+      ? '<img class="ai-shop-sprite" src="' + esc(aiSpr) + '" alt="" loading="lazy" decoding="async">'
+      : customerSvg(customer, [], 'neutral');
     return '<div class="shop2 shop2-preview" data-cam="chat">' +
       '<div class="shop2-cam">' +
       '<div class="shop2-layer shop2-back">' + backSvg(s, 'chat') + '</div>' +
       '<div class="shop2-layer shop2-mid">' + midSvg(s) + '</div>' +
       '<div class="shop2-layer shop2-furniture">' + furnitureLayer(s) + '</div>' +
-      (customer ? '<div class="shop2-person position-chat is-neutral look-player">' + customerSvg(customer, [], 'neutral') + '</div>' : '') +
+      (customer ? '<div class="shop2-person position-chat is-neutral look-player">' + previewPerson + '</div>' : '') +
       '<div class="shop2-layer shop2-front">' + frontSvg() + '</div>' +
       '<div class="shop2-keeper">' + keeperSvg() + '</div>' +
       '<div class="shop2-light"></div>' +

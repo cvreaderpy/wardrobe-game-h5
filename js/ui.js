@@ -75,6 +75,12 @@
 
   function itemSvg(item) {
     if (!item) { return ''; }
+    if (!item.image && window.AILook && AILook.iconUrl) {
+      var aiIcon = AILook.iconUrl(item.id);
+      if (aiIcon) {
+        return '<img class="ai-item-img" src="' + esc(aiIcon) + '" alt="' + esc(item.name) + '" loading="lazy" decoding="async">';
+      }
+    }
     var key = item.id || item.name;
     if (!item.image && svgCache[key]) { return svgCache[key]; }
     var html = buildItemSvg(item);
@@ -439,6 +445,10 @@
 
   function avatarSvg(customer) {
     var p = customer.portrait || {};
+    var aiPortrait = window.AILook && AILook.portraitUrl && AILook.portraitUrl(customer.id);
+    if (aiPortrait) {
+      return '<img class="ai-avatar" src="' + esc(aiPortrait) + '" alt="' + esc(customer.name) + '" loading="lazy" decoding="async">';
+    }
     if (p.image) {
       return '<img src="' + esc(p.image) + '" alt="' + esc(customer.name) + '" style="width:100%;height:100%;object-fit:cover;display:block">';
     }
@@ -1904,6 +1914,12 @@
       '</div>' +
       '<input id="save-import-file" type="file" accept=".json,application/json" style="display:none">' +
       '</div>' +
+      '<div class="qr-play">' +
+      '<img src="assets/qr-play.png" alt="手机扫码直接玩">' +
+      '<div class="qr-copy"><strong>手机扫码直接玩</strong>' +
+      '<span>微信 / 浏览器扫一下，免安装</span>' +
+      '<code>cvreaderpy.github.io/wardrobe-game-h5</code></div>' +
+      '</div>' +
       '<div class="footer-note">2.5D 手账风 · 经营 + 搭配 · 单局 5–10 分钟</div>' +
       (window.__WARDROBE_H5_BUILD__ ? '' : '<a class="proto-link" href="prototype.html">打开 1 位顾客的互动样片 →</a>');
   };
@@ -2246,6 +2262,10 @@
 
   /** 员工头像：优先用等距人物拆件拼一个全身像，失败时退回首字头像 */
   UI.staffPortrait = function (m) {
+    var ai = window.AILook && AILook.staffPortraitUrl && AILook.staffPortraitUrl(m);
+    if (ai) {
+      return '<img class="ai-staff-avatar" src="' + esc(ai) + '" alt="' + esc((m && m.name) || '店员') + '" loading="lazy" decoding="async">';
+    }
     if (window.Iso && Iso.character && Iso.character.staffAppearance) {
       try {
         var app = Iso.character.staffAppearance(m);
@@ -2888,7 +2908,7 @@
       } else {
         html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
       }
-      html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接挑衣服</button>';
+      html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
       return html;
     }
 
@@ -2898,7 +2918,7 @@
         (iso ? '' : '<div class="dialogue-line customer">“那……就拜托你了。”</div>') +
         revealChips(s, c) +
         '<div class="hint-box mt10">她愿意试穿 ' + Math.max(1, s.patience) + ' 次。好感越高，越容易听到真话，也更愿意给小费。</div>' +
-        '<button type="button" class="btn mt14" data-action="start-service">开始帮她挑衣服</button>' +
+        '<button type="button" class="btn mt14" data-action="start-fitting-room">带她进试衣间</button>' +
         '</div>';
       return html;
     }
@@ -2920,8 +2940,8 @@
           '<span class="affinity-loss">不太对味 · 好感 ' + s.chatReply.delta + '</span>') +
         '</div>' +
         revealChips(s, c) +
-        '<button type="button" class="btn mt14" data-action="' + (lastBeat ? 'start-service' : 'chat-next') + '">' +
-        (lastBeat ? '好，开始帮她挑衣服' : '继续聊') + '</button>';
+        '<button type="button" class="btn mt14" data-action="' + (lastBeat ? 'start-fitting-room' : 'chat-next') + '">' +
+        (lastBeat ? '带她进试衣间' : '继续聊') + '</button>';
     } else {
       html += '<div class="dialogue-choices">';
       (beat ? beat.choices : []).forEach(function (choice, index) {
@@ -2941,7 +2961,7 @@
       html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
     }
 
-    html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接挑衣服</button>';
+    html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
     return html;
   };
 
@@ -3080,20 +3100,160 @@
 
   /* ---------------- 结果 ---------------- */
 
+  UI.vectorLookUrl = function (c, ids, pose, expr) {
+    if (!c || !window.Iso || !Iso.character || !Iso.character.imageUrl) { return ''; }
+    var o = Iso.character.outfit({ selectedItems: ids || [] }, c);
+    return Iso.character.imageUrl(Iso.character.appearance(c), o, pose || 'stand', expr || 'calm');
+  };
+
+  UI.aiLookUrl = function (c, ids) {
+    var q = (ids || []).filter(Boolean).join(',');
+    if (!q) { return ''; }
+    var base = window.AI_FITTING_BASE || 'http://127.0.0.1:8124';
+    return base + '/render?ids=' + encodeURIComponent(q) + '&pose=stand';
+  };
+
+  UI.aiOnline = (function () {
+    try { return /[?&]render=online\b/.test(location.search) || !!window.AI_FITTING_ONLINE; } catch (e) { return false; }
+  })();
+
+  UI.lookHtml = function (c, ids, opts) {
+    opts = opts || {};
+    if (!UI.aiOnline && window.AILook && AILook.ready()) {
+      return AILook.html(c && c.id, ids || [], opts);
+    }
+    if (UI.aiOnline) { return UI.aiLookImg(c, ids, opts.id, opts.cls); }
+    var fb = UI.vectorLookUrl(c, ids, 'stand', 'calm');
+    return fb ? '<img' + (opts.id ? ' id="' + opts.id + '"' : '') + ' class="' + (opts.cls || '') + '" src="' + esc(fb) + '" alt="">' : '';
+  };
+
+  UI.aiLookImg = function (c, ids, id, cls) {
+    var ai = UI.aiLookUrl(c, ids);
+    var fallback = UI.vectorLookUrl(c, ids, 'stand', 'calm');
+    var src = ai || fallback;
+    return '<img' + (id ? ' id="' + id + '"' : '') + ' class="' + (cls || '') + '" src="' + esc(src) + '" data-fallback="' + esc(fallback) + '" alt="" ' +
+      'onload="var p=this.closest(\'.fitting-ai-stage\');if(p)p.classList.remove(\'is-loading\')" ' +
+      'onerror="var f=this.dataset.fallback;this.onerror=null;this.src=f;var p=this.closest(\'.fitting-ai-stage\');if(p)p.classList.remove(\'is-loading\')">';
+  };
+
+  UI.fittingItemCard = function (item, selected) {
+    var cls = 'fit-item' + (selected ? ' selected' : '');
+    return '<button type="button" class="' + cls + '" data-action="fitting-item" data-id="' + esc(item.id) + '">' +
+      '<span class="fit-item-art">' + itemSvg(item) + '</span>' +
+      '<span class="fit-item-name">' + esc(item.name) + '</span>' +
+      '</button>';
+  };
+
+  UI.fittingWardrobeHtml = function (s, selected) {
+    var cats = [['top', '上装'], ['bottom', '下装'], ['dress', '连衣裙'], ['outer', '外套'], ['shoes', '鞋']];
+    var html = '<div class="fit-wardrobe-head"><strong>衣架</strong><span>拖到她身上，或点一下</span></div>';
+    var total = 0;
+    cats.forEach(function (pair) {
+      var items = E.getInventoryItems(pair[0]);
+      if (!items.length) { return; }
+      html += '<div class="fit-cat"><div class="fit-cat-title">' + pair[1] + '</div><div class="fit-items">';
+      items.forEach(function (item) {
+        total += 1;
+        html += UI.fittingItemCard(item, (selected || []).indexOf(item.id) >= 0);
+      });
+      html += '</div></div>';
+    });
+    if (!total) { html += '<div class="hint-box">货架上还没有可以试的衣服。</div>'; }
+    return html;
+  };
+
+  UI.fittingToggle = function (id) {
+    var s = E.state;
+    if (!s) { return; }
+    var r = E.toggleItem(id);
+    if (r && !r.ok && r.message) { UI.toast(r.message); }
+    E.buildPendingResult(s.selectedItems);
+    var rec = E.getQueueRecord(s.servingCustomerId);
+    if (rec) { rec.itemIds = (s.selectedItems || []).slice(); }
+    E.save();
+    UI._screenSig = '';
+    UI.render();
+  };
+
+  UI.bindFittingDrag = function () {
+    var drop = document.getElementById('fitting-drop');
+    if (!drop) { return; }
+    var cards = document.querySelectorAll('[data-action="fitting-item"]');
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        card.style.touchAction = 'none';
+        card.addEventListener('pointerdown', function (e) {
+          if (e.button !== undefined && e.button !== 0) { return; }
+          var id = card.getAttribute('data-id');
+          var item = itemById(id);
+          if (!item) { return; }
+          var startX = e.clientX, startY = e.clientY, moved = false;
+          var ghost = document.createElement('div');
+          ghost.className = 'shop2-ghost';
+          ghost.innerHTML = UI.itemSvg(item);
+          document.body.appendChild(ghost);
+          function move(ev) {
+            if (!moved && (Math.abs(ev.clientX - startX) > 7 || Math.abs(ev.clientY - startY) > 7)) {
+              moved = true;
+              ghost.classList.add('show');
+              drop.classList.add('is-over');
+            }
+            if (moved) {
+              ghost.style.left = ev.clientX + 'px';
+              ghost.style.top = ev.clientY + 'px';
+              if (ev.cancelable) { ev.preventDefault(); }
+            }
+          }
+          function cleanup() {
+            document.removeEventListener('pointermove', move);
+            document.removeEventListener('pointerup', up);
+            document.removeEventListener('pointercancel', cleanup);
+            ghost.classList.remove('show');
+            drop.classList.remove('is-over');
+            if (ghost.parentNode) { ghost.parentNode.removeChild(ghost); }
+          }
+          function up(ev) {
+            var rect = drop.getBoundingClientRect();
+            var over = ev.clientX >= rect.left && ev.clientX <= rect.right && ev.clientY >= rect.top && ev.clientY <= rect.bottom;
+            cleanup();
+            if (!moved) { return; }
+            UI._suppressToggleUntil = Date.now() + 350;
+            if (!over) { return; }
+            UI.fittingToggle(id);
+            if (window.Scene) { Scene.play('cloth'); Scene.pulse('reach'); Scene.gesture('point'); }
+          }
+          document.addEventListener('pointermove', move);
+          document.addEventListener('pointerup', up);
+          document.addEventListener('pointercancel', cleanup);
+        });
+      })(cards[i]);
+    }
+  };
+
   UI.screens.fitting = function (s) {
     var c = E.currentCustomer();
     if (!c) { return UI.screens.settle(s); }
     var rec = E.getQueueRecord(s.servingCustomerId) || {};
     var q = E.getQueueSummary();
     var waiting = rec.status === 'fittingWait';
-    var items = (s.pendingResult && s.pendingResult.itemIds) || rec.itemIds || [];
+    var items = (s.selectedItems && s.selectedItems.length) ? s.selectedItems.slice() : ((rec.itemIds || []).slice());
+    if (!s.selectedItems || !s.selectedItems.length) { s.selectedItems = items.slice(); }
     var names = items.map(function (id) {
       var it = itemById(id);
       return it ? it.name : '';
     }).filter(Boolean);
+    var look = UI.lookHtml(c, items, { id: 'fitting-ai-img' });
     var html = header(s, '试衣间');
     html += queueStrip(s);
-    html += '<div class="fitting-look">' + lookFigure(c, items, s.previewPose || 'stand', 'calm') + '</div>';
+    html += '<div class="fitting-ai">' +
+      '<div class="fitting-ai-stage fit-drop' + (UI.aiOnline ? ' is-loading' : '') + '" id="fitting-drop">' +
+        look +
+        '<div class="fitting-ai-loading"><span class="fit-spinner"></span>正在换装…</div>' +
+        '<div class="fitting-ai-hint">把衣服拖到她身上 · 也可以点衣架上的单品</div>' +
+      '</div>' +
+      '<div class="fitting-wardrobe">' + UI.fittingWardrobeHtml(s, items) + '</div>' +
+    '</div>';
+    html += '<div class="fitting-wish">' + wishCard(s, c) + '</div>';
     html += '<div class="fitting-hero">' +
       '<div class="fitting-copy"><strong>' + esc(c.name) + '</strong>' +
       '<span>' + esc(c.occasion) + ' · 预算 ' + money(c.budget) + '</span>' +
@@ -3107,8 +3267,8 @@
         ? '<div class="hint-box warn">前面的顾客还在试衣间里。等一等，或者让她先出来看效果。</div>'
         : (rec.noRoom
           ? '<div class="hint-box warn">店里没有试衣间，只能拉上帘子快速换一下。</div>'
-          : '<div class="hint-box">换好衣服后，她会照镜子看整体效果。</div>')) +
-      poseButtonsHtml(s) +
+          : '<div class="hint-box">把上装、下装和鞋都搭好，她会照镜子看整体效果。</div>')) +
+      '<div class="small muted mt4">AI 试衣暂用自然站姿</div>' +
       '<div class="btn-row mt10">' +
       (waiting
         ? '<button type="button" class="btn secondary small" data-action="wait-fitting">等前一位出来</button>' +
@@ -3140,7 +3300,7 @@
     var html = header(s, '试穿结果');
     html += queueStrip(s);
     html += '<div class="result-hero">' +
-      '<div class="result-look">' + lookFigure(c, pr.itemIds, s.previewPose || 'stand', 'calm') + '</div>' +
+      '<div class="result-look">' + UI.lookHtml(c, pr.itemIds, { cls: 'result-look-stack' }) + '</div>' +
       '<div class="result-title">' + esc(title) + '</div>' +
       '<div class="result-sub">' + esc(c.name) + ' · ' + esc(sub) + '</div>' +
       scoreRing(r.score) +
@@ -3399,7 +3559,7 @@
     if (s.chatPhase === 'done') {
       return kicker +
         '<div class="iso-choice-hint">她愿意试穿 ' + Math.max(1, s.patience) + ' 次。好感越高，越容易听到真话。</div>' +
-        '<button type="button" class="iso-choice primary" data-action="start-service">开始帮她挑衣服</button>';
+        '<button type="button" class="iso-choice primary" data-action="start-fitting-room">带她进试衣间</button>';
     }
     if (s.chatPhase === 'reply' && s.chatReply) {
       var lastBeat = s.chatStep + 1 >= d.beats.length;
@@ -3409,8 +3569,8 @@
         (s.chatReply.match ? '<span class="affinity-gain">说对了 · 好感 +' + s.chatReply.delta + '</span>' :
           '<span class="affinity-loss">不太对味 · 好感 ' + s.chatReply.delta + '</span>') +
         '</div>' +
-        '<button type="button" class="iso-choice primary" data-action="' + (lastBeat ? 'start-service' : 'chat-next') + '">' +
-        (lastBeat ? '好，开始帮她挑衣服' : '继续聊') + '</button>';
+        '<button type="button" class="iso-choice primary" data-action="' + (lastBeat ? 'start-fitting-room' : 'chat-next') + '">' +
+        (lastBeat ? '带她进试衣间' : '继续聊') + '</button>';
     }
     var beat = E.getChatBeat();
     var html = kicker + '<div class="iso-choices-list">';
@@ -3536,6 +3696,7 @@
     document.body.classList.toggle('prep-active', key === 'prep');
     var stageScreens = { brief: 1, prep: 1, chat: 1, service: 1, fitting: 1, result: 1, settle: 1 };
     var app = document.getElementById('app');
+    if (app) { app.classList.toggle('is-fitting', key === 'fitting'); }
     var stageRoot = document.getElementById('stage-root');
     if (stageRoot && window.Scene && stageScreens[key] && s) {
       var sig = [
@@ -3579,7 +3740,8 @@
     if (active && active !== screen) { active.classList.remove('active'); }
     var sameState = (s === UI._lastStateObj);
     var screenSig = key + '|' + (s ? (s.rev || 0) : 0) +
-      (key === 'prep' ? '|' + (UI._prepTab || 'today') : '');
+      (key === 'prep' ? '|' + (UI._prepTab || 'today') : '') +
+      (key === 'fitting' ? '|' + ((s && s.selectedItems) || []).join(',') : '');
     if (!sameState || screenSig !== UI._screenSig) {
       screen.innerHTML = UI.screens[key](s);
       UI._screenSig = screenSig;
@@ -3597,6 +3759,7 @@
       if (Iso.setChoices) { Iso.setChoices(UI.stageChoicesHtml(s, key)); }
     }
     if (key === 'service' && s && s.serviceMode === 'styling') { UI.bindStageDrag(); }
+    if (key === 'fitting') { UI.bindFittingDrag(); }
     if (UI._lastKey !== key) {
       var scroller = document.getElementById('screens');
       if (scroller) { scroller.scrollTop = 0; }
@@ -3682,7 +3845,7 @@
       return it ? it.name : '';
     }).filter(Boolean);
     var html = '<div class="modal-title">整体效果</div>' +
-      '<div class="look-modal-figure">' + lookFigure(c, ids, s.previewPose || 'stand', 'calm') + '</div>' +
+      '<div class="look-modal-figure">' + UI.lookHtml(c, ids, { cls: 'look-modal-stack' }) + '</div>' +
       '<div class="look-modal-name">' + esc(c.name) + (names.length ? ' · ' + names.map(esc).join(' + ') : '') + '</div>' +
       poseButtonsHtml(s) +
       '<button type="button" class="btn ghost mt10" data-action="close-modal">关上</button>';
@@ -4615,15 +4778,17 @@
         UI.render();
         if (window.Scene && s && s.chatPhase !== 'done') { Scene.talk(900); }
         break;
-      case 'start-service':
-        E.serveCustomer();
+      case 'start-fitting-room':
+        E.startFittingRoom();
         if (window.Scene) { Scene.play('page'); }
         UI.render();
+        UI.scrollTop();
         break;
       case 'skip-chat':
-        E.serveCustomer();
+        E.startFittingRoom();
         if (window.Scene) { Scene.play('page'); }
         UI.render();
+        UI.scrollTop();
         break;
       case 'care-water': {
         var care = E.careAction();
@@ -4695,6 +4860,14 @@
         E.setStyleFilter(id);
         UI.render();
         break;
+      case 'fitting-item': {
+        if (UI._suppressToggleUntil && Date.now() < UI._suppressToggleUntil) {
+          UI._suppressToggleUntil = 0;
+          break;
+        }
+        UI.fittingToggle(id);
+        break;
+      }
       case 'toggle-item': {
         if (UI._suppressToggleUntil && Date.now() < UI._suppressToggleUntil) {
           UI._suppressToggleUntil = 0;
