@@ -37,7 +37,45 @@
   <div id="modal-root"></div>
   <div id="debug-root"></div>
 
-  <script>window.__WARDROBE_H5_BUILD__ = true;</script>
+  <script>window.__WARDROBE_H5_BUILD__ = true; window.__WARDROBE_BUILD_ID__ = "efc51f232d40";</script>
+  <script>
+(function(){
+  var BUILD = window.__WARDROBE_BUILD_ID__ || '';
+  if (!BUILD) { return; }
+  var KEY = 'wardrobe-build-id';
+  var GUARD = 'wardrobe-build-reloaded';
+  var seen = '';
+  var guarded = false;
+  try { seen = localStorage.getItem(KEY) || ''; } catch (e) {}
+  try { guarded = sessionStorage.getItem(GUARD) === BUILD; } catch (e) {}
+  if (seen === BUILD || guarded) { return; }
+  var hadOld = !!seen || !!(navigator.serviceWorker && navigator.serviceWorker.controller);
+  try { localStorage.setItem(KEY, BUILD); } catch (e) {}
+  try { sessionStorage.setItem(GUARD, BUILD); } catch (e) {}
+  var jobs = [];
+  if (window.caches && caches.keys) {
+    jobs.push(caches.keys().then(function(keys){
+      var ours = keys.filter(function(k){ return k.indexOf('wardrobe-game-') === 0; });
+      if (ours.length) { hadOld = true; }
+      return Promise.all(ours.map(function(k){ return caches.delete(k); }));
+    }).catch(function(){}));
+  }
+  if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+    var scope = '';
+    try { scope = new URL('./', location.href).href; } catch (e) {}
+    jobs.push(navigator.serviceWorker.getRegistrations().then(function(rs){
+      var mine = rs.filter(function(r){ return !scope || r.scope === scope; });
+      if (mine.length) { hadOld = true; }
+      return Promise.all(mine.map(function(r){ return r.unregister(); }));
+    }).catch(function(){}));
+  }
+  if (!jobs.length) { return; }
+  var done = false;
+  function go(){ if (done) { return; } done = true; try { location.reload(); } catch (e) {} }
+  Promise.all(jobs).then(function(){ if (hadOld) { go(); } }, function(){ if (hadOld) { go(); } });
+  setTimeout(function(){ if (hadOld) { go(); } }, 2500);
+})();
+</script>
   <script src="js/data.js"></script>
   <script src="js/furniture.js"></script>
   <script src="js/dialogue.js"></script>

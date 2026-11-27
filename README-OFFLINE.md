@@ -103,10 +103,11 @@ https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
 
 ### 离线
 
-- 第一次打开会把 `index.html`、CSS、全部 JS、图标、manifest 写入 Cache Storage
+- 第一次打开会把 `index.html`、CSS、JS、图标、manifest 和 AI 素材清单写入 Cache Storage
+- AI 衣服 / 头像 / 店员大图按首次用到时缓存；没缓存到的单品会自动退回矢量图，不会出现白板
 - 之后断网、飞行模式也能从桌面图标打开
 - 页面导航走“网络优先、缓存兜底”；静态资源走“缓存优先”
-- 新版本发布后会提示“有新版本可用”，点“刷新更新”才切换；不点不会打断当前游戏
+- 新版本发布会做一次版本自愈：清掉旧 Service Worker 和旧缓存后自动刷新，避免手机一直停在旧版本
 
 ### 注意
 
@@ -205,10 +206,11 @@ https://cvreaderpy.github.io/wardrobe-game-h5/wardrobe-game.html
 - 确认 `manifest.webmanifest` 和 `sw.js` 返回 200，不是 404
 - Chrome DevTools → Application → Manifest / Service Workers 看报错
 
-**离线打不开**
+**离线打不开 / 一直显示旧版本**
 
 - 第一次必须联网完整加载一次
 - DevTools → Application → Cache Storage 里应看到 `wardrobe-game-<hash>`
+- 版本更新会自动清旧缓存并刷新一次；如果仍然旧，关掉页面重新打开，或清除该站点的网站数据
 - 微信 / 小红书 WebView 可能不支持，换系统浏览器
 
 **手机连不上局域网服务器**

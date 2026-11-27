@@ -19,6 +19,12 @@
     if (refreshing) { location.reload(); }
   });
 
+  // 新版 SW 激活后会广播；旧页面也至少能弹出「刷新更新」，
+  // 不用等用户下次冷启动。
+  navigator.serviceWorker.addEventListener('message', function (e) {
+    if (e.data && e.data.type === 'SW_UPDATED') { showUpdate(null); }
+  });
+
   function showUpdate(reg) {
     if (document.getElementById('sw-update')) { return; }
 
