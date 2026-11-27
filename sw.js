@@ -10,7 +10,7 @@
  */
 'use strict';
 
-var CACHE_VERSION = 'wardrobe-game-8b32d890a7de';
+var CACHE_VERSION = 'wardrobe-game-adc351b9d279';
 var PRECACHE = [
   "./",
   "./index.html",
@@ -31,8 +31,10 @@ var PRECACHE = [
   "./js/iso/art/garments.js",
   "./js/iso/art/character.js",
   "./js/iso/art/cat.js",
+  "./js/iso/art/dog.js",
   "./js/iso/ambient.js",
   "./js/iso/cat.js",
+  "./js/iso/dog.js",
   "./assets/hd/offline/manifest.js",
   "./js/ai-offline.js",
   "./js/iso/stage.js",

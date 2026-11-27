@@ -1,7 +1,7 @@
 {
-  "builtAt": "2026-11-27T12:45:46.533Z",
-  "commit": "23caa2d",
-  "cacheVersion": "8b32d890a7de",
+  "builtAt": "2026-11-27T13:34:28.857Z",
+  "commit": "2585080",
+  "cacheVersion": "adc351b9d279",
   "precache": [
     "./",
     "./index.html",
@@ -22,8 +22,10 @@
     "./js/iso/art/garments.js",
     "./js/iso/art/character.js",
     "./js/iso/art/cat.js",
+    "./js/iso/art/dog.js",
     "./js/iso/ambient.js",
     "./js/iso/cat.js",
+    "./js/iso/dog.js",
     "./assets/hd/offline/manifest.js",
     "./js/ai-offline.js",
     "./js/iso/stage.js",

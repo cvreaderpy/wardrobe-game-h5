@@ -285,6 +285,40 @@
     'g_tote', 'a_scarf', 'h_sheer', 'a_chain'
   ];
 
+  // 接待时的茶水零食：每位顾客只能上一次，成本计入当天支出
+  D.REFRESHMENTS = [
+    {
+      id: 'water', name: '温水', icon: '💧', cost: 0, affinity: 6, sound: 'water',
+      line: '她接过温水，小口喝着，慢慢放松下来。'
+    },
+    {
+      id: 'tea', name: '热茶', icon: '🍵', cost: 3, affinity: 8, sound: 'sip',
+      line: '她把热茶捧在手心，肩膀松了下来。'
+    },
+    {
+      id: 'coffee', name: '手冲咖啡', icon: '☕', cost: 8, affinity: 10, sound: 'sip',
+      line: '她闻到咖啡香，眼睛亮了一点。'
+    },
+    {
+      id: 'juice', name: '鲜榨橙汁', icon: '🍊', cost: 10, affinity: 9, sound: 'sip',
+      line: '冰凉的橙汁让她舒服地叹了口气。'
+    },
+    {
+      id: 'cookie', name: '黄油饼干', icon: '🍪', cost: 5, affinity: 7, sound: 'crunch',
+      line: '她捏起一块饼干，小口吃完，心情好了一点。'
+    },
+    {
+      id: 'madeleine', name: '玛德琳', icon: '🥐', cost: 8, affinity: 9, sound: 'crunch',
+      line: '她咬了一口玛德琳，说这个配茶刚好。'
+    },
+    {
+      id: 'nuts', name: '坚果小碟', icon: '🥜', cost: 6, affinity: 7, sound: 'crunch',
+      line: '她慢慢剥着坚果，话也多了起来。'
+    }
+  ];
+  D.REFRESHMENTS_BY_ID = {};
+  D.REFRESHMENTS.forEach(function (r) { D.REFRESHMENTS_BY_ID[r.id] = r; });
+
   D.LOTS = [
     { id: 'lot_work', name: '通勤补货包', tagline: '白衬衫 + 阔腿裤，一周不用想', items: ['t_shirt', 'b_wide', 's_loafer', 'g_black'], cost: 250, style: 'work' },
     { id: 'lot_french', name: '法式上新包', tagline: '碎花、茶歇裙、玛丽珍，温柔一套', items: ['t_blouse', 'd_flower', 's_mary', 'a_beret'], cost: 240, style: 'french' },

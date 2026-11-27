@@ -60,6 +60,8 @@
     choicesHtml: '',
     catHot: null,
     catHome: null,
+    dogHot: null,
+    dogHome: null,
     placed: [],
     season: 'spring',
     weather: 'sunny',
@@ -420,6 +422,7 @@
         if (st.choices) { root.appendChild(st.choices); }
         if (st.zoomBar) { root.appendChild(st.zoomBar); }
         if (st.catHot) { root.appendChild(st.catHot); }
+        if (st.dogHot) { root.appendChild(st.dogHot); }
       }
       if (st.root !== root) {
         if (st.app.canvas.parentNode) { st.app.canvas.parentNode.removeChild(st.app.canvas); }
@@ -432,6 +435,7 @@
         if (st.choices) { root.appendChild(st.choices); }
         if (st.zoomBar) { root.appendChild(st.zoomBar); }
         if (st.catHot) { root.appendChild(st.catHot); }
+        if (st.dogHot) { root.appendChild(st.dogHot); }
         st.root = root;
         Iso.resize();
       }
@@ -527,6 +531,14 @@
       st.catHot.setAttribute('aria-label', '摸摸店猫');
       st.catHot.innerHTML = '<span class="iso-cat-hint">摸猫</span>';
       root.appendChild(st.catHot);
+
+      st.dogHot = document.createElement('div');
+      st.dogHot.className = 'iso-cat-hot iso-dog-hot';
+      st.dogHot.setAttribute('data-action', 'pet-dog');
+      st.dogHot.setAttribute('role', 'button');
+      st.dogHot.setAttribute('aria-label', '摸摸比熊');
+      st.dogHot.innerHTML = '<span class="iso-cat-hint">摸狗</span>';
+      root.appendChild(st.dogHot);
       preloadFx();
 
       app.ticker.add(Iso.tick);
@@ -574,6 +586,7 @@
     if (st.speech) { st.speech.style.display = 'none'; }
     if (st.choices) { st.choices.style.display = 'none'; }
     if (st.catHot) { st.catHot.style.display = 'none'; }
+    if (st.dogHot) { st.dogHot.style.display = 'none'; }
   };
 
   /* ---------------- 站位 / 进店路线 ---------------- */
@@ -703,8 +716,42 @@
     return { gx: 2.4, gy: 6.6 };
   };
 
+  /* 比熊喜欢门口和试衣镜附近，离猫远一点 */
+  Iso.findDogSpot = function (placed, occupied) {
+    var cat = Iso.catStage;
+    var prefs = [[8.2, 8.0], [7.2, 9.0], [9.2, 6.4], [6.4, 7.0], [9.0, 8.8], [5.8, 5.2], [8.6, 3.4]];
+    var fitting = findFitting(placed);
+    if (fitting) {
+      prefs.push([fitting.x + fitting.w + 0.8, fitting.y + fitting.h * 0.5]);
+      prefs.push([fitting.x - 1.2, fitting.y + fitting.h + 1.0]);
+    }
+    function ok(gx, gy) {
+      if (!spotFree(placed, gx, gy, occupied)) { return false; }
+      return !cat || !cat.rig || Math.hypot(gx - cat.gx, gy - cat.gy) >= 1.2;
+    }
+    for (var i = 0; i < prefs.length; i++) {
+      if (ok(prefs[i][0], prefs[i][1])) { return { gx: prefs[i][0], gy: prefs[i][1] }; }
+    }
+    for (var gy = N - 2.2; gy >= 2.2; gy -= 0.7) {
+      for (var gx = N - 1.8; gx >= 1.8; gx -= 0.7) {
+        if (ok(gx, gy)) { return { gx: gx, gy: gy }; }
+      }
+    }
+    return { gx: 8.2, gy: 8.0 };
+  };
+
   function freeCatTile(gx, gy) {
-    return spotFree(st.placed || [], gx, gy, []);
+    if (!spotFree(st.placed || [], gx, gy, [])) { return false; }
+    var dog = Iso.dogStage && Iso.dogStage.rig;
+    if (dog && Math.hypot(gx - Iso.dogStage.gx, gy - Iso.dogStage.gy) < 1.1) { return false; }
+    return true;
+  }
+
+  function freeDogTile(gx, gy) {
+    if (!spotFree(st.placed || [], gx, gy, [])) { return false; }
+    var cat = Iso.catStage && Iso.catStage.rig;
+    if (cat && Math.hypot(gx - Iso.catStage.gx, gy - Iso.catStage.gy) < 1.1) { return false; }
+    return true;
   }
 
   function occupiedSpots() {
@@ -747,6 +794,25 @@
       st.catHot.title = '摸摸' + Iso.catStage.profile.name;
     }
     Iso.catStage.ensureFree({ placed: placed, isFree: freeCatTile, home: home });
+  }
+
+  function ensureDog(placed) {
+    if (!window.Iso || !Iso.dogStage || !Iso.dogStage.build) { return; }
+    var home = Iso.findDogSpot(placed, occupiedSpots());
+    st.dogHome = home;
+    var last = st.last && st.last.s;
+    Iso.dogStage.build(st.world, {
+      seed: (last && last.shopName) || 'yijian',
+      home: home,
+      isFree: freeDogTile,
+      onWag: function (x, y) { Iso.burst('heart', x, y, 7); },
+      onBark: function () { if (window.Scene && Scene.play) { Scene.play('woof'); } },
+      onZzz: function (x, y) { Iso.burst('zzz', x, y, 1); }
+    });
+    if (st.dogHot && Iso.dogStage.profile) {
+      st.dogHot.title = '摸摸' + Iso.dogStage.profile.name;
+    }
+    Iso.dogStage.ensureFree({ placed: placed, isFree: freeDogTile, home: home });
   }
 
   Iso.findSpot = function (placed, occupied) {
@@ -1041,6 +1107,7 @@
     buildOwner(placed);
     buildQueue(placed);
     ensureCat(placed);
+    ensureDog(placed);
     buildAmbient(placed);
 
     if (key === 'settle') {
@@ -1183,6 +1250,7 @@
           Iso.greetStaff(placed);
         }
         if (Iso.catStage && Iso.catStage.noticeCustomer) { Iso.catStage.noticeCustomer(); }
+        if (Iso.dogStage && Iso.dogStage.noticeCustomer) { Iso.dogStage.noticeCustomer(); }
       }
       st.world.addChild(rig);
       st.lastCustomerId = customer.id;
@@ -1974,11 +2042,23 @@
         home: st.catHome
       });
     }
+    if (Iso.dogStage && Iso.dogStage.update) {
+      var dogOcc = catOcc.slice();
+      if (Iso.catStage && Iso.catStage.rig) { dogOcc.push({ gx: Iso.catStage.gx, gy: Iso.catStage.gy }); }
+      Iso.dogStage.update(now, dt, {
+        placed: st.placed || [],
+        occupied: dogOcc,
+        customer: st.char,
+        isFree: freeDogTile,
+        home: st.dogHome
+      });
+    }
 
     updateFx(now, dt);
     Iso.updateStaffTags();
     Iso.updateHotspot();
     Iso.updateCatHotspot();
+    Iso.updateDogHotspot();
   };
 
   /* ---------------- 热区 ---------------- */
@@ -1991,6 +2071,7 @@
       if (st.hint) { st.hint.style.display = 'none'; }
       if (st.speech) { st.speech.style.display = 'none'; }
       Iso.updateCatHotspot();
+      Iso.updateDogHotspot();
       return;
     }
     var s = r.scale.y;
@@ -2020,6 +2101,7 @@
       st.speech.style.top = by.toFixed(1) + 'px';
     }
     Iso.updateCatHotspot();
+    Iso.updateDogHotspot();
   };
 
   Iso.updateCatHotspot = function () {
@@ -2043,6 +2125,29 @@
     st.catHot.style.top = cy.toFixed(1) + 'px';
     st.catHot.style.width = cw.toFixed(1) + 'px';
     st.catHot.style.height = ch.toFixed(1) + 'px';
+  };
+
+  Iso.updateDogHotspot = function () {
+    if (!st.ready || !st.dogHot) { return; }
+    var dr = Iso.dogStage && Iso.dogStage.rig;
+    if (!dr || !st.dogHot.parentNode) {
+      st.dogHot.style.display = 'none';
+      return;
+    }
+    var sc = Math.abs(dr.scale.x) || 0.82;
+    var x = dr.x - 30 * sc;
+    var y = dr.y - 48 * sc;
+    var w = 60 * sc;
+    var h = 50 * sc;
+    var cx = st.cam.x + x * st.cam.scale;
+    var cy = st.cam.y + y * st.cam.scale;
+    var cw = w * st.cam.scale;
+    var ch = h * st.cam.scale;
+    st.dogHot.style.display = 'block';
+    st.dogHot.style.left = cx.toFixed(1) + 'px';
+    st.dogHot.style.top = cy.toFixed(1) + 'px';
+    st.dogHot.style.width = cw.toFixed(1) + 'px';
+    st.dogHot.style.height = ch.toFixed(1) + 'px';
   };
 
   /* ---------------- 对话气泡 ---------------- */
@@ -2140,6 +2245,11 @@
   Iso.petCat = function () {
     if (!Iso.catStage || !Iso.catStage.pet) { return false; }
     return Iso.catStage.pet();
+  };
+
+  Iso.petDog = function () {
+    if (!Iso.dogStage || !Iso.dogStage.pet) { return false; }
+    return Iso.dogStage.pet();
   };
 
   Iso.gesture = function (name) {

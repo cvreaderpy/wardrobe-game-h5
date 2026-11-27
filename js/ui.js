@@ -783,7 +783,7 @@
     if (!s.wishRevealed) {
       return '<div class="wish-card locked">' +
         '<div class="wish-title">✦ 她还有话没说</div>' +
-        '<div class="wish-desc">倒杯温水，或把好感聊到 65，她会告诉你。</div>' +
+        '<div class="wish-desc">递杯喝的或小零食，或把好感聊到 65，她会告诉你。</div>' +
         challenge +
         '</div>';
     }
@@ -791,6 +791,32 @@
       '<div class="wish-title">✦ 她的心愿：' + esc(w.label) + '</div>' +
       '<div class="wish-desc">' + esc(w.desc) + '</div>' +
       challenge +
+      '</div>';
+  }
+
+  function careMenuHtml(s) {
+    if (s.careUsed) { return ''; }
+    var html = '<div class="care-menu">' +
+      '<div class="care-menu-head"><strong>吧台茶点</strong><span>每位顾客一次 · 计入今日成本</span></div>' +
+      '<div class="care-options">';
+    D.REFRESHMENTS.forEach(function (item) {
+      var afford = (s.cash || 0) >= (item.cost || 0);
+      html += '<button type="button" class="care-option' + (item.cost ? '' : ' is-free') + '"' +
+        ' data-action="care-serve" data-id="' + esc(item.id) + '"' + (afford ? '' : ' disabled') + '>' +
+        '<span class="care-option-icon">' + item.icon + '</span>' +
+        '<span class="care-option-name">' + esc(item.name) + '</span>' +
+        '<span class="care-option-meta">' + (item.cost ? '¥' + item.cost : '免费') + ' · 好感 +' + item.affinity + '</span>' +
+        '</button>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  function careNoteHtml(s) {
+    if (!s.careUsed || !s.careLine) { return ''; }
+    var item = D.REFRESHMENTS_BY_ID[s.careId] || D.REFRESHMENTS_BY_ID.water;
+    return '<div class="care-note">' + item.icon + ' ' + esc(s.careLine) +
+      (item.cost ? ' <span class="care-note-cost">茶点 -' + money(item.cost) + '</span>' : '') +
       '</div>';
   }
 
@@ -802,7 +828,7 @@
     return '<div class="extra-card">' +
       '<div class="extra-row">' +
       '<span class="extra-label">✦ ' + esc(w.label) + '</span>' +
-      '<span class="extra-desc">' + (s.wishRevealed ? esc(w.desc) : '聊聊天 / 倒杯水，她才会说') + '</span>' +
+      '<span class="extra-desc">' + (s.wishRevealed ? esc(w.desc) : '聊聊天 / 递杯喝的，她才会说') + '</span>' +
       wishStatus +
       '</div>' +
       '<div class="extra-row">' +
@@ -2903,11 +2929,8 @@
     if (iso) {
       html += revealChips(s, c);
       html += '<div class="iso-chat-tip">看她的表情和动作。她吃哪一套，比台词本身更重要。</div>';
-      if (s.careUsed && s.careLine) {
-        html += '<div class="care-note">💧 ' + esc(s.careLine) + '</div>';
-      } else {
-        html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
-      }
+      html += careNoteHtml(s);
+      html += careMenuHtml(s);
       html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
       return html;
     }
@@ -2955,11 +2978,8 @@
     }
     html += '</div>';
 
-    if (s.careUsed && s.careLine) {
-      html += '<div class="care-note">💧 ' + esc(s.careLine) + '</div>';
-    } else {
-      html += '<button type="button" class="btn secondary small care-btn" data-action="care-water">💧 给她倒杯温水</button>';
-    }
+    html += careNoteHtml(s);
+    html += careMenuHtml(s);
 
     html += '<button type="button" class="btn ghost small mt10" data-action="skip-chat">跳过寒暄，直接进试衣间</button>';
     return html;
@@ -3397,6 +3417,7 @@
       receiptRow('营销支出', '-' + money(ds.marketingCost), 'neg') +
       receiptRow('员工工资', '-' + money(ds.staffCost || 0), 'neg') +
       (ds.weatherCost ? receiptRow('天气应对', '-' + money(ds.weatherCost), 'neg') : '') +
+      (ds.refreshmentCost ? receiptRow('茶水零食', '-' + money(ds.refreshmentCost), 'neg') : '') +
       receiptRow('房租', '-' + money(ds.rent), 'neg') +
       receiptRow('今日利润', money(ds.profit), ds.profit >= 0 ? 'pos' : 'neg') +
       receiptRow('口碑变化', (ds.reputationDelta >= 0 ? '+' : '') + ds.reputationDelta) +
@@ -3509,7 +3530,7 @@
       '<div class="help-step"><div class="help-num">2</div><div class="help-body"><strong>先聊两句</strong>每位顾客进店后先对话。选共情、直接或玩笑，看她吃哪一套。聊对了会加好感，也会套出真正在意的事。</div></div>' +
       '<div class="help-step"><div class="help-num">3</div><div class="help-body"><strong>帮她挑衣服</strong>可以选现成方案，也可以自己搭。自己搭的时候，每放一件她都会当场反应；试穿次数由好感和耐心决定。</div></div>' +
       '<div class="help-step"><div class="help-num">4</div><div class="help-body"><strong>搭配评分</strong>风格 35 + 场合 25 + 配色 20 + 身材 10 + 配饰 5 + 预算 5。缺鞋、缺上下装、超预算都会扣分。好感不影响分数，但影响小费和折扣。</div></div>' +
-      '<div class="help-step"><div class="help-num">5</div><div class="help-body"><strong>关店结算</strong>营业额减去商品成本、营销、房租，就是今天的利润。进货是现金支出，不算当天成本。目标达成会有奖励。</div></div>' +
+      '<div class="help-step"><div class="help-num">5</div><div class="help-body"><strong>关店结算</strong>营业额减去商品成本、营销、房租，就是今天的利润。进货和吧台茶点都是现金支出，茶点会记进当天成本。目标达成会有奖励。</div></div>' +
       '<div class="help-step"><div class="help-num">6</div><div class="help-body"><strong>季节与总结</strong>7 天一个季节，每季结束生成小店称号和分享卡；可以继续下一季，也可以重开一家。应季款售价 +10%，过季款 −20%，进货也更便宜。</div></div>' +
       '</div>' +
       '<button type="button" class="btn" data-action="help-back">知道了，去开店</button>';
@@ -4790,11 +4811,29 @@
         UI.render();
         UI.scrollTop();
         break;
+      case 'care-serve': {
+        var care = E.careAction(id);
+        if (!care || !care.ok) {
+          UI.toast((care && care.message) || '现在没法递茶点');
+          break;
+        }
+        if (window.Scene) { Scene.play((care.item && care.item.sound) || 'water'); }
+        UI.floatText('好感 +' + care.item.affinity, 'good');
+        UI.toast(care.cost
+          ? care.item.icon + ' ' + care.item.name + ' · -' + money(care.cost)
+          : '她放松了一点');
+        UI.render();
+        if (window.Scene) { Scene.gesture('lean'); Scene.talk(850); }
+        break;
+      }
+      case 'care-menu':
+        UI.scrollToEl('.care-menu');
+        break;
       case 'care-water': {
-        var care = E.careAction();
-        if (care && care.ok) {
+        var water = E.careAction('water');
+        if (water && water.ok) {
           if (window.Scene) { Scene.play('water'); }
-          UI.floatText('好感 +6', 'good');
+          UI.floatText('好感 +' + water.item.affinity, 'good');
           UI.toast('她放松了一点');
         }
         UI.render();
@@ -4805,6 +4844,12 @@
         var petted = window.Scene && Scene.petCat ? Scene.petCat() : false;
         if (window.Scene) { Scene.play(petted ? 'purr' : 'heart'); }
         UI.floatText('呼噜呼噜', 'heart');
+        break;
+      }
+      case 'pet-dog': {
+        var dogPetted = window.Scene && Scene.petDog ? Scene.petDog() : false;
+        if (window.Scene) { Scene.play(dogPetted ? 'woof' : 'heart'); }
+        UI.floatText(dogPetted ? '汪！摇尾巴' : '狗狗在打盹', 'heart');
         break;
       }
       case 'toggle-sound': {

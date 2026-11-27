@@ -2604,6 +2604,95 @@ h3 {
   margin-top: 10px;
 }
 
+/* 吧台茶点：每位顾客一次，价格直接写在按钮上 */
+.care-menu {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1.5px dashed #E0C9A8;
+  border-radius: 12px;
+  background: #FFF9EF;
+}
+
+.care-menu-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.care-menu-head strong {
+  color: #8A6417;
+  font-size: 12px;
+  letter-spacing: .5px;
+}
+
+.care-menu-head span {
+  color: #9A8067;
+  font-size: 9px;
+  text-align: right;
+}
+
+.care-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.care-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 7px 4px 6px;
+  border: 1.5px solid rgba(91, 70, 54, .32);
+  border-radius: 10px;
+  background: #FFFDF8;
+  color: var(--cocoa);
+  font-family: inherit;
+  line-height: 1.25;
+}
+
+.care-option:active {
+  transform: translate(1px, 1px);
+}
+
+.care-option[disabled] {
+  opacity: .42;
+}
+
+.care-option.is-free {
+  border-color: rgba(138, 154, 123, .55);
+  background: #F7FBF3;
+}
+
+.care-option-icon {
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.care-option-name {
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.care-option-meta {
+  color: #9A8067;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.care-note-cost {
+  margin-left: 4px;
+  color: #B26A4A;
+  font-weight: 800;
+}
+
+@media (max-width: 360px) {
+  .care-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 .reveal-box {
   margin-top: 10px;
   padding: 8px 10px;

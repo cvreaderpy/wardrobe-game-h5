@@ -184,6 +184,18 @@
       tone(96, 0.32, 'triangle', 0.018, 0);
       tone(120, 0.26, 'triangle', 0.014, 0.12);
       tone(88, 0.3, 'sine', 0.012, 0.24);
+    } else if (name === 'sip') {
+      tone(640, 0.1, 'sine', 0.012, 0);
+      tone(880, 0.14, 'sine', 0.009, 0.07);
+      noiseAt(0.05, 0.003, 0.02, 'highpass', 2600);
+    } else if (name === 'crunch') {
+      noiseAt(0.07, 0.010, 0, 'bandpass', 2200);
+      noiseAt(0.06, 0.008, 0.09, 'bandpass', 2800);
+      tone(320, 0.05, 'triangle', 0.006, 0.01);
+    } else if (name === 'woof') {
+      tone(240, 0.1, 'square', 0.020, 0);
+      tone(180, 0.14, 'sine', 0.018, 0.06);
+      noiseAt(0.05, 0.006, 0, 'bandpass', 900);
     } else if (name === 'hanger') {
       tone(1220, 0.055, 'triangle', 0.016, 0);
       tone(1760, 0.045, 'sine', 0.011, 0.025);
@@ -1095,9 +1107,10 @@
     var tools = '';
 
     if (key === 'chat' && !s.careUsed) {
-      tools += '<button type="button" class="stage-tool" data-action="care-water" title="倒杯温水">💧<span>倒水</span></button>';
+      tools += '<button type="button" class="stage-tool" data-action="care-menu" title="茶点单">🍵<span>茶点</span></button>';
     }
     tools += '<button type="button" class="stage-tool" data-action="pet-cat" title="摸摸猫">🐈<span>摸猫</span></button>';
+    tools += '<button type="button" class="stage-tool" data-action="pet-dog" title="摸摸狗">🐶<span>摸狗</span></button>';
     tools += '<button type="button" class="stage-tool sound" data-action="toggle-sound" title="声音开关">' +
       (Scene.isSoundOn() ? '🔊' : '🔇') + '<span>声音</span></button>';
 
@@ -1196,6 +1209,11 @@
 
   Scene.petCat = function () {
     if (Scene._isoOn && window.Iso && Iso.petCat) { return Iso.petCat(); }
+    return false;
+  };
+
+  Scene.petDog = function () {
+    if (Scene._isoOn && window.Iso && Iso.petDog) { return Iso.petDog(); }
     return false;
   };
 

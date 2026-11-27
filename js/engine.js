@@ -526,6 +526,7 @@
         chatReply: null,
         careUsed: false,
         careLine: '',
+        careId: '',
         affinity: 45,
         patience: 2,
         revealed: [],
@@ -588,6 +589,7 @@
     s.chatReply = null;
     s.careUsed = false;
     s.careLine = '';
+    s.careId = '';
     s.affinity = 45;
     s.patience = 2;
     s.revealed = [];
@@ -619,6 +621,7 @@
       marketingCost: 0,
       staffCost: 0,
       weatherCost: 0,
+      refreshmentCost: 0,
       staffServed: 0,
       staffSales: 0,
       staffRevenue: 0,
@@ -703,6 +706,8 @@
     if (s.chatReply === undefined) { s.chatReply = null; }
     if (typeof s.careUsed !== 'boolean') { s.careUsed = false; }
     if (!s.careLine) { s.careLine = ''; }
+    if (typeof s.careId !== 'string') { s.careId = ''; }
+    if (s.dayStats && typeof s.dayStats.refreshmentCost !== 'number') { s.dayStats.refreshmentCost = 0; }
     if (typeof s.affinity !== 'number') { s.affinity = 45; }
     if (typeof s.patience !== 'number') { s.patience = 2; }
     if (!Array.isArray(s.revealed)) { s.revealed = []; }
@@ -3533,6 +3538,7 @@
     s.chatReply = null;
     s.careUsed = false;
     s.careLine = '';
+    s.careId = '';
     s.affinity = clamp(45 + Engine.getStaffAffinityBonus(), 0, 100);
     s.patience = Math.max(1, 2 + Engine.getWeatherPatience());
     s.revealed = [];
@@ -3603,20 +3609,31 @@
     }
   };
 
-  Engine.careAction = function () {
+  Engine.careAction = function (id) {
     var s = Engine.state;
     var customer = Engine.currentCustomer();
     var d = Engine.getDialogue(customer);
     if (!s || !customer || s.careUsed) { return { ok: false }; }
+    var item = D.REFRESHMENTS_BY_ID[id] || D.REFRESHMENTS_BY_ID.water;
+    if (!item) { return { ok: false }; }
+    var cost = item.cost || 0;
+    if (cost > s.cash) { return { ok: false, message: '现金不够，先拿杯温水吧。' }; }
+
+    // 茶点是即时消耗：当场扣现金，同时记进当天支出，结算时从利润里减掉
+    s.cash -= cost;
+    if (s.dayStats) {
+      s.dayStats.refreshmentCost = (s.dayStats.refreshmentCost || 0) + cost;
+    }
     s.careUsed = true;
-    s.careLine = d && d.care ? d.care : '她接过水，慢慢放松下来。';
+    s.careId = item.id;
+    s.careLine = (item.id === 'water' && d && d.care) ? d.care : item.line;
     s.wishRevealed = true;
     if (customer.wishLine) { s.careLine += ' 她小声说：“' + customer.wishLine + '”'; }
-    s.affinity = clamp(s.affinity + 6, 0, 100);
+    s.affinity = clamp(s.affinity + item.affinity, 0, 100);
     s.expression = 'happy';
     Engine.recomputePatience();
     Engine.save();
-    return { ok: true, line: s.careLine };
+    return { ok: true, line: s.careLine, item: item, cost: cost };
   };
 
   Engine.reactToItem = function (id) {
@@ -4847,7 +4864,7 @@
     switch (goal.type) {
       case 'sales': current = ds.sales; break;
       case 'revenue': current = ds.revenue; break;
-      case 'profit': current = ds.revenue - ds.cogs - ds.marketingCost - ds.rent + ds.goalBonus; break;
+      case 'profit': current = ds.revenue - ds.cogs - ds.marketingCost - (ds.staffCost || 0) - (ds.weatherCost || 0) - (ds.refreshmentCost || 0) - ds.rent; break;
       case 'fans': current = s.fans; break;
       case 'styleScore': current = ds.stylingBest ? ds.stylingBest.score : 0; break;
     }
@@ -4925,7 +4942,7 @@
 
     s.cash -= ds.rent;
 
-    ds.profit = ds.revenue - ds.cogs - ds.marketingCost - (ds.staffCost || 0) - (ds.weatherCost || 0) - ds.rent;
+    ds.profit = ds.revenue - ds.cogs - ds.marketingCost - (ds.staffCost || 0) - (ds.weatherCost || 0) - (ds.refreshmentCost || 0) - ds.rent;
 
     ds.goalMet = Engine.checkGoal(cfg.goal);
     if (ds.goalMet) {
@@ -4963,6 +4980,7 @@
       cash: s.cash,
       loan: ds.loan,
       goalBonus: ds.goalBonus,
+      refreshmentCost: ds.refreshmentCost || 0,
       staffServed: ds.staffServed || 0,
       staffSales: ds.staffSales || 0,
       crowdLeft: ds.crowdLeft || 0,
