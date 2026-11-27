@@ -37,7 +37,7 @@
   <div id="modal-root"></div>
   <div id="debug-root"></div>
 
-  <script>window.__WARDROBE_H5_BUILD__ = true; window.__WARDROBE_BUILD_ID__ = "efc51f232d40";</script>
+  <script>window.__WARDROBE_H5_BUILD__ = true; window.__WARDROBE_BUILD_ID__ = "b37edebd24a5";</script>
   <script>
 (function(){
   var BUILD = window.__WARDROBE_BUILD_ID__ || '';
@@ -71,7 +71,18 @@
   }
   if (!jobs.length) { return; }
   var done = false;
-  function go(){ if (done) { return; } done = true; try { location.reload(); } catch (e) {} }
+  function go(){
+    if (done) { return; }
+    done = true;
+    try {
+      // 带一个新 query 重新进入，绕开 GitHub Pages / 浏览器对旧 index.html 的 HTTP 缓存
+      var u = new URL(location.href);
+      u.searchParams.set('__build', BUILD);
+      location.replace(u.href);
+    } catch (e) {
+      try { location.reload(); } catch (e2) {}
+    }
+  }
   Promise.all(jobs).then(function(){ if (hadOld) { go(); } }, function(){ if (hadOld) { go(); } });
   setTimeout(function(){ if (hadOld) { go(); } }, 2500);
 })();
