@@ -1,9 +1,9 @@
 {
   "app": "malt-and-hops",
-  "version": "0.8.0",
-  "cacheVersion": "malt-hops-a4f6b460572f",
-  "builtAt": "2026-11-27T00:57:34.088Z",
-  "sourceCommit": "3814268",
+  "version": "0.9.0",
+  "cacheVersion": "malt-hops-e4bc3a3f95d1",
+  "builtAt": "2026-11-27T01:04:42.232Z",
+  "sourceCommit": "42a6297",
   "repo": "cvreaderpy/wardrobe-game-h5",
   "path": "malt-and-hops"
 }
