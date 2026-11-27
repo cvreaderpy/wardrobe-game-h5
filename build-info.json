@@ -1,7 +1,7 @@
 {
-  "builtAt": "2026-11-27T22:29:31.224Z",
-  "commit": "ba63825",
-  "cacheVersion": "914d57768987",
+  "builtAt": "2026-11-27T22:57:22.358Z",
+  "commit": "2260f22",
+  "cacheVersion": "97862a51f19e",
   "assetVersion": 28,
   "precache": [
     "./",
@@ -41,6 +41,6 @@
     "./assets/hd/offline/manifest.js",
     "./assets/hd/offline/base/generic.webp"
   ],
-  "precacheExtra": 452,
+  "precacheExtra": 554,
   "singleFile": "wardrobe-game.html"
 }

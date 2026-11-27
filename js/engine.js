@@ -3801,7 +3801,7 @@
       var items = Engine.getInventoryItems(cat);
       if (items && items.length) { defaults.push(items[0].id); }
     });
-    s.selectedItems = defaults;
+    s.selectedItems = Engine.normalizeSelection(defaults);
     s.serviceMode = 'styling';
     s.quickOptions = [];
     s.activeCategory = 'all';
@@ -3831,7 +3831,7 @@
     var customer = Engine.currentCustomer();
     if (!s || !customer || !s.quickOptions || !s.quickOptions[index]) { return { ok: false }; }
     var opt = s.quickOptions[index];
-    s.selectedItems = opt.items.slice();
+    s.selectedItems = Engine.normalizeSelection(opt.items);
     s.serviceMode = 'styling';
     s.activeCategory = 'all';
     s.accessorySlot = 'all';
@@ -3867,6 +3867,39 @@
     s.activeCategory = cat || 'all';
     s.accessorySlot = 'all';
     Engine.save();
+  };
+
+  // 统一收拾选择：同 cat 留最后一件，dress 与 top/bottom 互斥，
+  // 配饰按 slot 去重；外套和上衣是不同 cat，正常叠穿。
+  Engine.normalizeSelection = function (ids) {
+    var src = (ids || []).filter(Boolean);
+    var out = [];
+    var seen = {};
+    var seenAcc = {};
+    var groupMode = '';
+    for (var i = src.length - 1; i >= 0; i--) {
+      var it = D.ITEMS_BY_ID[src[i]];
+      if (!it) { continue; }
+      var cat = it.cat;
+      if (cat === 'top' || cat === 'bottom') {
+        if (groupMode === 'dress') { continue; }
+        groupMode = 'separates';
+        if (seen[cat]) { continue; }
+      } else if (cat === 'dress') {
+        if (groupMode === 'separates') { continue; }
+        groupMode = 'dress';
+        if (seen.dress) { continue; }
+      } else if (cat === 'accessory') {
+        var slot = it.slot || 'other';
+        if (seenAcc[slot]) { continue; }
+        seenAcc[slot] = true;
+      } else if (seen[cat]) {
+        continue;
+      }
+      seen[cat] = true;
+      out.unshift(src[i]);
+    }
+    return out;
   };
 
   Engine.toggleItem = function (id) {
@@ -4321,7 +4354,7 @@
     var s = Engine.state;
     var customer = Engine.currentCustomer();
     if (!s || !customer) { return null; }
-    itemIds = (itemIds || []).slice();
+    itemIds = Engine.normalizeSelection(itemIds);
     var result = Engine.scoreOutfit(customer, itemIds);
     var extras = Engine.evaluateExtras(customer, itemIds, result);
     var over = result.total > customer.budget * 1.15;
@@ -4391,7 +4424,7 @@
     if (!s) { return { ok: false }; }
     var pr = Engine.buildPendingResult(itemIds);
     if (!pr) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
-    s.selectedItems = (itemIds || []).slice();
+    s.selectedItems = Engine.normalizeSelection(itemIds);
     var rec = queueRecord(s.servingCustomerId);
     if (rec) { rec.itemIds = (itemIds || []).slice(); }
     var rooms = Engine.getFittingRooms();
