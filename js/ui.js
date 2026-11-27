@@ -3330,7 +3330,8 @@
     var q = E.getQueueSummary();
     var waiting = rec.status === 'fittingWait';
     var items = (s.selectedItems && s.selectedItems.length) ? s.selectedItems.slice() : ((rec.itemIds || []).slice());
-    if (!s.selectedItems || !s.selectedItems.length) { s.selectedItems = items.slice(); }
+    items = E.normalizeSelection(items);
+    if (items.join('|') !== (s.selectedItems || []).join('|')) { s.selectedItems = items.slice(); }
     var names = items.map(function (id) {
       var it = itemById(id);
       return it ? it.name : '';

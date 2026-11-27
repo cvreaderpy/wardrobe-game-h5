@@ -542,42 +542,42 @@
    "ay": 160
   },
   "g_tote": {
-   "file": "assets/hd/offline/icons/g_tote.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_tote.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_black": {
-   "file": "assets/hd/offline/icons/g_black.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_black.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_mini": {
-   "file": "assets/hd/offline/icons/g_mini.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_mini.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_bucket": {
-   "file": "assets/hd/offline/icons/g_bucket.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_bucket.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_shoulder": {
-   "file": "assets/hd/offline/icons/g_shoulder.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_shoulder.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_saddle": {
-   "file": "assets/hd/offline/icons/g_saddle.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_saddle.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_backpack": {
-   "file": "assets/hd/offline/icons/g_backpack.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_backpack.webp?v=28",
    "w": 256,
    "h": 256
   },
   "g_clutch": {
-   "file": "assets/hd/offline/icons/g_clutch.webp?v=28",
+   "file": "assets/hd/offline/icons-ai/g_clutch.webp?v=28",
    "w": 256,
    "h": 256
   },
@@ -608,6 +608,136 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/icons/h_legging.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_scarf": {
+   "file": "assets/hd/offline/icons-ai/a_scarf.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_pearl": {
+   "file": "assets/hd/offline/icons-ai/a_pearl.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_glasses": {
+   "file": "assets/hd/offline/icons-ai/a_glasses.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_beret": {
+   "file": "assets/hd/offline/icons-ai/a_beret.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_belt": {
+   "file": "assets/hd/offline/icons-ai/a_belt.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_clip": {
+   "file": "assets/hd/offline/icons-ai/a_clip.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_sun": {
+   "file": "assets/hd/offline/icons-ai/a_sun.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_chain": {
+   "file": "assets/hd/offline/icons-ai/a_chain.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_choker": {
+   "file": "assets/hd/offline/icons-ai/a_choker.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_pendant": {
+   "file": "assets/hd/offline/icons-ai/a_pendant.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_collar": {
+   "file": "assets/hd/offline/icons-ai/a_collar.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_stud": {
+   "file": "assets/hd/offline/icons-ai/a_stud.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_hoop": {
+   "file": "assets/hd/offline/icons-ai/a_hoop.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_drop": {
+   "file": "assets/hd/offline/icons-ai/a_drop.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_cuff": {
+   "file": "assets/hd/offline/icons-ai/a_cuff.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_hairbow": {
+   "file": "assets/hd/offline/icons-ai/a_hairbow.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_scrunchie": {
+   "file": "assets/hd/offline/icons-ai/a_scrunchie.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_claw": {
+   "file": "assets/hd/offline/icons-ai/a_claw.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_headband": {
+   "file": "assets/hd/offline/icons-ai/a_headband.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_hairpin": {
+   "file": "assets/hd/offline/icons-ai/a_hairpin.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_bangle": {
+   "file": "assets/hd/offline/icons-ai/a_bangle.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_beads": {
+   "file": "assets/hd/offline/icons-ai/a_beads.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_watch": {
+   "file": "assets/hd/offline/icons-ai/a_watch.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_ring": {
+   "file": "assets/hd/offline/icons-ai/a_ring.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_chainbelt": {
+   "file": "assets/hd/offline/icons-ai/a_chainbelt.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_brooch": {
+   "file": "assets/hd/offline/icons-ai/a_brooch.webp?v=28",
    "w": 256,
    "h": 256
   }
@@ -1659,28 +1789,28 @@
    "file": "assets/hd/offline/swatches/s_sneaker.webp?v=28"
   },
   "g_tote": {
-   "file": "assets/hd/offline/swatches/g_tote.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_tote.webp?v=28"
   },
   "g_black": {
-   "file": "assets/hd/offline/swatches/g_black.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_black.webp?v=28"
   },
   "g_mini": {
-   "file": "assets/hd/offline/swatches/g_mini.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_mini.webp?v=28"
   },
   "g_bucket": {
-   "file": "assets/hd/offline/swatches/g_bucket.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_bucket.webp?v=28"
   },
   "g_shoulder": {
-   "file": "assets/hd/offline/swatches/g_shoulder.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_shoulder.webp?v=28"
   },
   "g_saddle": {
-   "file": "assets/hd/offline/swatches/g_saddle.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_saddle.webp?v=28"
   },
   "g_backpack": {
-   "file": "assets/hd/offline/swatches/g_backpack.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_backpack.webp?v=28"
   },
   "g_clutch": {
-   "file": "assets/hd/offline/swatches/g_clutch.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai/g_clutch.webp?v=28"
   },
   "h_sheer": {
    "file": "assets/hd/offline/swatches/h_sheer.webp?v=28"
@@ -1699,6 +1829,84 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/swatches/h_legging.webp?v=28"
+  },
+  "a_scarf": {
+   "file": "assets/hd/offline/swatches-ai/a_scarf.webp?v=28"
+  },
+  "a_pearl": {
+   "file": "assets/hd/offline/swatches-ai/a_pearl.webp?v=28"
+  },
+  "a_glasses": {
+   "file": "assets/hd/offline/swatches-ai/a_glasses.webp?v=28"
+  },
+  "a_beret": {
+   "file": "assets/hd/offline/swatches-ai/a_beret.webp?v=28"
+  },
+  "a_belt": {
+   "file": "assets/hd/offline/swatches-ai/a_belt.webp?v=28"
+  },
+  "a_clip": {
+   "file": "assets/hd/offline/swatches-ai/a_clip.webp?v=28"
+  },
+  "a_sun": {
+   "file": "assets/hd/offline/swatches-ai/a_sun.webp?v=28"
+  },
+  "a_chain": {
+   "file": "assets/hd/offline/swatches-ai/a_chain.webp?v=28"
+  },
+  "a_choker": {
+   "file": "assets/hd/offline/swatches-ai/a_choker.webp?v=28"
+  },
+  "a_pendant": {
+   "file": "assets/hd/offline/swatches-ai/a_pendant.webp?v=28"
+  },
+  "a_collar": {
+   "file": "assets/hd/offline/swatches-ai/a_collar.webp?v=28"
+  },
+  "a_stud": {
+   "file": "assets/hd/offline/swatches-ai/a_stud.webp?v=28"
+  },
+  "a_hoop": {
+   "file": "assets/hd/offline/swatches-ai/a_hoop.webp?v=28"
+  },
+  "a_drop": {
+   "file": "assets/hd/offline/swatches-ai/a_drop.webp?v=28"
+  },
+  "a_cuff": {
+   "file": "assets/hd/offline/swatches-ai/a_cuff.webp?v=28"
+  },
+  "a_hairbow": {
+   "file": "assets/hd/offline/swatches-ai/a_hairbow.webp?v=28"
+  },
+  "a_scrunchie": {
+   "file": "assets/hd/offline/swatches-ai/a_scrunchie.webp?v=28"
+  },
+  "a_claw": {
+   "file": "assets/hd/offline/swatches-ai/a_claw.webp?v=28"
+  },
+  "a_headband": {
+   "file": "assets/hd/offline/swatches-ai/a_headband.webp?v=28"
+  },
+  "a_hairpin": {
+   "file": "assets/hd/offline/swatches-ai/a_hairpin.webp?v=28"
+  },
+  "a_bangle": {
+   "file": "assets/hd/offline/swatches-ai/a_bangle.webp?v=28"
+  },
+  "a_beads": {
+   "file": "assets/hd/offline/swatches-ai/a_beads.webp?v=28"
+  },
+  "a_watch": {
+   "file": "assets/hd/offline/swatches-ai/a_watch.webp?v=28"
+  },
+  "a_ring": {
+   "file": "assets/hd/offline/swatches-ai/a_ring.webp?v=28"
+  },
+  "a_chainbelt": {
+   "file": "assets/hd/offline/swatches-ai/a_chainbelt.webp?v=28"
+  },
+  "a_brooch": {
+   "file": "assets/hd/offline/swatches-ai/a_brooch.webp?v=28"
   }
  },
  "details": {
@@ -1883,28 +2091,28 @@
    "file": "assets/hd/offline/detail/s_sneaker.webp?v=28"
   },
   "g_tote": {
-   "file": "assets/hd/offline/detail/g_tote.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_tote.webp?v=28"
   },
   "g_black": {
-   "file": "assets/hd/offline/detail/g_black.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_black.webp?v=28"
   },
   "g_mini": {
-   "file": "assets/hd/offline/detail/g_mini.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_mini.webp?v=28"
   },
   "g_bucket": {
-   "file": "assets/hd/offline/detail/g_bucket.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_bucket.webp?v=28"
   },
   "g_shoulder": {
-   "file": "assets/hd/offline/detail/g_shoulder.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_shoulder.webp?v=28"
   },
   "g_saddle": {
-   "file": "assets/hd/offline/detail/g_saddle.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_saddle.webp?v=28"
   },
   "g_backpack": {
-   "file": "assets/hd/offline/detail/g_backpack.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_backpack.webp?v=28"
   },
   "g_clutch": {
-   "file": "assets/hd/offline/detail/g_clutch.webp?v=28"
+   "file": "assets/hd/offline/detail-ai/g_clutch.webp?v=28"
   },
   "h_sheer": {
    "file": "assets/hd/offline/detail/h_sheer.webp?v=28"
@@ -1923,6 +2131,84 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/detail/h_legging.webp?v=28"
+  },
+  "a_scarf": {
+   "file": "assets/hd/offline/detail-ai/a_scarf.webp?v=28"
+  },
+  "a_pearl": {
+   "file": "assets/hd/offline/detail-ai/a_pearl.webp?v=28"
+  },
+  "a_glasses": {
+   "file": "assets/hd/offline/detail-ai/a_glasses.webp?v=28"
+  },
+  "a_beret": {
+   "file": "assets/hd/offline/detail-ai/a_beret.webp?v=28"
+  },
+  "a_belt": {
+   "file": "assets/hd/offline/detail-ai/a_belt.webp?v=28"
+  },
+  "a_clip": {
+   "file": "assets/hd/offline/detail-ai/a_clip.webp?v=28"
+  },
+  "a_sun": {
+   "file": "assets/hd/offline/detail-ai/a_sun.webp?v=28"
+  },
+  "a_chain": {
+   "file": "assets/hd/offline/detail-ai/a_chain.webp?v=28"
+  },
+  "a_choker": {
+   "file": "assets/hd/offline/detail-ai/a_choker.webp?v=28"
+  },
+  "a_pendant": {
+   "file": "assets/hd/offline/detail-ai/a_pendant.webp?v=28"
+  },
+  "a_collar": {
+   "file": "assets/hd/offline/detail-ai/a_collar.webp?v=28"
+  },
+  "a_stud": {
+   "file": "assets/hd/offline/detail-ai/a_stud.webp?v=28"
+  },
+  "a_hoop": {
+   "file": "assets/hd/offline/detail-ai/a_hoop.webp?v=28"
+  },
+  "a_drop": {
+   "file": "assets/hd/offline/detail-ai/a_drop.webp?v=28"
+  },
+  "a_cuff": {
+   "file": "assets/hd/offline/detail-ai/a_cuff.webp?v=28"
+  },
+  "a_hairbow": {
+   "file": "assets/hd/offline/detail-ai/a_hairbow.webp?v=28"
+  },
+  "a_scrunchie": {
+   "file": "assets/hd/offline/detail-ai/a_scrunchie.webp?v=28"
+  },
+  "a_claw": {
+   "file": "assets/hd/offline/detail-ai/a_claw.webp?v=28"
+  },
+  "a_headband": {
+   "file": "assets/hd/offline/detail-ai/a_headband.webp?v=28"
+  },
+  "a_hairpin": {
+   "file": "assets/hd/offline/detail-ai/a_hairpin.webp?v=28"
+  },
+  "a_bangle": {
+   "file": "assets/hd/offline/detail-ai/a_bangle.webp?v=28"
+  },
+  "a_beads": {
+   "file": "assets/hd/offline/detail-ai/a_beads.webp?v=28"
+  },
+  "a_watch": {
+   "file": "assets/hd/offline/detail-ai/a_watch.webp?v=28"
+  },
+  "a_ring": {
+   "file": "assets/hd/offline/detail-ai/a_ring.webp?v=28"
+  },
+  "a_chainbelt": {
+   "file": "assets/hd/offline/detail-ai/a_chainbelt.webp?v=28"
+  },
+  "a_brooch": {
+   "file": "assets/hd/offline/detail-ai/a_brooch.webp?v=28"
   }
  },
  "defaults": {
