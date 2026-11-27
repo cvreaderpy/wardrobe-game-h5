@@ -85,7 +85,7 @@
    "h": 432
   },
   "t_shirt": {
-   "file": "assets/hd/offline/tops/t_shirt.webp?v=28",
+   "file": "assets/hd/offline/tops-clean/t_shirt.webp?v=28",
    "x": 237,
    "y": 187,
    "w": 277,
@@ -1945,6 +1945,19 @@
      "t5": "assets/hd/offline/defaults/safety-shorts-skin-t5.webp?v=28"
     }
    }
+  }
+ },
+ "arms": {
+  "x": 235,
+  "y": 227,
+  "w": 279,
+  "h": 392,
+  "tones": {
+   "t1": "assets/hd/offline/arms/arms-t1.webp?v=28",
+   "t2": "assets/hd/offline/arms/arms-t2.webp?v=28",
+   "t3": "assets/hd/offline/arms/arms-t3.webp?v=28",
+   "t4": "assets/hd/offline/arms/arms-t4.webp?v=28",
+   "t5": "assets/hd/offline/arms/arms-t5.webp?v=28"
   }
  }
 }
