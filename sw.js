@@ -12,7 +12,7 @@
  */
 'use strict';
 
-var CACHE_VERSION = 'wardrobe-game-c369527fd558';
+var CACHE_VERSION = 'wardrobe-game-c5a382b245a6';
 var ASSET_CACHE = 'wardrobe-assets-v28';
 var PRECACHE = [
   "./",
