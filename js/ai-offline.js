@@ -119,6 +119,10 @@
     if (arms && arms.tones && arms.tones[tone]) {
       layers.push({ file: arms.tones[tone], x: arms.x, y: arms.y, w: arms.w, h: arms.h });
     }
+    var mid = m.midriff;
+    if (mid && mid.tones && mid.tones[tone]) {
+      layers.push({ file: mid.tones[tone], x: mid.x, y: mid.y, w: mid.w, h: mid.h });
+    }
     var def = m.defaults && m.defaults.safetyShorts;
     if (cats.dresses) {
       layers.push(m.dresses[cats.dresses]);
