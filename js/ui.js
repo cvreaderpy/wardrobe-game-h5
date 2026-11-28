@@ -3181,7 +3181,11 @@
 
   UI.vectorLookUrl = function (c, ids, pose, expr) {
     if (!c || !window.Iso || !Iso.character || !Iso.character.imageUrl) { return ''; }
-    var o = Iso.character.outfit({ selectedItems: ids || [] }, c);
+    var s = E.state;
+    var o = Iso.character.outfit({
+      selectedItems: ids || [],
+      itemColors: (s && s.itemColors) || {}
+    }, c);
     return Iso.character.imageUrl(Iso.character.appearance(c), o, pose || 'stand', expr || 'calm');
   };
 
@@ -3198,9 +3202,11 @@
 
   UI.lookHtml = function (c, ids, opts) {
     opts = opts || {};
+    var s = E.state;
+    var colors = opts.colors || (s && s.itemColors) || {};
     var fb = UI.vectorLookUrl(c, ids, 'stand', 'calm');
     if (!UI.aiOnline && window.AILook && AILook.ready()) {
-      var html = AILook.html(c && c.id, ids || [], { cls: opts.cls, fallback: fb });
+      var html = AILook.html(c && c.id, ids || [], { cls: opts.cls, fallback: fb, colors: colors });
       if (html) { return html; }
     }
     if (UI.aiOnline) { return UI.aiLookImg(c, ids, opts.id, opts.cls); }
@@ -3237,6 +3243,34 @@
       '</button>';
   };
 
+  UI.fittingColorRows = function (items, s) {
+    var rows = [];
+    (items || []).forEach(function (id) {
+      var it = itemById(id);
+      if (!it) { return; }
+      var opts = D.colorOptions ? D.colorOptions(id) : [];
+      if (!opts || opts.length < 2) { return; }
+      var current = E.colorOf(id);
+      var dots = opts.map(function (c) {
+        var hex = D.COLOR_HEX[c] || '#999';
+        return '<button type="button" class="fit-color-dot' + (c === current ? ' active' : '') + '"' +
+          ' data-action="fit-color" data-id="' + esc(id) + '" data-color="' + esc(c) + '"' +
+          ' style="background:' + hex + '" title="' + esc(D.COLOR_LABELS[c] || c) + '"' +
+          ' aria-label="' + esc(it.name + ' ' + (D.COLOR_LABELS[c] || c)) + '"></button>';
+      }).join('');
+      rows.push('<div class="fit-color-row">' +
+        '<span class="fit-color-name">' + esc(it.name) + '</span>' +
+        '<span class="fit-color-now">' + esc(D.COLOR_LABELS[current] || current) + '</span>' +
+        '<span class="fit-color-dots">' + dots + '</span>' +
+        '</div>');
+    });
+    if (!rows.length) { return ''; }
+    return '<div class="fit-colors">' +
+      '<div class="fit-colors-head"><strong>颜色</strong><span>穿上才看得到 · 点一下换色</span></div>' +
+      rows.join('') +
+      '</div>';
+  };
+
   UI.fittingWardrobeHtml = function (s, selected) {
     var cats = [['top', '上装'], ['bottom', '下装'], ['dress', '连衣裙'], ['outer', '外套'], ['shoes', '鞋']];
     var html = '<div class="fit-wardrobe-head"><strong>衣架</strong><span>拖到她身上，或点一下</span></div>';
@@ -3262,7 +3296,10 @@
     if (r && !r.ok && r.message) { UI.toast(r.message); }
     E.buildPendingResult(s.selectedItems);
     var rec = E.getQueueRecord(s.servingCustomerId);
-    if (rec) { rec.itemIds = (s.selectedItems || []).slice(); }
+    if (rec) {
+      rec.itemIds = (s.selectedItems || []).slice();
+      rec.itemColors = E.colorSnapshot(s.selectedItems);
+    }
     E.save();
     UI._screenSig = '';
     UI.render();
@@ -3345,6 +3382,7 @@
         '<div class="fitting-ai-loading"><span class="fit-spinner"></span>正在换装…</div>' +
         '<div class="fitting-ai-hint">把衣服拖到她身上 · 也可以点衣架上的单品</div>' +
       '</div>' +
+      UI.fittingColorRows(items, s) +
       '<div class="fitting-wardrobe">' + UI.fittingWardrobeHtml(s, items) + '</div>' +
     '</div>';
     html += '<div class="fitting-wish">' + wishCard(s, c) + '</div>';
@@ -3394,7 +3432,7 @@
     var html = header(s, '试穿结果');
     html += queueStrip(s);
     html += '<div class="result-hero">' +
-      '<div class="result-look">' + UI.lookHtml(c, pr.itemIds, { cls: 'result-look-stack' }) + '</div>' +
+      '<div class="result-look">' + UI.lookHtml(c, pr.itemIds, { cls: 'result-look-stack', colors: pr.itemColors }) + '</div>' +
       '<div class="result-title">' + esc(title) + '</div>' +
       '<div class="result-sub">' + esc(c.name) + ' · ' + esc(sub) + '</div>' +
       scoreRing(r.score) +
@@ -3958,7 +3996,7 @@
     var c = E.currentCustomer();
     if (!s || !c) { return; }
     var ids = lookIdsFor(s);
-    if (window.AILook && AILook.preload) { AILook.preload(c.id, ids); }
+    if (window.AILook && AILook.preload) { AILook.preload(c.id, ids, E.state && E.state.itemColors); }
     var names = ids.map(function (id) {
       var it = itemById(id);
       return it ? it.name : '';
@@ -4419,7 +4457,7 @@
 
   /* ---------------- 事件分发 ---------------- */
 
-  UI.handle = function (action, id) {
+  UI.handle = function (action, id, color) {
     var s = E.state;
 
     switch (action) {
@@ -4899,14 +4937,14 @@
         break;
       case 'start-fitting-room':
         E.startFittingRoom();
-        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
+        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems, s.itemColors); }
         if (window.Scene) { Scene.play('page'); }
         UI.render();
         UI.scrollTop();
         break;
       case 'skip-chat':
         E.startFittingRoom();
-        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
+        if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems, s.itemColors); }
         if (window.Scene) { Scene.play('page'); }
         UI.render();
         UI.scrollTop();
@@ -4966,7 +5004,7 @@
         if (!tryRes.ok) {
           UI.toast(tryRes.message);
         } else {
-          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
+          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems, s.itemColors); }
           if (window.Scene) { Scene.play('hanger'); }
           UI.toast('她试了试：' + tryRes.hint);
           UI.render();
@@ -5006,6 +5044,15 @@
         E.setStyleFilter(id);
         UI.render();
         break;
+      case 'fit-color': {
+        var colorRes = E.setItemColor(id, color);
+        if (!colorRes.ok && colorRes.message) { UI.toast(colorRes.message); }
+        if (window.AILook && AILook.preload && s) {
+          AILook.preload(s.servingCustomerId, s.selectedItems, s.itemColors);
+        }
+        UI.render();
+        break;
+      }
       case 'fitting-item': {
         if (UI._suppressToggleUntil && Date.now() < UI._suppressToggleUntil) {
           UI._suppressToggleUntil = 0;
@@ -5039,7 +5086,7 @@
           UI.toast('先选几件衣服再试穿');
         } else {
           var fitRes = E.startTryOn(s.selectedItems);
-          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems); }
+          if (window.AILook && AILook.preload) { AILook.preload(s.servingCustomerId, s.selectedItems, s.itemColors); }
           if (window.Scene) { Scene.play('curtain'); }
           if (fitRes && fitRes.waiting) { UI.toast('试衣间满了，先排个队'); }
           UI.render();

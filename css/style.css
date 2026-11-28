@@ -6172,6 +6172,60 @@ body.prep-active .debug-panel {
   white-space: nowrap;
   pointer-events: none;
 }
+.fit-colors {
+  flex: none;
+  border: 2px solid #5B4636;
+  border-radius: 16px;
+  background: #FFF9EF;
+  padding: 9px 11px;
+  box-shadow: 0 5px 0 rgba(91,70,54,.08);
+}
+.fit-colors-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1.5px dashed #DCCBB4;
+  margin-bottom: 7px;
+}
+.fit-colors-head strong { font-size: 13px; color: #6B4F3A; }
+.fit-colors-head span { font-size: 10px; color: #9A8067; }
+.fit-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.fit-color-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6B4F3A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fit-color-now {
+  flex: none;
+  font-size: 10px;
+  color: #9A8067;
+}
+.fit-color-dots { display: flex; gap: 6px; flex: none; }
+.fit-color-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #FFF9EF;
+  box-shadow: 0 0 0 1px #DCCBB4;
+  padding: 0;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.fit-color-dot.active {
+  box-shadow: 0 0 0 2px #5B4636;
+  transform: scale(1.1);
+}
 .fitting-wardrobe {
   flex: none;
   min-width: 0;
@@ -6280,6 +6334,7 @@ body.prep-active .debug-panel {
 .ai-look-stack { position: absolute; inset: 0; opacity: 0; transition: opacity .25s ease; }
 .ai-look-stack.is-ready { opacity: 1; }
 .ai-look-stack img { position: absolute; display: block; }
+.ai-hose { position: absolute; display: block; pointer-events: none; }
 .ai-look-frame > .ai-look-vector {
   position: absolute;
   inset: 0;
