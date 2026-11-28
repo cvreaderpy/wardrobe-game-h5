@@ -42,6 +42,13 @@
    "w": 250,
    "h": 320
   },
+  "t_halter": {
+   "file": "assets/hd/offline/tops/t_halter.webp?v=28",
+   "x": 256,
+   "y": 193,
+   "w": 236,
+   "h": 255
+  },
   "t_hoodie": {
    "file": "assets/hd/offline/tops/t_hoodie.webp?v=28",
    "x": 208,
@@ -75,6 +82,13 @@
    "x": 251,
    "y": 187,
    "w": 251,
+   "h": 326
+  },
+  "t_puff": {
+   "file": "assets/hd/offline/tops/t_puff.webp?v=28",
+   "x": 248,
+   "y": 187,
+   "w": 261,
    "h": 326
   },
   "t_satin": {
@@ -118,6 +132,34 @@
    "y": 193,
    "w": 246,
    "h": 270
+  },
+  "t_crop_black": {
+   "file": "assets/hd/offline/tops/t_crop_black.webp?v=28",
+   "x": 251,
+   "y": 193,
+   "w": 250,
+   "h": 320
+  },
+  "t_shirt_black": {
+   "file": "assets/hd/offline/tops/t_shirt_black.webp?v=28",
+   "x": 237,
+   "y": 187,
+   "w": 277,
+   "h": 431
+  },
+  "t_knit_rose": {
+   "file": "assets/hd/offline/tops/t_knit_rose.webp?v=28",
+   "x": 219,
+   "y": 187,
+   "w": 315,
+   "h": 431
+  },
+  "t_cami_wine": {
+   "file": "assets/hd/offline/tops/t_cami_wine.webp?v=28",
+   "x": 256,
+   "y": 193,
+   "w": 243,
+   "h": 255
   }
  },
  "icons": {
@@ -156,6 +198,13 @@
    "ax": 232,
    "ay": 174
   },
+  "t_halter": {
+   "file": "assets/hd/offline/icons/t_halter.webp?v=28",
+   "w": 198,
+   "h": 256,
+   "ax": 241,
+   "ay": 178
+  },
   "t_hoodie": {
    "file": "assets/hd/offline/icons/t_hoodie.webp?v=28",
    "w": 198,
@@ -189,6 +238,13 @@
    "w": 198,
    "h": 256,
    "ax": 232,
+   "ay": 168
+  },
+  "t_puff": {
+   "file": "assets/hd/offline/icons/t_puff.webp?v=28",
+   "w": 198,
+   "h": 256,
+   "ax": 229,
    "ay": 168
   },
   "t_satin": {
@@ -260,6 +316,13 @@
    "h": 256,
    "ax": 213,
    "ay": 378
+  },
+  "b_midi": {
+   "file": "assets/hd/offline/icons/b_midi.webp?v=28",
+   "w": 139,
+   "h": 256,
+   "ax": 216,
+   "ay": 384
   },
   "b_pleat": {
    "file": "assets/hd/offline/icons/b_pleat.webp?v=28",
@@ -359,6 +422,13 @@
    "ax": 254,
    "ay": 1009
   },
+  "s_mule": {
+   "file": "assets/hd/offline/icons/s_mule.webp?v=28",
+   "w": 256,
+   "h": 139,
+   "ax": 256,
+   "ay": 1008
+  },
   "s_platform": {
    "file": "assets/hd/offline/icons/s_platform.webp?v=28",
    "w": 256,
@@ -450,6 +520,13 @@
    "ax": 204,
    "ay": 152
   },
+  "d_slip_black": {
+   "file": "assets/hd/offline/icons/d_slip_black.webp?v=28",
+   "w": 119,
+   "h": 256,
+   "ax": 203,
+   "ay": 152
+  },
   "d_sundress": {
    "file": "assets/hd/offline/icons/d_sundress.webp?v=28",
    "w": 119,
@@ -534,6 +611,13 @@
    "ax": 156,
    "ay": 142
   },
+  "o_trench_olive": {
+   "file": "assets/hd/offline/icons/o_trench_olive.webp?v=28",
+   "w": 135,
+   "h": 256,
+   "ax": 156,
+   "ay": 142
+  },
   "o_trenchshort": {
    "file": "assets/hd/offline/icons/o_trenchshort.webp?v=28",
    "w": 135,
@@ -552,7 +636,7 @@
    "h": 256
   },
   "g_mini": {
-   "file": "assets/hd/offline/icons-ai/g_mini.webp?v=28",
+   "file": "assets/hd/offline/icons-ai2/g_mini.webp?v=28",
    "w": 256,
    "h": 256
   },
@@ -572,7 +656,7 @@
    "h": 256
   },
   "g_backpack": {
-   "file": "assets/hd/offline/icons-ai/g_backpack.webp?v=28",
+   "file": "assets/hd/offline/icons-ai2/g_backpack.webp?v=28",
    "w": 256,
    "h": 256
   },
@@ -608,6 +692,26 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/icons/h_legging.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_sheer_wine": {
+   "file": "assets/hd/offline/icons/h_sheer_wine.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_opaque_black": {
+   "file": "assets/hd/offline/icons/h_opaque_black.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_knee_white": {
+   "file": "assets/hd/offline/icons/h_knee_white.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_ankle_black": {
+   "file": "assets/hd/offline/icons/h_ankle_black.webp?v=28",
    "w": 256,
    "h": 256
   },
@@ -740,6 +844,56 @@
    "file": "assets/hd/offline/icons-ai/a_brooch.webp?v=28",
    "w": 256,
    "h": 256
+  },
+  "t_crop_black": {
+   "file": "assets/hd/offline/icons/t_crop_black.webp?v=28",
+   "w": 198,
+   "h": 256
+  },
+  "t_shirt_black": {
+   "file": "assets/hd/offline/icons/t_shirt_black.webp?v=28",
+   "w": 198,
+   "h": 256
+  },
+  "t_knit_rose": {
+   "file": "assets/hd/offline/icons/t_knit_rose.webp?v=28",
+   "w": 198,
+   "h": 256
+  },
+  "t_cami_wine": {
+   "file": "assets/hd/offline/icons/t_cami_wine.webp?v=28",
+   "w": 198,
+   "h": 256
+  },
+  "b_jeans_black": {
+   "file": "assets/hd/offline/icons/b_jeans_black.webp?v=28",
+   "w": 139,
+   "h": 256
+  },
+  "b_wide_cream": {
+   "file": "assets/hd/offline/icons/b_wide_cream.webp?v=28",
+   "w": 139,
+   "h": 256
+  },
+  "d_knit_black": {
+   "file": "assets/hd/offline/icons/d_knit_black.webp?v=28",
+   "w": 119,
+   "h": 256
+  },
+  "o_blazer_black": {
+   "file": "assets/hd/offline/icons/o_blazer_black.webp?v=28",
+   "w": 135,
+   "h": 256
+  },
+  "s_loafer_black": {
+   "file": "assets/hd/offline/icons/s_loafer_black.webp?v=28",
+   "w": 256,
+   "h": 139
+  },
+  "s_boot_black": {
+   "file": "assets/hd/offline/icons/s_boot_black.webp?v=28",
+   "w": 256,
+   "h": 139
   }
  },
  "bottoms": {
@@ -783,6 +937,26 @@
    "y": 413,
    "w": 256,
    "h": 590
+  },
+  "b_midi": {
+   "file": "assets/hd/offline/bottoms/b_midi.webp?v=28",
+   "x": 245,
+   "y": 413,
+   "w": 261,
+   "h": 590,
+   "skin": {
+    "x": 292,
+    "y": 898,
+    "w": 188,
+    "h": 108,
+    "tones": {
+     "t1": "assets/hd/offline/skins/b_midi-t1.webp?v=28",
+     "t2": "assets/hd/offline/skins/b_midi-t2.webp?v=28",
+     "t3": "assets/hd/offline/skins/b_midi-t3.webp?v=28",
+     "t4": "assets/hd/offline/skins/b_midi-t4.webp?v=28",
+     "t5": "assets/hd/offline/skins/b_midi-t5.webp?v=28"
+    }
+   }
   },
   "b_pleat": {
    "file": "assets/hd/offline/bottoms/b_pleat.webp?v=28",
@@ -897,6 +1071,20 @@
    "y": 413,
    "w": 254,
    "h": 590
+  },
+  "b_jeans_black": {
+   "file": "assets/hd/offline/bottoms/b_jeans_black.webp?v=28",
+   "x": 251,
+   "y": 413,
+   "w": 253,
+   "h": 590
+  },
+  "b_wide_cream": {
+   "file": "assets/hd/offline/bottoms/b_wide_cream.webp?v=28",
+   "x": 248,
+   "y": 413,
+   "w": 257,
+   "h": 590
   }
  },
  "shoes": {
@@ -949,6 +1137,13 @@
    "w": 234,
    "h": 107
   },
+  "s_mule": {
+   "file": "assets/hd/offline/shoes/s_mule.webp?v=28",
+   "x": 269,
+   "y": 1021,
+   "w": 233,
+   "h": 114
+  },
   "s_platform": {
    "file": "assets/hd/offline/shoes/s_platform.webp?v=28",
    "x": 269,
@@ -983,6 +1178,20 @@
    "y": 1022,
    "w": 238,
    "h": 105
+  },
+  "s_loafer_black": {
+   "file": "assets/hd/offline/shoes/s_loafer_black.webp?v=28",
+   "x": 268,
+   "y": 1022,
+   "w": 235,
+   "h": 105
+  },
+  "s_boot_black": {
+   "file": "assets/hd/offline/shoes/s_boot_black.webp?v=28",
+   "x": 266,
+   "y": 1019,
+   "w": 241,
+   "h": 117
   }
  },
  "dresses": {
@@ -1146,6 +1355,26 @@
     }
    }
   },
+  "d_slip_black": {
+   "file": "assets/hd/offline/dresses/d_slip_black.webp?v=28",
+   "x": 245,
+   "y": 194,
+   "w": 259,
+   "h": 809,
+   "skin": {
+    "x": 293,
+    "y": 900,
+    "w": 186,
+    "h": 106,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_slip_black-t1.webp?v=28",
+     "t2": "assets/hd/offline/skins/d_slip_black-t2.webp?v=28",
+     "t3": "assets/hd/offline/skins/d_slip_black-t3.webp?v=28",
+     "t4": "assets/hd/offline/skins/d_slip_black-t4.webp?v=28",
+     "t5": "assets/hd/offline/skins/d_slip_black-t5.webp?v=28"
+    }
+   }
+  },
   "d_sundress": {
    "file": "assets/hd/offline/dresses/d_sundress.webp?v=28",
    "x": 235,
@@ -1203,6 +1432,26 @@
      "t3": "assets/hd/offline/skins/d_y2k-t3.webp?v=28",
      "t4": "assets/hd/offline/skins/d_y2k-t4.webp?v=28",
      "t5": "assets/hd/offline/skins/d_y2k-t5.webp?v=28"
+    }
+   }
+  },
+  "d_knit_black": {
+   "file": "assets/hd/offline/dresses/d_knit_black.webp?v=28",
+   "x": 244,
+   "y": 193,
+   "w": 264,
+   "h": 810,
+   "skin": {
+    "x": 297,
+    "y": 899,
+    "w": 177,
+    "h": 107,
+    "tones": {
+     "t1": "assets/hd/offline/skins/d_knit-t1.webp?v=28",
+     "t2": "assets/hd/offline/skins/d_knit-t2.webp?v=28",
+     "t3": "assets/hd/offline/skins/d_knit-t3.webp?v=28",
+     "t4": "assets/hd/offline/skins/d_knit-t4.webp?v=28",
+     "t5": "assets/hd/offline/skins/d_knit-t5.webp?v=28"
     }
    }
   }
@@ -1271,11 +1520,25 @@
    "w": 353,
    "h": 776
   },
+  "o_trench_olive": {
+   "file": "assets/hd/offline/outers/o_trench_olive.webp?v=28",
+   "x": 202,
+   "y": 188,
+   "w": 353,
+   "h": 781
+  },
   "o_trenchshort": {
    "file": "assets/hd/offline/outers/o_trenchshort.webp?v=28",
    "x": 220,
    "y": 188,
    "w": 311,
+   "h": 469
+  },
+  "o_blazer_black": {
+   "file": "assets/hd/offline/outers/o_blazer_black.webp?v=28",
+   "x": 234,
+   "y": 188,
+   "w": 286,
    "h": 469
   }
  },
@@ -1623,6 +1886,9 @@
   "t_crop": {
    "file": "assets/hd/offline/swatches/t_crop.webp?v=28"
   },
+  "t_halter": {
+   "file": "assets/hd/offline/swatches/t_halter.webp?v=28"
+  },
   "t_hoodie": {
    "file": "assets/hd/offline/swatches/t_hoodie.webp?v=28"
   },
@@ -1637,6 +1903,9 @@
   },
   "t_polo": {
    "file": "assets/hd/offline/swatches/t_polo.webp?v=28"
+  },
+  "t_puff": {
+   "file": "assets/hd/offline/swatches/t_puff.webp?v=28"
   },
   "t_satin": {
    "file": "assets/hd/offline/swatches/t_satin.webp?v=28"
@@ -1667,6 +1936,9 @@
   },
   "b_leather": {
    "file": "assets/hd/offline/swatches/b_leather.webp?v=28"
+  },
+  "b_midi": {
+   "file": "assets/hd/offline/swatches/b_midi.webp?v=28"
   },
   "b_pleat": {
    "file": "assets/hd/offline/swatches/b_pleat.webp?v=28"
@@ -1713,6 +1985,9 @@
   "d_slip": {
    "file": "assets/hd/offline/swatches/d_slip.webp?v=28"
   },
+  "d_slip_black": {
+   "file": "assets/hd/offline/swatches/d_slip_black.webp?v=28"
+  },
   "d_sundress": {
    "file": "assets/hd/offline/swatches/d_sundress.webp?v=28"
   },
@@ -1749,6 +2024,9 @@
   "o_trench": {
    "file": "assets/hd/offline/swatches/o_trench.webp?v=28"
   },
+  "o_trench_olive": {
+   "file": "assets/hd/offline/swatches/o_trench_olive.webp?v=28"
+  },
   "o_trenchshort": {
    "file": "assets/hd/offline/swatches/o_trenchshort.webp?v=28"
   },
@@ -1773,6 +2051,9 @@
   "s_mary": {
    "file": "assets/hd/offline/swatches/s_mary.webp?v=28"
   },
+  "s_mule": {
+   "file": "assets/hd/offline/swatches/s_mule.webp?v=28"
+  },
   "s_platform": {
    "file": "assets/hd/offline/swatches/s_platform.webp?v=28"
   },
@@ -1795,7 +2076,7 @@
    "file": "assets/hd/offline/swatches-ai/g_black.webp?v=28"
   },
   "g_mini": {
-   "file": "assets/hd/offline/swatches-ai/g_mini.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai2/g_mini.webp?v=28"
   },
   "g_bucket": {
    "file": "assets/hd/offline/swatches-ai/g_bucket.webp?v=28"
@@ -1807,7 +2088,7 @@
    "file": "assets/hd/offline/swatches-ai/g_saddle.webp?v=28"
   },
   "g_backpack": {
-   "file": "assets/hd/offline/swatches-ai/g_backpack.webp?v=28"
+   "file": "assets/hd/offline/swatches-ai2/g_backpack.webp?v=28"
   },
   "g_clutch": {
    "file": "assets/hd/offline/swatches-ai/g_clutch.webp?v=28"
@@ -1829,6 +2110,18 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/swatches/h_legging.webp?v=28"
+  },
+  "h_sheer_wine": {
+   "file": "assets/hd/offline/swatches/h_sheer_wine.webp?v=28"
+  },
+  "h_opaque_black": {
+   "file": "assets/hd/offline/swatches/h_opaque_black.webp?v=28"
+  },
+  "h_knee_white": {
+   "file": "assets/hd/offline/swatches/h_knee_white.webp?v=28"
+  },
+  "h_ankle_black": {
+   "file": "assets/hd/offline/swatches/h_ankle_black.webp?v=28"
   },
   "a_scarf": {
    "file": "assets/hd/offline/swatches-ai/a_scarf.webp?v=28"
@@ -1907,6 +2200,36 @@
   },
   "a_brooch": {
    "file": "assets/hd/offline/swatches-ai/a_brooch.webp?v=28"
+  },
+  "t_crop_black": {
+   "file": "assets/hd/offline/swatches/t_crop_black.webp?v=28"
+  },
+  "t_shirt_black": {
+   "file": "assets/hd/offline/swatches/t_shirt_black.webp?v=28"
+  },
+  "t_knit_rose": {
+   "file": "assets/hd/offline/swatches/t_knit_rose.webp?v=28"
+  },
+  "t_cami_wine": {
+   "file": "assets/hd/offline/swatches/t_cami_wine.webp?v=28"
+  },
+  "b_jeans_black": {
+   "file": "assets/hd/offline/swatches/b_jeans_black.webp?v=28"
+  },
+  "b_wide_cream": {
+   "file": "assets/hd/offline/swatches/b_wide_cream.webp?v=28"
+  },
+  "d_knit_black": {
+   "file": "assets/hd/offline/swatches/d_knit_black.webp?v=28"
+  },
+  "o_blazer_black": {
+   "file": "assets/hd/offline/swatches/o_blazer_black.webp?v=28"
+  },
+  "s_loafer_black": {
+   "file": "assets/hd/offline/swatches/s_loafer_black.webp?v=28"
+  },
+  "s_boot_black": {
+   "file": "assets/hd/offline/swatches/s_boot_black.webp?v=28"
   }
  },
  "details": {
@@ -1925,6 +2248,9 @@
   "t_crop": {
    "file": "assets/hd/offline/detail/t_crop.webp?v=28"
   },
+  "t_halter": {
+   "file": "assets/hd/offline/detail/t_halter.webp?v=28"
+  },
   "t_hoodie": {
    "file": "assets/hd/offline/detail/t_hoodie.webp?v=28"
   },
@@ -1939,6 +2265,9 @@
   },
   "t_polo": {
    "file": "assets/hd/offline/detail/t_polo.webp?v=28"
+  },
+  "t_puff": {
+   "file": "assets/hd/offline/detail/t_puff.webp?v=28"
   },
   "t_satin": {
    "file": "assets/hd/offline/detail/t_satin.webp?v=28"
@@ -1969,6 +2298,9 @@
   },
   "b_leather": {
    "file": "assets/hd/offline/detail/b_leather.webp?v=28"
+  },
+  "b_midi": {
+   "file": "assets/hd/offline/detail/b_midi.webp?v=28"
   },
   "b_pleat": {
    "file": "assets/hd/offline/detail/b_pleat.webp?v=28"
@@ -2015,6 +2347,9 @@
   "d_slip": {
    "file": "assets/hd/offline/detail/d_slip.webp?v=28"
   },
+  "d_slip_black": {
+   "file": "assets/hd/offline/detail/d_slip_black.webp?v=28"
+  },
   "d_sundress": {
    "file": "assets/hd/offline/detail/d_sundress.webp?v=28"
   },
@@ -2051,6 +2386,9 @@
   "o_trench": {
    "file": "assets/hd/offline/detail/o_trench.webp?v=28"
   },
+  "o_trench_olive": {
+   "file": "assets/hd/offline/detail/o_trench_olive.webp?v=28"
+  },
   "o_trenchshort": {
    "file": "assets/hd/offline/detail/o_trenchshort.webp?v=28"
   },
@@ -2075,6 +2413,9 @@
   "s_mary": {
    "file": "assets/hd/offline/detail/s_mary.webp?v=28"
   },
+  "s_mule": {
+   "file": "assets/hd/offline/detail/s_mule.webp?v=28"
+  },
   "s_platform": {
    "file": "assets/hd/offline/detail/s_platform.webp?v=28"
   },
@@ -2097,7 +2438,7 @@
    "file": "assets/hd/offline/detail-ai/g_black.webp?v=28"
   },
   "g_mini": {
-   "file": "assets/hd/offline/detail-ai/g_mini.webp?v=28"
+   "file": "assets/hd/offline/detail-ai2/g_mini.webp?v=28"
   },
   "g_bucket": {
    "file": "assets/hd/offline/detail-ai/g_bucket.webp?v=28"
@@ -2109,7 +2450,7 @@
    "file": "assets/hd/offline/detail-ai/g_saddle.webp?v=28"
   },
   "g_backpack": {
-   "file": "assets/hd/offline/detail-ai/g_backpack.webp?v=28"
+   "file": "assets/hd/offline/detail-ai2/g_backpack.webp?v=28"
   },
   "g_clutch": {
    "file": "assets/hd/offline/detail-ai/g_clutch.webp?v=28"
@@ -2131,6 +2472,18 @@
   },
   "h_legging": {
    "file": "assets/hd/offline/detail/h_legging.webp?v=28"
+  },
+  "h_sheer_wine": {
+   "file": "assets/hd/offline/detail/h_sheer_wine.webp?v=28"
+  },
+  "h_opaque_black": {
+   "file": "assets/hd/offline/detail/h_opaque_black.webp?v=28"
+  },
+  "h_knee_white": {
+   "file": "assets/hd/offline/detail/h_knee_white.webp?v=28"
+  },
+  "h_ankle_black": {
+   "file": "assets/hd/offline/detail/h_ankle_black.webp?v=28"
   },
   "a_scarf": {
    "file": "assets/hd/offline/detail-ai/a_scarf.webp?v=28"
@@ -2209,6 +2562,36 @@
   },
   "a_brooch": {
    "file": "assets/hd/offline/detail-ai/a_brooch.webp?v=28"
+  },
+  "t_crop_black": {
+   "file": "assets/hd/offline/detail/t_crop_black.webp?v=28"
+  },
+  "t_shirt_black": {
+   "file": "assets/hd/offline/detail/t_shirt_black.webp?v=28"
+  },
+  "t_knit_rose": {
+   "file": "assets/hd/offline/detail/t_knit_rose.webp?v=28"
+  },
+  "t_cami_wine": {
+   "file": "assets/hd/offline/detail/t_cami_wine.webp?v=28"
+  },
+  "b_jeans_black": {
+   "file": "assets/hd/offline/detail/b_jeans_black.webp?v=28"
+  },
+  "b_wide_cream": {
+   "file": "assets/hd/offline/detail/b_wide_cream.webp?v=28"
+  },
+  "d_knit_black": {
+   "file": "assets/hd/offline/detail/d_knit_black.webp?v=28"
+  },
+  "o_blazer_black": {
+   "file": "assets/hd/offline/detail/o_blazer_black.webp?v=28"
+  },
+  "s_loafer_black": {
+   "file": "assets/hd/offline/detail/s_loafer_black.webp?v=28"
+  },
+  "s_boot_black": {
+   "file": "assets/hd/offline/detail/s_boot_black.webp?v=28"
   }
  },
  "defaults": {

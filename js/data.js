@@ -270,7 +270,33 @@
     { id: 'a_chainbelt', name: '链条腰带', cat: 'accessory', slot: 'waist', shape: 'chainbelt', style: ['y2k', 'vintage'], colors: ['silver'], color: 'silver', formality: 3, warmth: 1, cost: 22, price: 68, fit: [], desc: '松松地挂在胯上。' },
     { id: 'a_brooch', name: '复古胸针', cat: 'accessory', slot: 'other', shape: 'brooch', style: ['vintage', 'french'], colors: ['mustard'], color: 'mustard', formality: 3, warmth: 1, cost: 25, price: 78, fit: [], desc: '别在西装领上。' },
     { id: 'h_ankle', name: '白色短袜', cat: 'hosiery', shape: 'ankle', style: ['academia', 'sporty'], colors: ['white'], color: 'white', formality: 2, warmth: 1, cost: 8, price: 28, fit: ['comfort'], desc: '配乐福鞋刚刚好。' },
-    { id: 'h_legging', name: '黑色打底裤', cat: 'hosiery', shape: 'tights', style: ['minimal', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 3, cost: 25, price: 68, fit: ['cover', 'comfort'], desc: '裙子和短裤下面都能穿。' }
+    { id: 'h_legging', name: '黑色打底裤', cat: 'hosiery', shape: 'tights', style: ['minimal', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 3, cost: 25, price: 68, fit: ['cover', 'comfort'], desc: '裙子和短裤下面都能穿。' },
+
+    /* 同款新颜色 */
+    { id: 't_crop_black', name: '短款黑 T', cat: 'top', shape: 'tee', style: ['sporty', 'cleanfit'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 37, price: 92, fit: ['slim', 'photo'], desc: '黑得干净，比例还是一样的。' },
+    { id: 't_shirt_black', name: '黑色挺括衬衫', cat: 'top', shape: 'shirt', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 72, price: 162, fit: ['tall', 'slim'], desc: '黑色把利落感放大了一档。' },
+    { id: 't_knit_rose', name: '玫瑰针织开衫', cat: 'top', shape: 'top', style: ['french', 'minimal'], colors: ['rose'], color: 'rose', formality: 3, warmth: 3, cost: 82, price: 172, fit: ['cover', 'soft'], desc: '奶油换成玫瑰，气色也跟着亮。' },
+    { id: 't_cami_wine', name: '酒红缎面吊带', cat: 'top', shape: 'cami', style: ['y2k', 'sweet'], colors: ['burgundy'], color: 'burgundy', formality: 3, warmth: 1, cost: 47, price: 122, fit: ['slim', 'tall'], desc: '比黑色多一点心事。' },
+    { id: 'b_jeans_black', name: '黑色直筒牛仔', cat: 'bottom', shape: 'pants', style: ['minimal', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 3, cost: 82, price: 192, fit: ['tall', 'cover'], desc: '黑色牛仔，什么都能压住。' },
+    { id: 'b_wide_cream', name: '奶油阔腿裤', cat: 'bottom', shape: 'pants', style: ['work', 'minimal'], colors: ['cream'], color: 'cream', formality: 4, warmth: 2, cost: 92, price: 202, fit: ['tall', 'cover'], desc: '一身黑的时候，它是那口气。' },
+    { id: 'd_knit_black', name: '黑色针织长裙', cat: 'dress', shape: 'dress', style: ['minimal', 'academia'], colors: ['black'], color: 'black', formality: 3, warmth: 4, cost: 92, price: 212, fit: ['cover', 'comfort'], desc: '黑色把针织的软收住了。' },
+    { id: 'o_blazer_black', name: '黑色西装', cat: 'outer', shape: 'blazer', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 5, warmth: 3, cost: 132, price: 302, fit: ['tall', 'slim'], desc: '该认真的时候，穿它。' },
+    { id: 's_loafer_black', name: '黑色乐福鞋', cat: 'shoes', shape: 'loafer', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 72, price: 162, fit: ['comfort'], desc: '比棕色更安静，也更百搭。' },
+    { id: 's_boot_black', name: '黑色短靴', cat: 'shoes', shape: 'boot', style: ['vintage', 'y2k'], colors: ['black'], color: 'black', formality: 3, warmth: 4, cost: 92, price: 212, fit: ['tall', 'comfort'], desc: '黑靴子，走路自带声音。' },
+
+    /* 丝袜新颜色 / 样式 */
+    { id: 'h_sheer_wine', name: '酒红透肤丝袜', cat: 'hosiery', shape: 'tights', style: ['y2k', 'vintage'], colors: ['burgundy'], color: 'burgundy', formality: 2, warmth: 1, cost: 16, price: 48, fit: ['slim', 'photo'], desc: '透一点酒红，像灯光落在腿上。' },
+    { id: 'h_opaque_black', name: '黑色不透连裤袜', cat: 'hosiery', shape: 'tights', style: ['minimal', 'work'], colors: ['black'], color: 'black', formality: 3, warmth: 3, cost: 24, price: 62, fit: ['cover', 'comfort'], desc: '冷天的第二条裤子，黑色最稳。' },
+    { id: 'h_knee_white', name: '白色及膝袜', cat: 'hosiery', shape: 'knee', style: ['academia', 'sweet'], colors: ['white'], color: 'white', formality: 2, warmth: 2, cost: 10, price: 35, fit: ['soft', 'comfort'], desc: '白袜子一穿，学院味就回来了。' },
+    { id: 'h_ankle_black', name: '黑色短袜', cat: 'hosiery', shape: 'ankle', style: ['y2k', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 8, price: 28, fit: ['comfort'], desc: '黑短袜配乐福鞋，干净利落。' },
+
+    /* 新样式 */
+    { id: 't_halter', name: '黑色挂脖背心', cat: 'top', shape: 'cami', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 50, price: 128, fit: ['slim', 'photo'], desc: '肩颈线露出来，黑得很轻。' },
+    { id: 't_puff', name: '奶油泡泡袖衬衫', cat: 'top', shape: 'blouse', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 3, warmth: 2, cost: 65, price: 158, fit: ['soft', 'photo'], desc: '袖口蓬一点，整个人就软了。' },
+    { id: 'b_midi', name: '巧克力缎面中长裙', cat: 'bottom', shape: 'skirt', style: ['french', 'work'], colors: ['chocolate'], color: 'chocolate', formality: 3, warmth: 2, cost: 75, price: 178, fit: ['tall', 'cover'], desc: '走起来有光，停下来也稳。' },
+    { id: 'd_slip_black', name: '黑色缎面吊带裙', cat: 'dress', shape: 'dress', style: ['y2k', 'minimal'], colors: ['black'], color: 'black', formality: 3, warmth: 2, cost: 85, price: 218, fit: ['slim', 'photo'], desc: '一根细带，撑住整个晚上。' },
+    { id: 'o_trench_olive', name: '橄榄绿风衣', cat: 'outer', shape: 'trench', style: ['gorpcore', 'work'], colors: ['olive'], color: 'olive', formality: 4, warmth: 4, cost: 140, price: 328, fit: ['tall', 'cover'], desc: '比卡其少一点乖，多一点野。' },
+    { id: 's_mule', name: '奶油穆勒鞋', cat: 'shoes', shape: 'heel', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 3, warmth: 1, cost: 80, price: 188, fit: ['comfort', 'tall'], desc: '后跟空着，走路很轻。' }
   ];
 
   D.ITEMS_BY_ID = {};
