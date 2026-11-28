@@ -935,8 +935,8 @@
     for (var k in app) { a2[k] = app[k]; }
     a2.accEyes = acc.eyes || null;
     a2.accEar = acc.ear || null;
-    a2.hat = acc.hair && acc.hair.shape === 'beret' ? acc.hair : null;
-    a2.hairClip = acc.hair && acc.hair.shape !== 'beret' ? acc.hair : null;
+    a2.hat = acc.hair && ['beret', 'bucket', 'beanie'].indexOf(acc.hair.shape) >= 0 ? acc.hair : null;
+    a2.hairClip = acc.hair && ['beret', 'bucket', 'beanie'].indexOf(acc.hair.shape) < 0 ? acc.hair : null;
     var expr = Iso.expressionFor(s, key);
     var pose = s.previewPose || 'stand';
     if (key === 'result' && pose === 'stand') { pose = 'mirror'; }

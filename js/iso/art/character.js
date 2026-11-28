@@ -443,9 +443,21 @@
     // 帽子 / 发饰
     if (a.hat) {
       var hc = colorOf(a.hat.color);
-      s += '<path d="M-23 -146Q-21 -159 2 -159Q25 -159 23 -146Q8 -152 -23 -146Z" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
-      s += '<path d="M-21 -146Q0 -151 21 -146" fill="none" stroke="' + lo2(hc) + '" stroke-width="1"/>';
-      s += '<circle cx="2" cy="-159" r="2.1" fill="' + hi2(hc) + '" stroke="' + edgeHair(hc) + '" stroke-width=".4"/>';
+      var hl0 = Iso.lookOf(a.hat) || {};
+      var hk0 = hl0.s || a.hat.shape || 'beret';
+      if (hk0 === 'bucket') {
+        s += '<path d="M-23 -146Q-23 -158 0 -158Q23 -158 23 -146Z" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
+        s += '<path d="M-29 -146H29L26 -139Q0 -135 -26 -139Z" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
+        s += '<path d="M-25 -146Q0 -141 25 -146" fill="none" stroke="' + lo2(hc) + '" stroke-width="1"/>';
+      } else if (hk0 === 'beanie') {
+        s += '<path d="M-22 -146Q-22 -161 0 -161Q22 -161 22 -146Z" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
+        s += '<rect x="-24" y="-148" width="48" height="7" rx="3.5" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
+        s += '<path d="M-14 -158V-148M-5 -160V-148M4 -160V-148M13 -158V-148" fill="none" stroke="' + lo2(hc) + '" stroke-width=".8"/>';
+      } else {
+        s += '<path d="M-23 -146Q-21 -159 2 -159Q25 -159 23 -146Q8 -152 -23 -146Z" fill="' + hc + '" stroke="' + edgeHair(hc) + '" stroke-width=".8"/>';
+        s += '<path d="M-21 -146Q0 -151 21 -146" fill="none" stroke="' + lo2(hc) + '" stroke-width="1"/>';
+        s += '<circle cx="2" cy="-159" r="2.1" fill="' + hi2(hc) + '" stroke="' + edgeHair(hc) + '" stroke-width=".4"/>';
+      }
     } else if (a.hairClip) {
       var hl = Iso.lookOf(a.hairClip) || {};
       var hkind = hl.s || a.hairClip.shape;

@@ -256,6 +256,16 @@
           '<path d="M24 46 L16 42 M76 46 L84 42" stroke="#5B4636" stroke-width="3" stroke-linecap="round"/>' +
           '<path d="M30 42 Q38 36 46 42" stroke="rgba(255,255,255,.5)" stroke-width="2" fill="none"/>';
         break;
+      case 'bucket':
+        body = '<path d="M30 50 Q30 30 50 30 Q70 30 70 50 Z" fill="' + fill + '"' + st + '/>' +
+          '<path d="M22 50 H78 L74 62 Q50 68 26 62 Z" fill="' + fill + '"' + st + '/>' +
+          '<path d="M28 50 Q50 56 72 50"' + detail + '/>';
+        break;
+      case 'beanie':
+        body = '<path d="M31 51 Q31 27 50 27 Q69 27 69 51 Z" fill="' + fill + '"' + st + '/>' +
+          '<rect x="27" y="50" width="46" height="12" rx="6" fill="' + fill + '"' + st + '/>' +
+          '<path d="M36 44 Q50 48 64 44"' + white + '/>';
+        break;
       case 'beret':
         body = '<path d="M26 56 Q26 28 50 28 Q74 28 74 56 Z" fill="' + fill + '"' + st + '/>' +
           '<path d="M22 56 Q50 66 78 56 L78 64 Q50 74 22 64 Z" fill="' + fill + '"' + st + '/>' +

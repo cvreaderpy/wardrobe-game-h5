@@ -2244,6 +2244,96 @@
    "file": "assets/hd/offline/icons-ai/a_brooch.webp?v=28",
    "w": 256,
    "h": 256
+  },
+  "h_crew_white": {
+   "file": "assets/hd/offline/icons/h_crew_white.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_crew_black": {
+   "file": "assets/hd/offline/icons/h_crew_black.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "h_overknee": {
+   "file": "assets/hd/offline/icons/h_overknee.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_hobo": {
+   "file": "assets/hd/offline/icons-ai/g_hobo.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_camera": {
+   "file": "assets/hd/offline/icons-ai/g_camera.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_tophandle": {
+   "file": "assets/hd/offline/icons-ai/g_tophandle.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "g_phone": {
+   "file": "assets/hd/offline/icons-ai/g_phone.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_bucket_hat": {
+   "file": "assets/hd/offline/icons-ai/a_bucket_hat.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_beanie": {
+   "file": "assets/hd/offline/icons-ai/a_beanie.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_round_glasses": {
+   "file": "assets/hd/offline/icons-ai/a_round_glasses.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_cateye_sun": {
+   "file": "assets/hd/offline/icons-ai/a_cateye_sun.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_aviator_sun": {
+   "file": "assets/hd/offline/icons-ai/a_aviator_sun.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_huggie": {
+   "file": "assets/hd/offline/icons-ai/a_huggie.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_pearl_drop": {
+   "file": "assets/hd/offline/icons-ai/a_pearl_drop.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_chandelier": {
+   "file": "assets/hd/offline/icons-ai/a_chandelier.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_chain_bracelet": {
+   "file": "assets/hd/offline/icons-ai/a_chain_bracelet.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_cuff_bracelet": {
+   "file": "assets/hd/offline/icons-ai/a_cuff_bracelet.webp?v=28",
+   "w": 256,
+   "h": 256
+  },
+  "a_charm_bracelet": {
+   "file": "assets/hd/offline/icons-ai/a_charm_bracelet.webp?v=28",
+   "w": 256,
+   "h": 256
   }
  },
  "bottoms": {
@@ -7211,6 +7301,60 @@
   },
   "a_brooch": {
    "file": "assets/hd/offline/swatches-ai/a_brooch.webp?v=28"
+  },
+  "h_crew_white": {
+   "file": "assets/hd/offline/swatches/h_crew_white.webp?v=28"
+  },
+  "h_crew_black": {
+   "file": "assets/hd/offline/swatches/h_crew_black.webp?v=28"
+  },
+  "h_overknee": {
+   "file": "assets/hd/offline/swatches/h_overknee.webp?v=28"
+  },
+  "g_hobo": {
+   "file": "assets/hd/offline/swatches-ai/g_hobo.webp?v=28"
+  },
+  "g_camera": {
+   "file": "assets/hd/offline/swatches-ai/g_camera.webp?v=28"
+  },
+  "g_tophandle": {
+   "file": "assets/hd/offline/swatches-ai/g_tophandle.webp?v=28"
+  },
+  "g_phone": {
+   "file": "assets/hd/offline/swatches-ai/g_phone.webp?v=28"
+  },
+  "a_bucket_hat": {
+   "file": "assets/hd/offline/swatches-ai/a_bucket_hat.webp?v=28"
+  },
+  "a_beanie": {
+   "file": "assets/hd/offline/swatches-ai/a_beanie.webp?v=28"
+  },
+  "a_round_glasses": {
+   "file": "assets/hd/offline/swatches-ai/a_round_glasses.webp?v=28"
+  },
+  "a_cateye_sun": {
+   "file": "assets/hd/offline/swatches-ai/a_cateye_sun.webp?v=28"
+  },
+  "a_aviator_sun": {
+   "file": "assets/hd/offline/swatches-ai/a_aviator_sun.webp?v=28"
+  },
+  "a_huggie": {
+   "file": "assets/hd/offline/swatches-ai/a_huggie.webp?v=28"
+  },
+  "a_pearl_drop": {
+   "file": "assets/hd/offline/swatches-ai/a_pearl_drop.webp?v=28"
+  },
+  "a_chandelier": {
+   "file": "assets/hd/offline/swatches-ai/a_chandelier.webp?v=28"
+  },
+  "a_chain_bracelet": {
+   "file": "assets/hd/offline/swatches-ai/a_chain_bracelet.webp?v=28"
+  },
+  "a_cuff_bracelet": {
+   "file": "assets/hd/offline/swatches-ai/a_cuff_bracelet.webp?v=28"
+  },
+  "a_charm_bracelet": {
+   "file": "assets/hd/offline/swatches-ai/a_charm_bracelet.webp?v=28"
   }
  },
  "details": {
@@ -7813,6 +7957,60 @@
   },
   "a_brooch": {
    "file": "assets/hd/offline/detail-ai/a_brooch.webp?v=28"
+  },
+  "h_crew_white": {
+   "file": "assets/hd/offline/detail/h_crew_white.webp?v=28"
+  },
+  "h_crew_black": {
+   "file": "assets/hd/offline/detail/h_crew_black.webp?v=28"
+  },
+  "h_overknee": {
+   "file": "assets/hd/offline/detail/h_overknee.webp?v=28"
+  },
+  "g_hobo": {
+   "file": "assets/hd/offline/detail-ai/g_hobo.webp?v=28"
+  },
+  "g_camera": {
+   "file": "assets/hd/offline/detail-ai/g_camera.webp?v=28"
+  },
+  "g_tophandle": {
+   "file": "assets/hd/offline/detail-ai/g_tophandle.webp?v=28"
+  },
+  "g_phone": {
+   "file": "assets/hd/offline/detail-ai/g_phone.webp?v=28"
+  },
+  "a_bucket_hat": {
+   "file": "assets/hd/offline/detail-ai/a_bucket_hat.webp?v=28"
+  },
+  "a_beanie": {
+   "file": "assets/hd/offline/detail-ai/a_beanie.webp?v=28"
+  },
+  "a_round_glasses": {
+   "file": "assets/hd/offline/detail-ai/a_round_glasses.webp?v=28"
+  },
+  "a_cateye_sun": {
+   "file": "assets/hd/offline/detail-ai/a_cateye_sun.webp?v=28"
+  },
+  "a_aviator_sun": {
+   "file": "assets/hd/offline/detail-ai/a_aviator_sun.webp?v=28"
+  },
+  "a_huggie": {
+   "file": "assets/hd/offline/detail-ai/a_huggie.webp?v=28"
+  },
+  "a_pearl_drop": {
+   "file": "assets/hd/offline/detail-ai/a_pearl_drop.webp?v=28"
+  },
+  "a_chandelier": {
+   "file": "assets/hd/offline/detail-ai/a_chandelier.webp?v=28"
+  },
+  "a_chain_bracelet": {
+   "file": "assets/hd/offline/detail-ai/a_chain_bracelet.webp?v=28"
+  },
+  "a_cuff_bracelet": {
+   "file": "assets/hd/offline/detail-ai/a_cuff_bracelet.webp?v=28"
+  },
+  "a_charm_bracelet": {
+   "file": "assets/hd/offline/detail-ai/a_charm_bracelet.webp?v=28"
   }
  },
  "defaults": {
@@ -7906,6 +8104,34 @@
    "y": 586,
    "w": 82,
    "h": 96
+  },
+  "g_hobo": {
+   "file": "assets/hd/offline/worn/g_hobo.webp?v=28",
+   "x": 295,
+   "y": 449,
+   "w": 172,
+   "h": 428
+  },
+  "g_camera": {
+   "file": "assets/hd/offline/worn/g_camera.webp?v=28",
+   "x": 265,
+   "y": 217,
+   "w": 186,
+   "h": 399
+  },
+  "g_tophandle": {
+   "file": "assets/hd/offline/worn/g_tophandle.webp?v=28",
+   "x": 318,
+   "y": 464,
+   "w": 140,
+   "h": 157
+  },
+  "g_phone": {
+   "file": "assets/hd/offline/worn/g_phone.webp?v=28",
+   "x": 256,
+   "y": 218,
+   "w": 190,
+   "h": 380
   },
   "g_tote__black": {
    "file": "assets/hd/offline/colorways/bags/g_tote__black.webp?v=28",
@@ -8018,6 +8244,62 @@
    "y": 586,
    "w": 82,
    "h": 96
+  },
+  "g_hobo__cream": {
+   "file": "assets/hd/offline/colorways/bags/g_hobo__cream.webp?v=28",
+   "x": 295,
+   "y": 449,
+   "w": 172,
+   "h": 428
+  },
+  "g_hobo__mustard": {
+   "file": "assets/hd/offline/colorways/bags/g_hobo__mustard.webp?v=28",
+   "x": 295,
+   "y": 449,
+   "w": 172,
+   "h": 428
+  },
+  "g_camera__cream": {
+   "file": "assets/hd/offline/colorways/bags/g_camera__cream.webp?v=28",
+   "x": 265,
+   "y": 217,
+   "w": 186,
+   "h": 399
+  },
+  "g_camera__mustard": {
+   "file": "assets/hd/offline/colorways/bags/g_camera__mustard.webp?v=28",
+   "x": 265,
+   "y": 217,
+   "w": 186,
+   "h": 399
+  },
+  "g_tophandle__black": {
+   "file": "assets/hd/offline/colorways/bags/g_tophandle__black.webp?v=28",
+   "x": 318,
+   "y": 464,
+   "w": 140,
+   "h": 157
+  },
+  "g_tophandle__mustard": {
+   "file": "assets/hd/offline/colorways/bags/g_tophandle__mustard.webp?v=28",
+   "x": 318,
+   "y": 464,
+   "w": 140,
+   "h": 157
+  },
+  "g_phone__black": {
+   "file": "assets/hd/offline/colorways/bags/g_phone__black.webp?v=28",
+   "x": 256,
+   "y": 218,
+   "w": 190,
+   "h": 380
+  },
+  "g_phone__olive": {
+   "file": "assets/hd/offline/colorways/bags/g_phone__olive.webp?v=28",
+   "x": 256,
+   "y": 218,
+   "w": 190,
+   "h": 380
   }
  },
  "accessories": {
@@ -8202,6 +8484,83 @@
    "y": 287,
    "w": 51,
    "h": 54
+  },
+  "a_bucket_hat": {
+   "file": "assets/hd/offline/worn/a_bucket_hat.webp?v=28",
+   "x": 296,
+   "y": 23,
+   "w": 179,
+   "h": 129
+  },
+  "a_beanie": {
+   "file": "assets/hd/offline/worn/a_beanie.webp?v=28",
+   "x": 311,
+   "y": 23,
+   "w": 148,
+   "h": 128
+  },
+  "a_round_glasses": {
+   "file": "assets/hd/offline/worn/a_round_glasses.webp?v=28",
+   "x": 328,
+   "y": 109,
+   "w": 116,
+   "h": 51
+  },
+  "a_cateye_sun": {
+   "file": "assets/hd/offline/worn/a_cateye_sun.webp?v=28",
+   "x": 330,
+   "y": 112,
+   "w": 117,
+   "h": 47
+  },
+  "a_aviator_sun": {
+   "file": "assets/hd/offline/worn/a_aviator_sun.webp?v=28",
+   "x": 337,
+   "y": 114,
+   "w": 103,
+   "h": 47
+  },
+  "a_huggie": {
+   "file": "assets/hd/offline/worn/a_huggie.webp?v=28",
+   "x": 331,
+   "y": 142,
+   "w": 108,
+   "h": 32
+  },
+  "a_pearl_drop": {
+   "file": "assets/hd/offline/worn/a_pearl_drop.webp?v=28",
+   "x": 330,
+   "y": 155,
+   "w": 108,
+   "h": 34
+  },
+  "a_chandelier": {
+   "file": "assets/hd/offline/worn/a_chandelier.webp?v=28",
+   "x": 328,
+   "y": 141,
+   "w": 112,
+   "h": 57
+  },
+  "a_chain_bracelet": {
+   "file": "assets/hd/offline/worn/a_chain_bracelet.webp?v=28",
+   "x": 473,
+   "y": 556,
+   "w": 39,
+   "h": 20
+  },
+  "a_cuff_bracelet": {
+   "file": "assets/hd/offline/worn/a_cuff_bracelet.webp?v=28",
+   "x": 470,
+   "y": 531,
+   "w": 43,
+   "h": 40
+  },
+  "a_charm_bracelet": {
+   "file": "assets/hd/offline/worn/a_charm_bracelet.webp?v=28",
+   "x": 231,
+   "y": 545,
+   "w": 48,
+   "h": 37
   },
   "a_scarf__black": {
    "file": "assets/hd/offline/colorways/accessories/a_scarf__black.webp?v=28",
@@ -8566,218 +8925,435 @@
    "y": 287,
    "w": 51,
    "h": 54
+  },
+  "a_bucket_hat__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_bucket_hat__mustard.webp?v=28",
+   "x": 296,
+   "y": 23,
+   "w": 179,
+   "h": 129
+  },
+  "a_bucket_hat__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_bucket_hat__black.webp?v=28",
+   "x": 296,
+   "y": 23,
+   "w": 179,
+   "h": 129
+  },
+  "a_beanie__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_beanie__mustard.webp?v=28",
+   "x": 311,
+   "y": 23,
+   "w": 148,
+   "h": 128
+  },
+  "a_beanie__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_beanie__black.webp?v=28",
+   "x": 311,
+   "y": 23,
+   "w": 148,
+   "h": 128
+  },
+  "a_round_glasses__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_round_glasses__mustard.webp?v=28",
+   "x": 328,
+   "y": 109,
+   "w": 116,
+   "h": 51
+  },
+  "a_round_glasses__cream": {
+   "file": "assets/hd/offline/colorways/accessories/a_round_glasses__cream.webp?v=28",
+   "x": 328,
+   "y": 109,
+   "w": 116,
+   "h": 51
+  },
+  "a_cateye_sun__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_cateye_sun__mustard.webp?v=28",
+   "x": 330,
+   "y": 112,
+   "w": 117,
+   "h": 47
+  },
+  "a_cateye_sun__cream": {
+   "file": "assets/hd/offline/colorways/accessories/a_cateye_sun__cream.webp?v=28",
+   "x": 330,
+   "y": 112,
+   "w": 117,
+   "h": 47
+  },
+  "a_aviator_sun__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_aviator_sun__black.webp?v=28",
+   "x": 337,
+   "y": 114,
+   "w": 103,
+   "h": 47
+  },
+  "a_aviator_sun__cream": {
+   "file": "assets/hd/offline/colorways/accessories/a_aviator_sun__cream.webp?v=28",
+   "x": 337,
+   "y": 114,
+   "w": 103,
+   "h": 47
+  },
+  "a_huggie__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_huggie__mustard.webp?v=28",
+   "x": 331,
+   "y": 142,
+   "w": 108,
+   "h": 32
+  },
+  "a_huggie__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_huggie__black.webp?v=28",
+   "x": 331,
+   "y": 142,
+   "w": 108,
+   "h": 32
+  },
+  "a_pearl_drop__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_pearl_drop__mustard.webp?v=28",
+   "x": 330,
+   "y": 155,
+   "w": 108,
+   "h": 34
+  },
+  "a_pearl_drop__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_pearl_drop__black.webp?v=28",
+   "x": 330,
+   "y": 155,
+   "w": 108,
+   "h": 34
+  },
+  "a_chandelier__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_chandelier__mustard.webp?v=28",
+   "x": 328,
+   "y": 141,
+   "w": 112,
+   "h": 57
+  },
+  "a_chandelier__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_chandelier__black.webp?v=28",
+   "x": 328,
+   "y": 141,
+   "w": 112,
+   "h": 57
+  },
+  "a_chain_bracelet__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_chain_bracelet__black.webp?v=28",
+   "x": 473,
+   "y": 556,
+   "w": 39,
+   "h": 20
+  },
+  "a_chain_bracelet__cream": {
+   "file": "assets/hd/offline/colorways/accessories/a_chain_bracelet__cream.webp?v=28",
+   "x": 473,
+   "y": 556,
+   "w": 39,
+   "h": 20
+  },
+  "a_cuff_bracelet__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_cuff_bracelet__mustard.webp?v=28",
+   "x": 470,
+   "y": 531,
+   "w": 43,
+   "h": 40
+  },
+  "a_cuff_bracelet__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_cuff_bracelet__black.webp?v=28",
+   "x": 470,
+   "y": 531,
+   "w": 43,
+   "h": 40
+  },
+  "a_charm_bracelet__mustard": {
+   "file": "assets/hd/offline/colorways/accessories/a_charm_bracelet__mustard.webp?v=28",
+   "x": 231,
+   "y": 545,
+   "w": 48,
+   "h": 37
+  },
+  "a_charm_bracelet__black": {
+   "file": "assets/hd/offline/colorways/accessories/a_charm_bracelet__black.webp?v=28",
+   "x": 231,
+   "y": 545,
+   "w": 48,
+   "h": 37
   }
  },
  "hosiery": {
   "h_sheer": {
    "file": "assets/hd/offline/worn/h_sheer.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque": {
    "file": "assets/hd/offline/worn/h_opaque.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_fishnet": {
    "file": "assets/hd/offline/worn/h_fishnet.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee": {
    "file": "assets/hd/offline/worn/h_knee.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle": {
    "file": "assets/hd/offline/worn/h_ankle.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_legging": {
    "file": "assets/hd/offline/worn/h_legging.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_sheer_wine": {
    "file": "assets/hd/offline/worn/h_sheer_wine.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque_black": {
    "file": "assets/hd/offline/worn/h_opaque_black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee_white": {
    "file": "assets/hd/offline/worn/h_knee_white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle_black": {
    "file": "assets/hd/offline/worn/h_ankle_black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
+  },
+  "h_crew_white": {
+   "file": "assets/hd/offline/worn/h_crew_white.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_crew_black": {
+   "file": "assets/hd/offline/worn/h_crew_black.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_overknee": {
+   "file": "assets/hd/offline/worn/h_overknee.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
   },
   "h_sheer__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_sheer__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_sheer__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_sheer__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque__black": {
    "file": "assets/hd/offline/colorways/hosiery/h_opaque__black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_opaque__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_fishnet__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_fishnet__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_fishnet__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_fishnet__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee__black": {
    "file": "assets/hd/offline/colorways/hosiery/h_knee__black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_knee__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle__black": {
    "file": "assets/hd/offline/colorways/hosiery/h_ankle__black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_ankle__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_legging__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_legging__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_legging__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_legging__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_sheer_wine__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_sheer_wine__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_sheer_wine__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_sheer_wine__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque_black__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_opaque_black__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_opaque_black__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_opaque_black__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee_white__black": {
    "file": "assets/hd/offline/colorways/hosiery/h_knee_white__black.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_knee_white__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_knee_white__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle_black__white": {
    "file": "assets/hd/offline/colorways/hosiery/h_ankle_black__white.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
   },
   "h_ankle_black__grey": {
    "file": "assets/hd/offline/colorways/hosiery/h_ankle_black__grey.webp?v=28",
    "x": 274,
-   "y": 617,
+   "y": 891,
    "w": 222,
-   "h": 389
+   "h": 115
+  },
+  "h_crew_white__black": {
+   "file": "assets/hd/offline/colorways/hosiery/h_crew_white__black.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_crew_white__grey": {
+   "file": "assets/hd/offline/colorways/hosiery/h_crew_white__grey.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_crew_black__white": {
+   "file": "assets/hd/offline/colorways/hosiery/h_crew_black__white.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_crew_black__grey": {
+   "file": "assets/hd/offline/colorways/hosiery/h_crew_black__grey.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_overknee__white": {
+   "file": "assets/hd/offline/colorways/hosiery/h_overknee__white.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
+  },
+  "h_overknee__grey": {
+   "file": "assets/hd/offline/colorways/hosiery/h_overknee__grey.webp?v=28",
+   "x": 274,
+   "y": 891,
+   "w": 222,
+   "h": 115
   }
  },
  "midriff": {

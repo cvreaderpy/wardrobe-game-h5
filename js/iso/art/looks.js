@@ -228,6 +228,26 @@
     s_loafer_brown: { s: 'loafer', m: 'leather', det: ['saddle', 'penny'], heel: 'flat' },
     s_hightop_white: { s: 'sneaker', m: 'canvas', det: ['lace', 'sole'], heel: 'flat' },
     /* EXPANSION:END */
+    /* ACCESSORY:PACK:START */
+    a_bucket_hat: { s: 'bucket', m: 'straw' },
+    a_beanie: { s: 'beanie', m: 'knit' },
+    a_round_glasses: { s: 'glasses', m: 'metal' },
+    a_cateye_sun: { s: 'sunglasses', m: 'acetate' },
+    a_aviator_sun: { s: 'sunglasses', m: 'metal' },
+    g_hobo: { s: 'shoulder', m: 'leather', det: ['slouch'] },
+    g_camera: { s: 'saddle',   m: 'leather', det: ['zip'] },
+    g_tophandle: { s: 'tote',     m: 'leather', det: ['handle'] },
+    g_phone: { s: 'mini',     m: 'leather', det: ['strap'] },
+    a_huggie: { s: 'hoop', m: 'metal' },
+    a_pearl_drop: { s: 'drop', m: 'pearl' },
+    a_chandelier: { s: 'drop', m: 'glass' },
+    a_chain_bracelet: { s: 'bangle', m: 'metal' },
+    a_cuff_bracelet: { s: 'bangle', m: 'metal' },
+    a_charm_bracelet: { s: 'beads', m: 'metal' },
+    h_crew_white: { s: 'ankle', m: 'cotton' },
+    h_crew_black: { s: 'ankle', m: 'cotton' },
+    h_overknee: { s: 'knee', m: 'knit' },
+    /* ACCESSORY:PACK:END */
   };
 
   var FALLBACK = {
