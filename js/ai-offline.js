@@ -31,9 +31,9 @@
   // 点「试穿 / 进试衣间」时先把底图和当前搭配的图层拉下来并解码。
   // 走进试衣间的动画结束时，图通常已经在缓存里了。
   A._preloaded = {};
-  A.preload = function (customerId, ids) {
+  A.preload = function (customerId, ids, colors) {
     if (!A.lookEnabled()) { return; }
-    var data = A.look(customerId, ids);
+    var data = A.look(customerId, ids, colors);
     if (!data) { return; }
     var prefix = window.AI_OFFLINE_BASE_PATH || '';
     var files = [data.base.file];
@@ -49,13 +49,45 @@
     });
   };
 
-  function catOf(ids) {
+  function variantId(id, colors) {
+    var c = colors && colors[id];
+    return c ? id + '__' + c : id;
+  }
+
+  function entryFor(cat, id, colors) {
+    var m = window.AI_OFFLINE || {};
+    var map = m[cat];
+    if (!map) { return null; }
+    var vid = variantId(id, colors);
+    if (map[vid]) { return map[vid]; }
+    return map[id] || null;
+  }
+
+  function catOf(ids, colors) {
     var out = {};
     var m = window.AI_OFFLINE || {};
     (ids || []).forEach(function (id) {
       ['tops', 'bottoms', 'shoes', 'dresses', 'outers'].forEach(function (cat) {
-        if (m[cat] && m[cat][id]) { out[cat] = id; }
+        if (entryFor(cat, id, colors)) { out[cat] = id; }
       });
+    });
+    return out;
+  }
+
+  function extrasOf(ids, colors) {
+    var out = { hosiery: null, bag: null, accessories: [] };
+    var m = window.AI_OFFLINE || {};
+    (ids || []).forEach(function (id) {
+      if (entryFor('hosiery', id, colors)) { out.hosiery = id; }
+      if (entryFor('bags', id, colors)) { out.bag = id; }
+      if (entryFor('accessories', id, colors)) { out.accessories.push(id); }
+    });
+    var order = ['neck', 'ear', 'hair', 'eyes', 'wrist', 'waist', 'other'];
+    var items = (window.GAME_DATA && window.GAME_DATA.ITEMS_BY_ID) || {};
+    out.accessories.sort(function (a, b) {
+      var ia = items[a], ib = items[b];
+      var sa = order.indexOf(ia && ia.slot), sb = order.indexOf(ib && ib.slot);
+      return (sa < 0 ? 99 : sa) - (sb < 0 ? 99 : sb);
     });
     return out;
   }
@@ -73,10 +105,34 @@
     var top = (layer.y - base.y) / base.h * 100;
     var w = layer.w / base.w * 100;
     var h = layer.h / base.h * 100;
-    return '<img class="' + (cls || '') + '" src="' + prefix + layer.file + '" alt="" ' +
-      'style="left:' + left.toFixed(4) + '%;top:' + top.toFixed(4) + '%;width:' + w.toFixed(4) + '%;height:' + h.toFixed(4) + '%" ' +
+    var pos = 'left:' + left.toFixed(4) + '%;top:' + top.toFixed(4) + '%;width:' + w.toFixed(4) + '%;height:' + h.toFixed(4) + '%';
+    var img = '<img class="' + (cls || '') + '" src="' + prefix + layer.file + '" alt="" ' +
+      'style="' + pos + '" ' +
       'onload="AILook.layerReady(this)" ' +
       'onerror="this.style.display=\'none\';AILook.layerReady(this)">';
+
+    if (!layer.hose) { return img; }
+    var GD = window.GAME_DATA || {};
+    var hex = (GD.COLOR_HEX && GD.COLOR_HEX[layer.hose.color]) || '#2E2A27';
+    var kind = layer.hose.kind || 'tights';
+    var id = layer.hose.id || '';
+    var opacity = 0.9;
+    if (id === 'h_sheer' || id === 'h_sheer_wine') { opacity = 0.55; }
+    else if (id === 'h_legging') { opacity = 0.94; }
+    else if (kind === 'knee' || kind === 'ankle') { opacity = 0.95; }
+    var clip = '';
+    if (kind === 'knee') { clip = 'clip-path:inset(38% 0 0 0);-webkit-clip-path:inset(38% 0 0 0);'; }
+    if (kind === 'ankle') { clip = 'clip-path:inset(72% 0 0 0);-webkit-clip-path:inset(72% 0 0 0);'; }
+    var paint = 'background:' + hex + ';opacity:' + opacity + ';';
+    if (kind === 'fishnet') {
+      paint = 'opacity:.92;background-image:' +
+        'repeating-linear-gradient(45deg,rgba(20,20,20,.78) 0 1px,transparent 1px 7px),' +
+        'repeating-linear-gradient(-45deg,rgba(20,20,20,.78) 0 1px,transparent 1px 7px);';
+    }
+    var mask = 'url(\'' + prefix + layer.file + '\')';
+    return img + '<span class="ai-hose" style="' + pos + ';' + paint + clip +
+      '-webkit-mask-image:' + mask + ';mask-image:' + mask + ';' +
+      '-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;"></span>';
   }
 
   // 一张图加载完 / 失败都计数；全部到齐后整摞淡入，矢量垫底再淡出。
@@ -98,20 +154,24 @@
     return (c && c.tone) || 't3';
   }
 
-  function pushSkin(layers, layer, tone) {
+  function pushSkin(layers, layer, tone, hose) {
     if (!layer || !layer.skin || !layer.skin.tones) { return; }
     var file = layer.skin.tones[tone] || layer.skin.tones.t3;
     if (!file) { return; }
-    layers.push({ file: file, x: layer.skin.x, y: layer.skin.y, w: layer.skin.w, h: layer.skin.h });
+    layers.push({
+      file: file, x: layer.skin.x, y: layer.skin.y, w: layer.skin.w, h: layer.skin.h,
+      hose: hose || null
+    });
   }
 
-  A.look = function (customerId, ids) {
+  A.look = function (customerId, ids, colors) {
     if (!A.ready()) { return null; }
     // 仍需要 manifest；ready 已包含 lookEnabled / failed 判断
     var m = window.AI_OFFLINE;
     var b = baseFor(customerId);
     var tone = toneFor(customerId);
-    var cats = catOf(ids);
+    var cats = catOf(ids, colors);
+    var extras = extrasOf(ids, colors);
     var layers = [];
     // 底图只到躯干；先把按肤色映射的手臂/前臂垫在衣服下面，
     // 短袖、无袖和连衣裙才不会露出空的前臂。
@@ -123,29 +183,56 @@
     if (mid && mid.tones && mid.tones[tone]) {
       layers.push({ file: mid.tones[tone], x: mid.x, y: mid.y, w: mid.w, h: mid.h });
     }
+    // 丝袜 / 连裤袜：直接给「露出来的腿」那层皮肤上色。
+    // 裙裤自己的 skin 图层本来就只覆盖露出的腿，所以不会盖住裙摆。
+    var hoseSpec = null;
+    if (extras.hosiery) {
+      var hoseItem = (window.GAME_DATA && window.GAME_DATA.ITEMS_BY_ID[extras.hosiery]) || {};
+      hoseSpec = {
+        id: extras.hosiery,
+        color: (colors && colors[extras.hosiery]) || hoseItem.color || 'black',
+        kind: hoseItem.shape || 'tights'
+      };
+    }
     var def = m.defaults && m.defaults.safetyShorts;
     if (cats.dresses) {
-      layers.push(m.dresses[cats.dresses]);
-      pushSkin(layers, m.dresses[cats.dresses], tone);
+      var dress = entryFor('dresses', cats.dresses, colors);
+      layers.push(dress);
+      pushSkin(layers, dress, tone, hoseSpec);
     } else {
       if (cats.bottoms) {
-        layers.push(m.bottoms[cats.bottoms]);
-        pushSkin(layers, m.bottoms[cats.bottoms], tone);
+        var bottom = entryFor('bottoms', cats.bottoms, colors);
+        layers.push(bottom);
+        pushSkin(layers, bottom, tone, hoseSpec);
       } else if (def) {
         // 从裙子切到上衣、又没选下装时，默认补一条安全裤，避免下半身透明
         layers.push(def);
-        pushSkin(layers, def, tone);
+        pushSkin(layers, def, tone, hoseSpec);
       }
       if (cats.tops) {
-        layers.push(m.tops[cats.tops]);
-        pushSkin(layers, m.tops[cats.tops], tone);
+        var top = entryFor('tops', cats.tops, colors);
+        layers.push(top);
+        pushSkin(layers, top, tone);
       }
     }
     if (!cats.dresses && cats.outers) {
-      layers.push(m.outers[cats.outers]);
-      pushSkin(layers, m.outers[cats.outers], tone);
+      var outer = entryFor('outers', cats.outers, colors);
+      layers.push(outer);
+      pushSkin(layers, outer, tone);
     }
-    if (cats.shoes) { layers.push(m.shoes[cats.shoes]); }
+    // 包和配饰在衣服 / 外套上面，鞋最后
+    if (extras.bag) {
+      var bag = entryFor('bags', extras.bag, colors);
+      if (bag) { layers.push(bag); }
+    }
+    extras.accessories.forEach(function (id) {
+      var acc = entryFor('accessories', id, colors);
+      if (acc) { layers.push(acc); }
+    });
+    if (cats.shoes) {
+      var shoes = entryFor('shoes', cats.shoes, colors);
+      if (shoes) { layers.push(shoes); }
+    }
     return { base: b, tone: tone, layers: layers };
   };
 
@@ -155,7 +242,8 @@
   }
 
   A.html = function (customerId, ids, opts) {
-    var data = A.look(customerId, ids);
+    opts = opts || {};
+    var data = A.look(customerId, ids, opts.colors);
     if (!data) { return ''; }
     opts = opts || {};
     var b = data.base;

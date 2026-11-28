@@ -272,18 +272,6 @@
     { id: 'h_ankle', name: '白色短袜', cat: 'hosiery', shape: 'ankle', style: ['academia', 'sporty'], colors: ['white'], color: 'white', formality: 2, warmth: 1, cost: 8, price: 28, fit: ['comfort'], desc: '配乐福鞋刚刚好。' },
     { id: 'h_legging', name: '黑色打底裤', cat: 'hosiery', shape: 'tights', style: ['minimal', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 3, cost: 25, price: 68, fit: ['cover', 'comfort'], desc: '裙子和短裤下面都能穿。' },
 
-    /* 同款新颜色 */
-    { id: 't_crop_black', name: '短款黑 T', cat: 'top', shape: 'tee', style: ['sporty', 'cleanfit'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 37, price: 92, fit: ['slim', 'photo'], desc: '黑得干净，比例还是一样的。' },
-    { id: 't_shirt_black', name: '黑色挺括衬衫', cat: 'top', shape: 'shirt', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 72, price: 162, fit: ['tall', 'slim'], desc: '黑色把利落感放大了一档。' },
-    { id: 't_knit_rose', name: '玫瑰针织开衫', cat: 'top', shape: 'top', style: ['french', 'minimal'], colors: ['rose'], color: 'rose', formality: 3, warmth: 3, cost: 82, price: 172, fit: ['cover', 'soft'], desc: '奶油换成玫瑰，气色也跟着亮。' },
-    { id: 't_cami_wine', name: '酒红缎面吊带', cat: 'top', shape: 'cami', style: ['y2k', 'sweet'], colors: ['burgundy'], color: 'burgundy', formality: 3, warmth: 1, cost: 47, price: 122, fit: ['slim', 'tall'], desc: '比黑色多一点心事。' },
-    { id: 'b_jeans_black', name: '黑色直筒牛仔', cat: 'bottom', shape: 'pants', style: ['minimal', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 3, cost: 82, price: 192, fit: ['tall', 'cover'], desc: '黑色牛仔，什么都能压住。' },
-    { id: 'b_wide_cream', name: '奶油阔腿裤', cat: 'bottom', shape: 'pants', style: ['work', 'minimal'], colors: ['cream'], color: 'cream', formality: 4, warmth: 2, cost: 92, price: 202, fit: ['tall', 'cover'], desc: '一身黑的时候，它是那口气。' },
-    { id: 'd_knit_black', name: '黑色针织长裙', cat: 'dress', shape: 'dress', style: ['minimal', 'academia'], colors: ['black'], color: 'black', formality: 3, warmth: 4, cost: 92, price: 212, fit: ['cover', 'comfort'], desc: '黑色把针织的软收住了。' },
-    { id: 'o_blazer_black', name: '黑色西装', cat: 'outer', shape: 'blazer', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 5, warmth: 3, cost: 132, price: 302, fit: ['tall', 'slim'], desc: '该认真的时候，穿它。' },
-    { id: 's_loafer_black', name: '黑色乐福鞋', cat: 'shoes', shape: 'loafer', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 72, price: 162, fit: ['comfort'], desc: '比棕色更安静，也更百搭。' },
-    { id: 's_boot_black', name: '黑色短靴', cat: 'shoes', shape: 'boot', style: ['vintage', 'y2k'], colors: ['black'], color: 'black', formality: 3, warmth: 4, cost: 92, price: 212, fit: ['tall', 'comfort'], desc: '黑靴子，走路自带声音。' },
-
     /* 丝袜新颜色 / 样式 */
     { id: 'h_sheer_wine', name: '酒红透肤丝袜', cat: 'hosiery', shape: 'tights', style: ['y2k', 'vintage'], colors: ['burgundy'], color: 'burgundy', formality: 2, warmth: 1, cost: 16, price: 48, fit: ['slim', 'photo'], desc: '透一点酒红，像灯光落在腿上。' },
     { id: 'h_opaque_black', name: '黑色不透连裤袜', cat: 'hosiery', shape: 'tights', style: ['minimal', 'work'], colors: ['black'], color: 'black', formality: 3, warmth: 3, cost: 24, price: 62, fit: ['cover', 'comfort'], desc: '冷天的第二条裤子，黑色最稳。' },
@@ -296,11 +284,204 @@
     { id: 'b_midi', name: '巧克力缎面中长裙', cat: 'bottom', shape: 'skirt', style: ['french', 'work'], colors: ['chocolate'], color: 'chocolate', formality: 3, warmth: 2, cost: 75, price: 178, fit: ['tall', 'cover'], desc: '走起来有光，停下来也稳。' },
     { id: 'd_slip_black', name: '黑色缎面吊带裙', cat: 'dress', shape: 'dress', style: ['y2k', 'minimal'], colors: ['black'], color: 'black', formality: 3, warmth: 2, cost: 85, price: 218, fit: ['slim', 'photo'], desc: '一根细带，撑住整个晚上。' },
     { id: 'o_trench_olive', name: '橄榄绿风衣', cat: 'outer', shape: 'trench', style: ['gorpcore', 'work'], colors: ['olive'], color: 'olive', formality: 4, warmth: 4, cost: 140, price: 328, fit: ['tall', 'cover'], desc: '比卡其少一点乖，多一点野。' },
-    { id: 's_mule', name: '奶油穆勒鞋', cat: 'shoes', shape: 'heel', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 3, warmth: 1, cost: 80, price: 188, fit: ['comfort', 'tall'], desc: '后跟空着，走路很轻。' }
+    { id: 's_mule', name: '奶油穆勒鞋', cat: 'shoes', shape: 'heel', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 3, warmth: 1, cost: 80, price: 188, fit: ['comfort', 'tall'], desc: '后跟空着，走路很轻。' },
+
+    /* EXPANSION:START */
+    { id: 't_utility_shirt', name: '鼠尾草工装衬衫', cat: 'top', shape: 'shirt', style: ['gorpcore', 'cleanfit'], colors: ['sage'], color: 'sage', formality: 2, warmth: 2, cost: 78, price: 178, fit: ['comfort', 'cover'], desc: '两个胸袋，卷起袖子就能去搬花。' },
+    { id: 't_henley_cocoa', name: '可可罗纹亨利衫', cat: 'top', shape: 'henley', style: ['minimal', 'cleanfit'], colors: ['cocoa'], color: 'cocoa', formality: 2, warmth: 3, cost: 55, price: 128, fit: ['soft', 'comfort'], desc: '领口三颗扣，单穿也不空。' },
+    { id: 't_breton_navy', name: '海军蓝海魂衫', cat: 'top', shape: 'tee', style: ['french', 'vintage'], colors: ['sky'], color: 'sky', formality: 2, warmth: 2, cost: 45, price: 108, fit: ['soft', 'comfort'], desc: '横条一穿，像从旧电影里走出来。' },
+    { id: 't_square_terracotta', name: '陶土方领针织', cat: 'top', shape: 'knit', style: ['french', 'minimal'], colors: ['terracotta'], color: 'terracotta', formality: 3, warmth: 2, cost: 60, price: 148, fit: ['soft', 'slim'], desc: '方领把锁骨留出来，颜色很暖。' },
+    { id: 't_zip_hoodie_lav', name: '薰衣草拉链卫衣', cat: 'top', shape: 'hoodie', style: ['sporty', 'sweet'], colors: ['lavender'], color: 'lavender', formality: 1, warmth: 4, cost: 65, price: 138, fit: ['comfort', 'cover'], desc: '拉链拉到一半，里面露一点白。' },
+    { id: 't_lace_cami_cream', name: '奶油蕾丝吊带', cat: 'top', shape: 'cami', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 3, warmth: 1, cost: 42, price: 108, fit: ['slim', 'soft'], desc: '蕾丝边很细，配开衫刚好。' },
+    { id: 't_long_vest_black', name: '黑色长款马甲', cat: 'top', shape: 'vest', style: ['work', 'cleanfit'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 75, price: 168, fit: ['formal', 'tall'], desc: '一穿就把比例拉长。' },
+    { id: 't_utility_vest_olive', name: '橄榄工装背心', cat: 'top', shape: 'vest', style: ['gorpcore', 'sporty'], colors: ['olive'], color: 'olive', formality: 2, warmth: 2, cost: 58, price: 128, fit: ['cover', 'dirty'], desc: '口袋多，装得下剪刀和线。' },
+    { id: 't_velvet_shirt_wine', name: '酒红丝绒衬衫', cat: 'top', shape: 'shirt', style: ['vintage', 'french'], colors: ['burgundy'], color: 'burgundy', formality: 4, warmth: 3, cost: 85, price: 198, fit: ['cover', 'soft'], desc: '丝绒在灯下会变深，很适合晚上。' },
+    { id: 't_oxford_sky', name: '天蓝牛津衬衫', cat: 'top', shape: 'shirt', style: ['work', 'minimal'], colors: ['sky'], color: 'sky', formality: 3, warmth: 2, cost: 70, price: 158, fit: ['tall', 'slim'], desc: '比白衬衫松一点，也更好搭。' },
+    { id: 't_ruffle_blouse_white', name: '白色荷叶边罩衫', cat: 'top', shape: 'blouse', style: ['french', 'sweet'], colors: ['white'], color: 'white', formality: 3, warmth: 2, cost: 68, price: 168, fit: ['soft', 'photo'], desc: '袖口一圈荷叶边，动起来很好看。' },
+    { id: 't_knit_polo_caramel', name: '焦糖针织 Polo', cat: 'top', shape: 'polo', style: ['cleanfit', 'vintage'], colors: ['mustard'], color: 'mustard', formality: 3, warmth: 3, cost: 72, price: 168, fit: ['comfort', 'soft'], desc: '领子软软地立着，不刻意。' },
+    { id: 't_one_shoulder_black', name: '黑色斜肩长袖', cat: 'top', shape: 'top', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 3, warmth: 2, cost: 55, price: 128, fit: ['slim', 'photo'], desc: '一边露肩，一边收得很干净。' },
+    { id: 't_cable_cream', name: '奶油绞花毛衣', cat: 'top', shape: 'knit', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 3, warmth: 4, cost: 90, price: 208, fit: ['cover', 'soft'], desc: '绞花很密，像奶奶织的那件。' },
+    { id: 't_halfzip_sage', name: '灰绿半拉链衫', cat: 'top', shape: 'hoodie', style: ['sporty', 'gorpcore'], colors: ['sage'], color: 'sage', formality: 2, warmth: 3, cost: 68, price: 148, fit: ['comfort', 'cover'], desc: '半拉链拉到胸口，刚好透气。' },
+    { id: 't_leather_vest_black', name: '黑色皮背心', cat: 'top', shape: 'vest', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 3, warmth: 2, cost: 88, price: 198, fit: ['slim', 'photo'], desc: '皮面有一点光，里面配白 T 最好。' },
+    { id: 't_wrap_white', name: '白色交叉裹身衫', cat: 'top', shape: 'blouse', style: ['french', 'cleanfit'], colors: ['white'], color: 'white', formality: 3, warmth: 2, cost: 72, price: 168, fit: ['soft', 'slim'], desc: '腰侧打结，比例自己说了算。' },
+    { id: 't_plaid_shirt_blue', name: '蓝灰格纹衬衫', cat: 'top', shape: 'shirt', style: ['academia', 'vintage'], colors: ['sky'], color: 'sky', formality: 2, warmth: 2, cost: 65, price: 148, fit: ['comfort', 'cover'], desc: '格纹不吵，配百褶裙刚好。' },
+    { id: 't_mesh_black', name: '黑色网纱长袖', cat: 'top', shape: 'top', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 48, price: 118, fit: ['slim', 'photo'], desc: '网纱下面配一件黑吊带，刚刚好。' },
+    { id: 't_bow_blouse_cream', name: '奶油缎面蝴蝶结衬衫', cat: 'top', shape: 'blouse', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 4, warmth: 2, cost: 88, price: 208, fit: ['formal', 'photo'], desc: '领口的蝴蝶结打小一点，就很贵。' },
+    { id: 't_rib_tank_white', name: '白色罗纹背心', cat: 'top', shape: 'cami', style: ['minimal', 'cleanfit'], colors: ['white'], color: 'white', formality: 2, warmth: 1, cost: 32, price: 78, fit: ['slim', 'comfort'], desc: '一件就能过夏天。' },
+    { id: 't_denim_shirt', name: '灰蓝牛仔衬衫', cat: 'top', shape: 'shirt', style: ['vintage', 'sporty'], colors: ['denim'], color: 'denim', formality: 2, warmth: 3, cost: 78, price: 178, fit: ['cover', 'comfort'], desc: '当外套穿，比普通衬衫更有型。' },
+    { id: 't_bodysuit_black', name: '黑色西装领连体衣', cat: 'top', shape: 'top', style: ['work', 'cleanfit'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 82, price: 188, fit: ['formal', 'slim'], desc: '下摆收进裤腰，怎么动都不跑。' },
+    { id: 't_peterpan_pink', name: '粉色娃娃领衬衫', cat: 'top', shape: 'blouse', style: ['sweet', 'french'], colors: ['rose'], color: 'rose', formality: 3, warmth: 2, cost: 62, price: 148, fit: ['soft', 'photo'], desc: '圆领一加，整个人都软了。' },
+    { id: 't_puff_crop_white', name: '白色泡泡袖短上衣', cat: 'top', shape: 'top', style: ['sweet', 'balletcore'], colors: ['white'], color: 'white', formality: 3, warmth: 1, cost: 48, price: 118, fit: ['slim', 'photo'], desc: '袖子蓬一点，腰线就出来了。' },
+    { id: 't_lace_cami_black', name: '黑色蕾丝吊带', cat: 'top', shape: 'cami', style: ['y2k', 'sweet'], colors: ['black'], color: 'black', formality: 3, warmth: 1, cost: 45, price: 112, fit: ['slim', 'photo'], desc: '黑色蕾丝，外面套件衬衫就能出门。' },
+    { id: 'b_circle_cream', name: '奶油伞裙', cat: 'bottom', shape: 'skirt', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 3, warmth: 2, cost: 70, price: 168, fit: ['cover', 'soft'], desc: '转起来像一朵开得很慢的花。' },
+    { id: 'b_pencil_black', name: '黑色铅笔裙', cat: 'bottom', shape: 'skirt', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 65, price: 158, fit: ['slim', 'formal'], desc: '开会时最稳的一条。' },
+    { id: 'b_cargo_skirt_khaki', name: '卡其工装裙', cat: 'bottom', shape: 'skirt', style: ['gorpcore', 'sporty'], colors: ['mustard'], color: 'mustard', formality: 2, warmth: 2, cost: 72, price: 168, fit: ['cover', 'dirty'], desc: '侧袋能装钥匙，裙摆能迈大步。' },
+    { id: 'b_tailored_grey', name: '灰色西装直筒裤', cat: 'bottom', shape: 'pants', style: ['work', 'cleanfit'], colors: ['grey'], color: 'grey', formality: 4, warmth: 2, cost: 88, price: 198, fit: ['formal', 'tall'], desc: '裤线压得很直，配短西装刚好。' },
+    { id: 'b_parachute_blue', name: '蓝色降落伞裤', cat: 'bottom', shape: 'pants', style: ['y2k', 'sporty'], colors: ['sky'], color: 'sky', formality: 2, warmth: 2, cost: 68, price: 158, fit: ['comfort', 'cover'], desc: '裤脚抽绳一收，形状就变了。' },
+    { id: 'b_velvet_wide_wine', name: '酒红丝绒阔腿裤', cat: 'bottom', shape: 'pants', style: ['vintage', 'french'], colors: ['burgundy'], color: 'burgundy', formality: 4, warmth: 3, cost: 98, price: 228, fit: ['tall', 'presence'], desc: '走路的时候，绒面会一条一条地亮。' },
+    { id: 'b_linen_shorts_white', name: '白色亚麻短裤', cat: 'bottom', shape: 'shorts', style: ['minimal', 'french'], colors: ['white'], color: 'white', formality: 2, warmth: 1, cost: 42, price: 98, fit: ['comfort', 'slim'], desc: '夏天配什么上衣都干净。' },
+    { id: 'b_biker_black', name: '黑色骑行短裤', cat: 'bottom', shape: 'shorts', style: ['y2k', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 38, price: 88, fit: ['slim', 'photo'], desc: '配大 T 和球鞋，腿会显得很长。' },
+    { id: 'b_denim_maxi', name: '牛仔工装长裙', cat: 'bottom', shape: 'skirt', style: ['vintage', 'gorpcore'], colors: ['denim'], color: 'denim', formality: 2, warmth: 3, cost: 82, price: 188, fit: ['cover', 'tall'], desc: '开衩刚好方便走路。' },
+    { id: 'b_pleat_sage', name: '鼠尾草百褶中裙', cat: 'bottom', shape: 'skirt', style: ['academia', 'minimal'], colors: ['sage'], color: 'sage', formality: 3, warmth: 2, cost: 62, price: 148, fit: ['tall', 'slim'], desc: '褶子很细，走起来有风。' },
+    { id: 'b_corduroy_brown', name: '棕色灯芯绒裤', cat: 'bottom', shape: 'pants', style: ['vintage', 'academia'], colors: ['cocoa'], color: 'cocoa', formality: 3, warmth: 3, cost: 78, price: 178, fit: ['comfort', 'cover'], desc: '灯芯绒的纹路，越旧越好看。' },
+    { id: 'b_flare_black', name: '黑色微喇西装裤', cat: 'bottom', shape: 'pants', style: ['cleanfit', 'work'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 86, price: 198, fit: ['tall', 'slim'], desc: '裤脚盖住鞋面，腿就长了。' },
+    { id: 'b_knit_cream', name: '奶油针织半裙', cat: 'bottom', shape: 'skirt', style: ['minimal', 'french'], colors: ['cream'], color: 'cream', formality: 3, warmth: 3, cost: 72, price: 168, fit: ['cover', 'soft'], desc: '软软地贴着，但不紧绷。' },
+    { id: 'b_stripe_wide_blue', name: '蓝白条纹阔腿裤', cat: 'bottom', shape: 'pants', style: ['french', 'cleanfit'], colors: ['sky'], color: 'sky', formality: 2, warmth: 2, cost: 74, price: 168, fit: ['tall', 'comfort'], desc: '竖条一拉，整个人都高了。' },
+    { id: 'b_cargo_shorts_olive', name: '橄榄工装短裤', cat: 'bottom', shape: 'shorts', style: ['gorpcore', 'sporty'], colors: ['olive'], color: 'olive', formality: 2, warmth: 2, cost: 55, price: 128, fit: ['cover', 'dirty'], desc: '口袋鼓鼓的，出门不用带包。' },
+    { id: 'b_satin_rose', name: '粉色缎面半裙', cat: 'bottom', shape: 'skirt', style: ['french', 'sweet'], colors: ['rose'], color: 'rose', formality: 3, warmth: 2, cost: 68, price: 158, fit: ['slim', 'photo'], desc: '灯一打，裙摆会发光。' },
+    { id: 'b_jogger_charcoal', name: '深灰运动裤', cat: 'bottom', shape: 'pants', style: ['sporty', 'minimal'], colors: ['grey'], color: 'grey', formality: 1, warmth: 3, cost: 58, price: 128, fit: ['comfort', 'cover'], desc: '收口一穿，就不想脱。' },
+    { id: 'b_aline_khaki', name: '卡其 A 字短裙', cat: 'bottom', shape: 'skirt', style: ['french', 'academia'], colors: ['mustard'], color: 'mustard', formality: 2, warmth: 1, cost: 48, price: 108, fit: ['slim', 'tall'], desc: 'A 字一撑，腰就细了。' },
+    { id: 'd_shirt_white', name: '白色衬衫裙', cat: 'dress', shape: 'dress', style: ['cleanfit', 'work'], colors: ['white'], color: 'white', formality: 4, warmth: 2, cost: 105, price: 248, fit: ['formal', 'tall'], desc: '系上腰带是裙子，松开就是衬衫。' },
+    { id: 'd_slip_maxi_black', name: '黑色吊带长裙', cat: 'dress', shape: 'slip', style: ['minimal', 'y2k'], colors: ['black'], color: 'black', formality: 3, warmth: 2, cost: 92, price: 218, fit: ['slim', 'photo'], desc: '一根细带，从肩到脚踝。' },
+    { id: 'd_tea_sage', name: '鼠尾草茶歇裙', cat: 'dress', shape: 'dress', style: ['french', 'vintage'], colors: ['sage'], color: 'sage', formality: 3, warmth: 2, cost: 115, price: 258, fit: ['tall', 'soft'], desc: 'V 领和裹身，刚好到小腿。' },
+    { id: 'd_denim_shirt', name: '蓝色牛仔衬衫裙', cat: 'dress', shape: 'dress', style: ['vintage', 'sporty'], colors: ['denim'], color: 'denim', formality: 2, warmth: 3, cost: 95, price: 228, fit: ['cover', 'tall'], desc: '牛仔的骨感，配球鞋正好。' },
+    { id: 'd_velvet_gown_wine', name: '酒红丝绒礼服裙', cat: 'dress', shape: 'dress', style: ['vintage', 'french'], colors: ['burgundy'], color: 'burgundy', formality: 5, warmth: 3, cost: 180, price: 428, fit: ['presence', 'tall'], desc: '灯一暗，丝绒就亮起来。' },
+    { id: 'd_knit_pinafore_cream', name: '奶油针织背心裙', cat: 'dress', shape: 'dress', style: ['academia', 'sweet'], colors: ['cream'], color: 'cream', formality: 2, warmth: 3, cost: 88, price: 198, fit: ['cover', 'soft'], desc: '里面塞一件衬衫，学院味就出来了。' },
+    { id: 'd_chiffon_floral', name: '碎花雪纺长裙', cat: 'dress', shape: 'dress', style: ['french', 'sweet'], colors: ['rose'], color: 'rose', formality: 3, warmth: 1, cost: 110, price: 258, fit: ['soft', 'photo'], desc: '风一吹，裙摆会一层一层地动。' },
+    { id: 'd_blazer_black', name: '黑色西装领连衣裙', cat: 'dress', shape: 'dress', style: ['work', 'cleanfit'], colors: ['black'], color: 'black', formality: 5, warmth: 2, cost: 130, price: 298, fit: ['formal', 'presence'], desc: '一件顶一套，开会不用想。' },
+    { id: 'd_wrap_knit_oat', name: '燕麦裹身针织裙', cat: 'dress', shape: 'dress', style: ['minimal', 'french'], colors: ['cream'], color: 'cream', formality: 3, warmth: 4, cost: 98, price: 228, fit: ['cover', 'comfort'], desc: '腰带一系，软软地贴在身上。' },
+    { id: 'd_linen_sundress_butter', name: '淡黄棉麻太阳裙', cat: 'dress', shape: 'dress', style: ['sweet', 'french'], colors: ['butter'], color: 'butter', formality: 2, warmth: 1, cost: 72, price: 168, fit: ['soft', 'photo'], desc: '有太阳的时候，穿它刚好。' },
+    { id: 'd_plaid_pinafore', name: '灰蓝格纹背带裙', cat: 'dress', shape: 'dress', style: ['academia', 'vintage'], colors: ['sky'], color: 'sky', formality: 2, warmth: 2, cost: 82, price: 188, fit: ['cover', 'tall'], desc: '格纹不吵，配白衬衫很乖。' },
+    { id: 'd_lace_maxi_black', name: '黑色蕾丝长裙', cat: 'dress', shape: 'dress', style: ['y2k', 'vintage'], colors: ['black'], color: 'black', formality: 4, warmth: 2, cost: 125, price: 288, fit: ['slim', 'photo'], desc: '蕾丝一层一层，灯下最好看。' },
+    { id: 'd_satin_slip_terracotta', name: '陶土缎面吊带裙', cat: 'dress', shape: 'slip', style: ['cleanfit', 'y2k'], colors: ['terracotta'], color: 'terracotta', formality: 3, warmth: 1, cost: 88, price: 208, fit: ['slim', 'photo'], desc: '颜色比黑色轻，也比粉色稳。' },
+    { id: 'd_tulle_white', name: '白色层叠纱裙', cat: 'dress', shape: 'dress', style: ['sweet', 'balletcore'], colors: ['white'], color: 'white', formality: 3, warmth: 1, cost: 95, price: 218, fit: ['photo', 'soft'], desc: '像把一朵云穿在身上。' },
+    { id: 'd_utility_olive', name: '橄榄工装连衣裙', cat: 'dress', shape: 'dress', style: ['gorpcore', 'cleanfit'], colors: ['olive'], color: 'olive', formality: 2, warmth: 2, cost: 92, price: 208, fit: ['cover', 'dirty'], desc: '口袋和腰带都有，出门很省事。' },
+    { id: 'd_knit_rose', name: '粉色针织连衣裙', cat: 'dress', shape: 'dress', style: ['sweet', 'minimal'], colors: ['rose'], color: 'rose', formality: 3, warmth: 4, cost: 90, price: 208, fit: ['cover', 'comfort'], desc: '软，但不塌，颜色很提气。' },
+    { id: 'o_leather_black', name: '黑色皮夹克', cat: 'outer', shape: 'jacket', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 3, warmth: 3, cost: 150, price: 348, fit: ['cover', 'photo'], desc: '拉链一拉，整个人就利落了。' },
+    { id: 'o_trench_oat', name: '燕麦长风衣', cat: 'outer', shape: 'coat', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 4, warmth: 4, cost: 165, price: 388, fit: ['cover', 'tall'], desc: '腰带一系，比例就出来了。' },
+    { id: 'o_chore_denim', name: '蓝色牛仔工装外套', cat: 'outer', shape: 'jacket', style: ['vintage', 'gorpcore'], colors: ['denim'], color: 'denim', formality: 2, warmth: 3, cost: 108, price: 238, fit: ['cover', 'dirty'], desc: '越穿越软，口袋也够用。' },
+    { id: 'o_wool_grey', name: '灰色羊毛大衣', cat: 'outer', shape: 'coat', style: ['work', 'minimal'], colors: ['grey'], color: 'grey', formality: 5, warmth: 5, cost: 195, price: 448, fit: ['formal', 'presence'], desc: '肩线很直，冷天也能体面。' },
+    { id: 'o_bomber_olive', name: '橄榄飞行员夹克', cat: 'outer', shape: 'jacket', style: ['gorpcore', 'sporty'], colors: ['olive'], color: 'olive', formality: 2, warmth: 3, cost: 115, price: 258, fit: ['comfort', 'cover'], desc: '短一截，腿就长一截。' },
+    { id: 'o_crop_cardigan_cream', name: '奶油短款开衫', cat: 'outer', shape: 'cardigan', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 3, warmth: 2, cost: 72, price: 168, fit: ['soft', 'comfort'], desc: '只扣中间一颗，刚刚好。' },
+    { id: 'o_blazer_burgundy', name: '酒红西装外套', cat: 'outer', shape: 'blazer', style: ['work', 'vintage'], colors: ['burgundy'], color: 'burgundy', formality: 5, warmth: 3, cost: 138, price: 318, fit: ['formal', 'presence'], desc: '比黑色多一点温度。' },
+    { id: 'o_trench_black', name: '黑色长风衣', cat: 'outer', shape: 'coat', style: ['cleanfit', 'y2k'], colors: ['black'], color: 'black', formality: 4, warmth: 4, cost: 170, price: 398, fit: ['cover', 'presence'], desc: '一身黑的时候，它负责压场。' },
+    { id: 'o_field_khaki', name: '卡其工装外套', cat: 'outer', shape: 'jacket', style: ['gorpcore', 'vintage'], colors: ['mustard'], color: 'mustard', formality: 2, warmth: 3, cost: 112, price: 248, fit: ['cover', 'dirty'], desc: '四个口袋，装得下一天。' },
+    { id: 'o_tweed_pink', name: '粉色粗花呢外套', cat: 'outer', shape: 'jacket', style: ['french', 'sweet'], colors: ['rose'], color: 'rose', formality: 4, warmth: 3, cost: 145, price: 328, fit: ['formal', 'photo'], desc: '粗花呢一穿，就像要去喝下午茶。' },
+    { id: 'o_quilt_vest_blue', name: '蓝色绗缝马甲', cat: 'outer', shape: 'vest', style: ['gorpcore', 'sporty'], colors: ['sky'], color: 'sky', formality: 2, warmth: 3, cost: 85, price: 198, fit: ['cover', 'comfort'], desc: '套在卫衣外面，轻但很暖。' },
+    { id: 'o_knit_cape_cream', name: '米白针织披肩', cat: 'outer', shape: 'coat', style: ['vintage', 'french'], colors: ['cream'], color: 'cream', formality: 4, warmth: 3, cost: 120, price: 278, fit: ['cover', 'presence'], desc: '手藏起来，只露出一点袖口。' },
+    { id: 'o_corduroy_brown', name: '棕色灯芯绒夹克', cat: 'outer', shape: 'jacket', style: ['vintage', 'academia'], colors: ['cocoa'], color: 'cocoa', formality: 3, warmth: 3, cost: 105, price: 238, fit: ['comfort', 'cover'], desc: '灯芯绒的纹路，很衬秋天。' },
+    { id: 'o_puffer_black', name: '黑色短款羽绒服', cat: 'outer', shape: 'jacket', style: ['gorpcore', 'minimal'], colors: ['black'], color: 'black', formality: 2, warmth: 5, cost: 165, price: 378, fit: ['cover', 'comfort'], desc: '轻，但比看起来暖。' },
+    { id: 's_pointed_flat_black', name: '黑色尖头平底鞋', cat: 'shoes', shape: 'flat', style: ['work', 'minimal'], colors: ['black'], color: 'black', formality: 4, warmth: 1, cost: 65, price: 148, fit: ['formal', 'comfort'], desc: '鞋头一尖，裤子就长了。' },
+    { id: 's_oxford_brown', name: '棕色牛津鞋', cat: 'shoes', shape: 'oxford', style: ['academia', 'vintage'], colors: ['cocoa'], color: 'cocoa', formality: 3, warmth: 2, cost: 78, price: 178, fit: ['comfort', 'formal'], desc: '配短袜和百褶裙，学院味刚好。' },
+    { id: 's_ankle_boot_cream', name: '奶油短靴', cat: 'shoes', shape: 'boot', style: ['french', 'minimal'], colors: ['cream'], color: 'cream', formality: 3, warmth: 3, cost: 85, price: 198, fit: ['comfort', 'tall'], desc: '颜色浅，冬天也不闷。' },
+    { id: 's_sport_sandal_blue', name: '蓝色运动凉鞋', cat: 'shoes', shape: 'sandal', style: ['gorpcore', 'sporty'], colors: ['sky'], color: 'sky', formality: 2, warmth: 1, cost: 58, price: 128, fit: ['comfort', 'dirty'], desc: '织带一扣，走山路也行。' },
+    { id: 's_platform_boot_black', name: '黑色厚底长靴', cat: 'shoes', shape: 'boot', style: ['y2k', 'cleanfit'], colors: ['black'], color: 'black', formality: 4, warmth: 4, cost: 110, price: 248, fit: ['tall', 'photo'], desc: '底厚，腿直，走路有声音。' },
+    { id: 's_ballet_pink', name: '粉色芭蕾舞鞋', cat: 'shoes', shape: 'flat', style: ['balletcore', 'sweet'], colors: ['rose'], color: 'rose', formality: 3, warmth: 1, cost: 62, price: 148, fit: ['comfort', 'soft'], desc: '鞋口一圈小边，很轻。' },
+    { id: 's_chunky_sneaker_grey', name: '灰色老爹鞋', cat: 'shoes', shape: 'sneaker', style: ['sporty', 'gorpcore'], colors: ['grey'], color: 'grey', formality: 2, warmth: 2, cost: 72, price: 158, fit: ['comfort', 'dirty'], desc: '底很厚，走一天也不累。' },
+    { id: 's_velvet_pump_wine', name: '酒红丝绒单鞋', cat: 'shoes', shape: 'heel', style: ['vintage', 'french'], colors: ['burgundy'], color: 'burgundy', formality: 4, warmth: 1, cost: 82, price: 188, fit: ['formal', 'photo'], desc: '绒面在灯下会变深。' },
+    { id: 's_hiking_olive', name: '橄榄登山鞋', cat: 'shoes', shape: 'boot', style: ['gorpcore', 'sporty'], colors: ['olive'], color: 'olive', formality: 2, warmth: 3, cost: 88, price: 198, fit: ['comfort', 'dirty'], desc: '鞋带一系，周末就往山里走。' },
+    { id: 's_mary_white', name: '白色玛丽珍', cat: 'shoes', shape: 'mary', style: ['french', 'sweet'], colors: ['white'], color: 'white', formality: 3, warmth: 2, cost: 68, price: 158, fit: ['comfort', 'photo'], desc: '白鞋配深色袜子，很干净。' },
+    { id: 's_mule_black', name: '黑色穆勒鞋', cat: 'shoes', shape: 'mule', style: ['cleanfit', 'minimal'], colors: ['black'], color: 'black', formality: 3, warmth: 1, cost: 72, price: 168, fit: ['comfort', 'tall'], desc: '后跟空着，走路很轻。' },
+    { id: 's_ballet_silver', name: '银色芭蕾平底鞋', cat: 'shoes', shape: 'flat', style: ['balletcore', 'y2k'], colors: ['silver'], color: 'silver', formality: 3, warmth: 1, cost: 66, price: 148, fit: ['comfort', 'photo'], desc: '金属色一穿，基本的衣服也亮了。' },
+    { id: 's_laceup_boot_black', name: '黑色系带靴', cat: 'shoes', shape: 'boot', style: ['vintage', 'gorpcore'], colors: ['black'], color: 'black', formality: 3, warmth: 4, cost: 95, price: 218, fit: ['comfort', 'dirty'], desc: '鞋带很多，但系紧就很稳。' },
+    { id: 's_canvas_blue', name: '蓝色帆布鞋', cat: 'shoes', shape: 'sneaker', style: ['sporty', 'minimal'], colors: ['sky'], color: 'sky', formality: 1, warmth: 1, cost: 55, price: 118, fit: ['comfort', 'dirty'], desc: '蓝得很轻，配牛仔刚好。' },
+    { id: 's_loafer_brown', name: '棕色便士乐福鞋', cat: 'shoes', shape: 'loafer', style: ['work', 'vintage'], colors: ['cocoa'], color: 'cocoa', formality: 4, warmth: 2, cost: 75, price: 168, fit: ['comfort', 'formal'], desc: '鞋面一道横带，很老派。' },
+    { id: 's_hightop_white', name: '白色高帮帆布鞋', cat: 'shoes', shape: 'sneaker', style: ['sporty', 'y2k'], colors: ['white'], color: 'white', formality: 1, warmth: 2, cost: 62, price: 138, fit: ['comfort', 'photo'], desc: '高帮一穿，脚踝就稳了。' },
+    /* EXPANSION:END */
   ];
 
   D.ITEMS_BY_ID = {};
   D.ITEMS.forEach(function (it) { D.ITEMS_BY_ID[it.id] = it; });
+
+  /* ---------------- 颜色系统 ----------------
+   * 颜色是单品的属性，不是新商品。商店 / 库存永远显示基础色；
+   * 只有试衣间穿上以后，才出现颜色切换。
+   */
+  D.COLOR_POOLS = {
+    top: ['black', 'cream', 'white', 'rose', 'sky', 'sage', 'burgundy', 'grey', 'mustard', 'lavender', 'terracotta', 'denim'],
+    bottom: ['black', 'cream', 'denim', 'cocoa', 'grey', 'olive', 'burgundy', 'white', 'nude', 'chocolate'],
+    dress: ['black', 'cream', 'burgundy', 'rose', 'sage', 'sky', 'lavender', 'terracotta', 'grey', 'denim'],
+    outer: ['black', 'cream', 'cocoa', 'olive', 'grey', 'mustard', 'burgundy', 'denim', 'chocolate'],
+    shoes: ['black', 'cocoa', 'cream', 'white', 'burgundy', 'nude', 'silver', 'grey'],
+    bag: ['black', 'cocoa', 'cream', 'burgundy', 'olive', 'rose', 'mustard', 'denim'],
+    accessory: ['silver', 'mustard', 'black', 'cream', 'rose', 'burgundy', 'terracotta', 'sage'],
+    hosiery: ['black', 'cream', 'white', 'burgundy', 'grey', 'nude']
+  };
+
+  // 手工挑过的颜色组合；没列出的单品用「离基础色最远的两个颜色」自动选。
+  D.COLOR_CHOICES = {
+    t_crop: ['white', 'black', 'rose'],
+    t_shirt: ['white', 'black', 'sky'],
+    t_knit: ['cream', 'rose', 'black'],
+    t_cami: ['lavender', 'burgundy', 'black'],
+    b_jeans: ['denim', 'black', 'cream'],
+    b_wide: ['black', 'cream', 'cocoa'],
+    d_knit: ['grey', 'black', 'cream'],
+    o_blazer: ['cream', 'black', 'cocoa'],
+    s_loafer: ['cocoa', 'black', 'cream'],
+    s_boot: ['cocoa', 'black', 'cream'],
+    t_tee: ['cream', 'black', 'rose'],
+    d_black: ['black', 'cream', 'burgundy'],
+    s_sneaker: ['white', 'black', 'cream'],
+    g_black: ['black', 'cocoa', 'cream'],
+    a_pearl: ['cream', 'silver', 'rose'],
+
+    // 扩充款：蓝 / 紫 / 暖色系的颜色组合手工收一下，避免自动选出芥末黄卫衣
+    t_zip_hoodie_lav: ['lavender', 'cream', 'black'],
+    t_oxford_sky: ['sky', 'white', 'black'],
+    t_plaid_shirt_blue: ['sky', 'cream', 'black'],
+    t_breton_navy: ['sky', 'cream', 'black'],
+    t_mesh_black: ['black', 'cream', 'burgundy'],
+    t_square_terracotta: ['terracotta', 'cream', 'black'],
+    t_knit_polo_caramel: ['mustard', 'cream', 'black'],
+    d_velvet_gown_wine: ['burgundy', 'black', 'cream'],
+    o_quilt_vest_blue: ['sky', 'cream', 'black'],
+    b_parachute_blue: ['sky', 'cream', 'black'],
+    b_stripe_wide_blue: ['sky', 'cream', 'black'],
+    b_cargo_skirt_khaki: ['mustard', 'olive', 'black'],
+    b_aline_khaki: ['mustard', 'black', 'cream'],
+    s_canvas_blue: ['sky', 'white', 'black'],
+    s_hiking_olive: ['olive', 'black', 'cream'],
+    o_field_khaki: ['mustard', 'olive', 'black']
+  };
+
+  function colorDistance(a, b) {
+    var ha = D.COLOR_HEX[a], hb = D.COLOR_HEX[b];
+    if (!ha || !hb) { return 0; }
+    var ra = parseInt(ha.slice(1, 3), 16), ga = parseInt(ha.slice(3, 5), 16), ba = parseInt(ha.slice(5, 7), 16);
+    var rb = parseInt(hb.slice(1, 3), 16), gb = parseInt(hb.slice(3, 5), 16), bb = parseInt(hb.slice(5, 7), 16);
+    var dr = ra - rb, dg = ga - gb, db = ba - bb;
+    return Math.sqrt(dr * dr + dg * dg + db * db);
+  }
+
+  D.colorOptions = function (id) {
+    var it = D.ITEMS_BY_ID[id];
+    if (!it) { return []; }
+    if (it.design) { return [it.color]; }
+    if (D.COLOR_CHOICES[id]) { return D.COLOR_CHOICES[id].slice(); }
+    var pool = (D.COLOR_POOLS[it.cat] || []).filter(function (c) {
+      return c !== it.color && D.COLOR_HEX[c];
+    });
+    if (!pool.length) { return [it.color]; }
+    var best = null, bestScore = -1;
+    for (var i = 0; i < pool.length; i++) {
+      for (var j = i + 1; j < pool.length; j++) {
+        var score = Math.min(
+          colorDistance(it.color, pool[i]),
+          colorDistance(it.color, pool[j]),
+          colorDistance(pool[i], pool[j])
+        );
+        if (score > bestScore) { bestScore = score; best = [pool[i], pool[j]]; }
+      }
+    }
+    // 只有一个候选时，补一个中性色
+    if (!best && pool.length === 1) { best = [pool[0]]; }
+    return [it.color].concat(best || []);
+  };
+
+  // 旧存档里的「同款色」商品 → 基础款 + 颜色
+  D.COLORWAY_ALIASES = {
+    t_crop_black: { id: 't_crop', color: 'black' },
+    t_shirt_black: { id: 't_shirt', color: 'black' },
+    t_knit_rose: { id: 't_knit', color: 'rose' },
+    t_cami_wine: { id: 't_cami', color: 'burgundy' },
+    b_jeans_black: { id: 'b_jeans', color: 'black' },
+    b_wide_cream: { id: 'b_wide', color: 'cream' },
+    d_knit_black: { id: 'd_knit', color: 'black' },
+    o_blazer_black: { id: 'o_blazer', color: 'black' },
+    s_loafer_black: { id: 's_loafer', color: 'black' },
+    s_boot_black: { id: 's_boot', color: 'black' }
+  };
 
   D.STARTING_INVENTORY = [
     't_knit', 't_shirt', 't_tee', 't_blouse',

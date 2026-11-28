@@ -26,10 +26,11 @@
     if (!el || el === document) { return; }
     var action = el.getAttribute('data-action');
     var id = el.getAttribute('data-id');
+    var color = el.getAttribute('data-color');
     if (!action || action === 'noop') { return; }
     e.preventDefault();
     if (window.UI) {
-      window.UI.handle(action, id);
+      window.UI.handle(action, id, color);
     }
   });
 

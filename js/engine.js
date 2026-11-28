@@ -3,7 +3,7 @@
   var D = window.GAME_DATA;
   var SAVE_KEY = 'yijian_xiaorizi_save_v1';
   var SAVE_BACKUP_KEY = SAVE_KEY + '_backup';
-  var VERSION = 17;
+  var VERSION = 18;
   var SAVE_WARN_BYTES = 1024 * 1024;   // 超过就提示，为 IndexedDB 决策留数据
   var SAVE_EXPORT_APP = 'yijian-xiaorizi';
   var SAVE_IMPORT_MAX_BYTES = 8 * 1024 * 1024;
@@ -64,7 +64,7 @@
     ui: [
       'screen', 'cart', 'cartCategory', 'invCategory', 'todayLots', 'pendingLot',
       'pendingMarketing', 'windowItems', 'serviceMode', 'activeCategory', 'accessorySlot',
-      'styleFilter', 'selectedItems', 'quickOptions', 'chatStep', 'chatPhase', 'chatReply',
+      'styleFilter', 'selectedItems', 'itemColors', 'quickOptions', 'chatStep', 'chatPhase', 'chatReply',
       'careUsed', 'careLine', 'affinity', 'patience', 'revealed', 'dialogueLog',
       'lastTry', 'tryOnCount', 'itemReaction', 'expression',
       'wishId', 'wishRevealed', 'challengeId', 'previewPose'
@@ -418,6 +418,69 @@
       if (!Array.isArray(s.feed)) { s.feed = []; }
       if (typeof s.feedUid !== 'number') { s.feedUid = 1; }
       // 老存档里的设计款/订单字段保持；回访由后续结算自然产生
+    },
+
+    // v17 → v18：同款色商品合并成「基础款 + 颜色」
+    18: function (s) {
+      var alias = D.COLORWAY_ALIASES || {};
+      var colors = (s.itemColors && typeof s.itemColors === 'object' && !Array.isArray(s.itemColors))
+        ? s.itemColors : {};
+
+      function mapId(id) {
+        var a = alias[id];
+        if (!a) { return id; }
+        if (!colors[a.id]) { colors[a.id] = a.color; }
+        return a.id;
+      }
+
+      // 商品 id 出现在数组 / 对象值里的，统一换成基础款 id
+      function walk(value) {
+        if (Array.isArray(value)) {
+          for (var i = 0; i < value.length; i++) { value[i] = walk(value[i]); }
+          return value;
+        }
+        if (value && typeof value === 'object') {
+          Object.keys(value).forEach(function (k) {
+            if (k === 'inventory') { return; }
+            value[k] = walk(value[k]);
+          });
+          return value;
+        }
+        return typeof value === 'string' ? mapId(value) : value;
+      }
+      walk(s);
+
+      // 货架 / 仓库按 id 合并数量，不能直接覆盖同名键
+      if (s.inventory && typeof s.inventory === 'object') {
+        ['shelf', 'store'].forEach(function (pool) {
+          var map = s.inventory[pool];
+          if (!map || typeof map !== 'object') { return; }
+          Object.keys(map).forEach(function (oldId) {
+            var a = alias[oldId];
+            if (!a) { return; }
+            var qty = Math.round(Number(map[oldId] && map[oldId].qty) || 0);
+            map[a.id] = map[a.id] || { qty: 0 };
+            map[a.id].qty = Math.max(0, Math.round(Number(map[a.id].qty) || 0)) + Math.max(0, qty);
+            if (!colors[a.id]) { colors[a.id] = a.color; }
+            delete map[oldId];
+          });
+        });
+      }
+
+      // 购物车也是 id → 数量；v17 存档里它在 ui 分片下，迁移时还没挂 alias
+      var cart = s.cart || (s.ui && s.ui.cart);
+      if (cart && typeof cart === 'object' && !Array.isArray(cart)) {
+        Object.keys(cart).forEach(function (oldId) {
+          var a = alias[oldId];
+          if (!a) { return; }
+          var qty = Math.round(Number(cart[oldId]) || 0);
+          cart[a.id] = Math.max(0, Math.round(Number(cart[a.id]) || 0)) + Math.max(0, qty);
+          delete cart[oldId];
+        });
+      }
+
+      if (s.ui && typeof s.ui === 'object') { s.ui.itemColors = colors; }
+      else { s.itemColors = colors; }
     }
   };
 
@@ -430,6 +493,13 @@
       if (!next) { throw new Error('missing migration: ' + from); }
       next(s);
       s.version = from + 1;
+    }
+    if (s.ui && typeof s.ui === 'object') {
+      if (!s.ui.itemColors || typeof s.ui.itemColors !== 'object' || Array.isArray(s.ui.itemColors)) {
+        s.ui.itemColors = {};
+      }
+    } else if (!s.itemColors || typeof s.itemColors !== 'object' || Array.isArray(s.itemColors)) {
+      s.itemColors = {};
     }
     return s;
   }
@@ -520,6 +590,7 @@
         accessorySlot: 'all',
         styleFilter: 'all',
         selectedItems: [],
+        itemColors: {},
         quickOptions: [],
         chatStep: 0,
         chatPhase: 'ask',
@@ -582,6 +653,7 @@
     s.accessorySlot = 'all';
     s.styleFilter = 'all';
     s.selectedItems = [];
+    s.itemColors = {};
     s.quickOptions = [];
     s.pendingResult = null;
     s.chatStep = 0;
@@ -2934,6 +3006,7 @@
     s.accessorySlot = 'all';
     s.styleFilter = 'all';
     s.selectedItems = [];
+    s.itemColors = {};
     s.quickOptions = [];
     s.pendingResult = null;
     Engine.beginCustomer();
@@ -3531,6 +3604,7 @@
     s.accessorySlot = 'all';
     s.styleFilter = 'all';
     s.selectedItems = [];
+    s.itemColors = {};
     s.quickOptions = [];
     s.pendingResult = null;
     s.chatStep = 0;
@@ -3646,7 +3720,7 @@
     var avoidHit = item.style.some(function (st) { return customer.avoid.indexOf(st) >= 0; });
     var styleHit = item.style.some(function (st) { return customer.styles.indexOf(st) >= 0; });
     var fitHit = item.fit.indexOf(customer.bodyNeed) >= 0;
-    var family = D.COLOR_FAMILY[item.color] || 'neutral';
+    var family = D.COLOR_FAMILY[Engine.colorOf(id) || item.color] || 'neutral';
     var pool;
 
     if (avoidHit) {
@@ -3782,6 +3856,7 @@
     s.serviceMode = 'quick';
     s.quickOptions = Engine.generateOutfitOptions(customer);
     s.selectedItems = [];
+    s.itemColors = {};
     s.activeCategory = 'all';
     s.accessorySlot = 'all';
     s.styleFilter = 'all';
@@ -3801,6 +3876,7 @@
       var items = Engine.getInventoryItems(cat);
       if (items && items.length) { defaults.push(items[0].id); }
     });
+    s.itemColors = {};
     s.selectedItems = Engine.normalizeSelection(defaults);
     s.serviceMode = 'styling';
     s.quickOptions = [];
@@ -3850,6 +3926,7 @@
     if (!customer) { return; }
     s.serviceMode = 'styling';
     s.selectedItems = [];
+    s.itemColors = {};
     s.activeCategory = 'all';
     s.accessorySlot = 'all';
     s.styleFilter = 'all';
@@ -3867,6 +3944,48 @@
     s.activeCategory = cat || 'all';
     s.accessorySlot = 'all';
     Engine.save();
+  };
+
+  // 当前这件衣服在试衣间里选中的颜色；没选过就是商品基础色。
+  Engine.colorOf = function (id) {
+    var s = Engine.state;
+    var it = D.ITEMS_BY_ID[id];
+    if (!it) { return null; }
+    var c = s && s.itemColors && s.itemColors[id];
+    return (c && D.colorOptions(id).indexOf(c) >= 0) ? c : it.color;
+  };
+
+  Engine.setItemColor = function (id, color) {
+    var s = Engine.state;
+    var it = D.ITEMS_BY_ID[id];
+    if (!s || !it) { return { ok: false }; }
+    var opts = D.colorOptions(id);
+    if (opts.indexOf(color) < 0) { return { ok: false, message: '这个颜色不适用于这件单品。' }; }
+    if (!s.itemColors || typeof s.itemColors !== 'object') { s.itemColors = {}; }
+    if (color === it.color) { delete s.itemColors[id]; }
+    else { s.itemColors[id] = color; }
+    s.lastTry = null;
+    if (s.selectedItems && s.selectedItems.indexOf(id) >= 0) {
+      Engine.buildPendingResult(s.selectedItems);
+      var rec = queueRecord(s.servingCustomerId);
+      if (rec) {
+        rec.itemIds = (s.selectedItems || []).slice();
+        rec.itemColors = Engine.colorSnapshot(s.selectedItems);
+      }
+    }
+    Engine.save();
+    return { ok: true, color: color };
+  };
+
+  // 一套搭配的颜色快照，存进队列 / 结果，避免换颜色后历史记录跟着变。
+  Engine.colorSnapshot = function (ids) {
+    var out = {};
+    (ids || []).forEach(function (id) {
+      if (!D.ITEMS_BY_ID[id]) { return; }
+      var c = Engine.colorOf(id);
+      if (c && c !== D.ITEMS_BY_ID[id].color) { out[id] = c; }
+    });
+    return out;
   };
 
   // 统一收拾选择：同 cat 留最后一件，dress 与 top/bottom 互斥，
@@ -3966,6 +4085,7 @@
     var s = Engine.state;
     if (!s) { return; }
     s.selectedItems = [];
+    s.itemColors = {};
     s.lastTry = null;
     s.itemReaction = null;
     s.expression = 'calm';
@@ -3987,7 +4107,12 @@
     (itemIds || []).forEach(function (id) {
       if (ids.indexOf(id) < 0 && D.ITEMS_BY_ID[id]) { ids.push(id); }
     });
-    var items = ids.map(function (id) { return D.ITEMS_BY_ID[id]; });
+    var items = ids.map(function (id) {
+      var it = D.ITEMS_BY_ID[id];
+      if (!it) { return null; }
+      var c = Engine.colorOf(id);
+      return (c && c !== it.color) ? Object.assign({}, it, { color: c }) : it;
+    }).filter(Boolean);
 
     var cats = {
       hasDress: false, hasTop: false, hasBottom: false, hasShoes: false,
@@ -4376,6 +4501,7 @@
     s.pendingResult = {
       customerId: customer.id,
       itemIds: itemIds.slice(),
+      itemColors: Engine.colorSnapshot(itemIds),
       result: result,
       extras: extras,
       outcome: outcome,
@@ -4426,7 +4552,10 @@
     if (!pr) { return { ok: false, message: '现在没有正在接待的顾客。' }; }
     s.selectedItems = Engine.normalizeSelection(itemIds);
     var rec = queueRecord(s.servingCustomerId);
-    if (rec) { rec.itemIds = (itemIds || []).slice(); }
+    if (rec) {
+      rec.itemIds = (itemIds || []).slice();
+      rec.itemColors = Engine.colorSnapshot(itemIds);
+    }
     var rooms = Engine.getFittingRooms();
     var occupied = Engine.getFittingOccupied();
     var status = 'fitting';
@@ -4818,6 +4947,7 @@
     s.pendingResult = null;
     s.serviceMode = 'quick';
     s.selectedItems = [];
+    s.itemColors = {};
     s.quickOptions = [];
     s.activeCategory = 'all';
     s.accessorySlot = 'all';

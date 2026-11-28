@@ -49,10 +49,16 @@
     var ids = [];
     if (s && s.pendingResult && s.pendingResult.itemIds) { ids = s.pendingResult.itemIds; }
     else if (s && s.selectedItems) { ids = s.selectedItems; }
+    var colors = (s && s.itemColors) || {};
+    function colored(it) {
+      if (!it) { return it; }
+      var c = colors[it.id];
+      return (c && c !== it.color) ? Object.assign({}, it, { color: c }) : it;
+    }
     var pick = {};
     var acc = {};
     ids.forEach(function (id) {
-      var it = GD.ITEMS_BY_ID[id];
+      var it = colored(GD.ITEMS_BY_ID[id]);
       if (!it) { return; }
       if (it.cat === 'accessory') { acc[it.slot] = it; }
       else if (!pick[it.cat]) { pick[it.cat] = it; }
@@ -63,7 +69,7 @@
       if (!it) {
         return { shape: fallbackShape, color: fallbackColor, look: Iso.lookOf({ id: '', cat: cat }) };
       }
-      return { shape: it.shape, color: colorOf(it.color), id: it.id, name: it.name, look: Iso.lookOf(it) };
+      return { shape: it.shape, color: colorOf(it.color), id: it.id, name: it.name, look: Iso.lookOf(it), itemColor: it.color };
     }
     return {
       top: item(pick.top, 'blouse', p.top || '#F1E3D3', 'top'),
