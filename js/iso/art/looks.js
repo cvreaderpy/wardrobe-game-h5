@@ -1,4 +1,4 @@
-/* 衣间小日子 — 100 件单品的服装结构配置
+/* 衣间小日子 — 全部单品的服装结构配置
  *
  * s     silhouette 轮廓
  * m     material   材质
@@ -27,6 +27,12 @@
     t_turtle:    { s: 'turtle',    m: 'knit',    p: 'rib',     neck: 'turtle',   slv: 'long',  len: 'waist', fit: 'slim',      clo: 'none' },
     t_oversize:  { s: 'oversize',  m: 'cotton',  p: 'stripe',  neck: 'collar',   slv: 'long',  len: 'hip',   fit: 'oversized', clo: 'buttons',  det: ['drop', 'pocket'] },
     t_knitvest:  { s: 'knitvest',  m: 'knit',    p: 'rib',     neck: 'v',        slv: 'none',  len: 'waist', fit: 'regular',   clo: 'none',     det: ['ribbed'] },
+    t_crop_black:  { s: 'crop',    m: 'cotton',  p: 'none',    neck: 'crew',     slv: 'short', len: 'crop',  fit: 'slim',      clo: 'none' },
+    t_shirt_black: { s: 'shirt',   m: 'cotton',  p: 'none',    neck: 'collar',   slv: 'long',  len: 'waist', fit: 'regular',   clo: 'buttons',  det: ['cuffs', 'placket', 'pocket'] },
+    t_knit_rose:   { s: 'knit',    m: 'knit',    p: 'rib',     neck: 'v',        slv: 'long',  len: 'hip',   fit: 'regular',   clo: 'open',     det: ['ribbed', 'pockets'] },
+    t_cami_wine:   { s: 'cami',    m: 'satin',   p: 'none',    neck: 'straps',   slv: 'none',  len: 'waist', fit: 'slim',      clo: 'none' },
+    t_halter:      { s: 'cami',    m: 'satin',   p: 'none',    neck: 'straps',   slv: 'none',  len: 'waist', fit: 'slim',      clo: 'none' },
+    t_puff:        { s: 'blouse',  m: 'cotton',  p: 'none',    neck: 'v',        slv: 'puff',  len: 'waist', fit: 'regular',   clo: 'buttons',  det: ['lace', 'gather'] },
 
     /* ---------------- 下装 11 ---------------- */
     b_jeans:          { s: 'jeans',          m: 'denim',   p: 'twill', rise: 'mid',  len: 'full', det: ['pockets', 'stitch', 'fly'] },
@@ -40,6 +46,9 @@
     b_tailoredshorts: { s: 'tailoredshorts', m: 'wool',    p: 'none',  rise: 'high', len: 'mini', det: ['cuff'] },
     b_tier:           { s: 'tier',           m: 'cotton',  p: 'none',  rise: 'high', len: 'midi', det: ['tier'] },
     b_widejeans:      { s: 'widejeans',      m: 'denim',   p: 'twill', rise: 'high', len: 'full', det: ['flare', 'stitch'] },
+    b_jeans_black:    { s: 'jeans',          m: 'denim',   p: 'twill', rise: 'mid',  len: 'full', det: ['pockets', 'stitch', 'fly'] },
+    b_wide_cream:     { s: 'wide',           m: 'wool',    p: 'none',  rise: 'high', len: 'full', det: ['crease'] },
+    b_midi:           { s: 'skirt',          m: 'satin',   p: 'none',  rise: 'high', len: 'midi', det: ['drape'] },
 
     /* ---------------- 连衣裙 11 ---------------- */
     d_flower:    { s: 'tea',       m: 'cotton', p: 'floral', neck: 'v',        slv: 'puff',  len: 'midi', fit: 'fitflare', det: ['ruffle', 'tie'] },
@@ -53,6 +62,8 @@
     d_wrap:      { s: 'wrap',      m: 'silk',   p: 'none',   neck: 'v',        slv: 'short', len: 'knee', fit: 'wrap',     det: ['tie', 'ruffle'] },
     d_sundress:  { s: 'sundress',  m: 'cotton', p: 'floral', neck: 'straps',   slv: 'none',  len: 'mini', fit: 'flare',    det: ['tier'] },
     d_qipao:     { s: 'qipao',     m: 'satin',  p: 'floral', neck: 'mandarin', slv: 'short', len: 'maxi', fit: 'slim',     det: ['slit', 'frog'] },
+    d_knit_black:  { s: 'knitdress', m: 'knit',   p: 'rib',  neck: 'crew',   slv: 'long',  len: 'midi', fit: 'slim' },
+    d_slip_black:  { s: 'slip',      m: 'satin',  p: 'none', neck: 'cowl',   slv: 'none',  len: 'midi', fit: 'bias',  det: ['drape'] },
 
     /* ---------------- 外套 10 ---------------- */
     o_trench:      { s: 'trench',       m: 'wool',  p: 'none',  len: 'long', clo: 'belt',    det: ['lapel', 'storm', 'epaulette'] },
@@ -65,6 +76,8 @@
     o_trenchshort: { s: 'croppedtrench', m: 'wool', p: 'none',  len: 'crop', clo: 'belt',    det: ['lapel', 'storm'] },
     o_puffer:      { s: 'puffer',       m: 'nylon', p: 'quilt', len: 'hip',  clo: 'zip',     det: ['collar', 'channel'] },
     o_cape:        { s: 'cape',         m: 'wool',  p: 'none',  len: 'long', clo: 'none',    det: ['drape'] },
+    o_blazer_black:   { s: 'blazer',     m: 'wool',  p: 'tweed', len: 'hip',  clo: 'buttons', det: ['lapel', 'pocket'] },
+    o_trench_olive:   { s: 'trench',     m: 'wool',  p: 'none',  len: 'long', clo: 'belt',    det: ['lapel', 'storm', 'epaulette'] },
 
     /* ---------------- 鞋 12 ---------------- */
     s_mary:     { s: 'mary',      m: 'leather', heel: 'low',      det: ['strap', 'buckle'] },
@@ -79,6 +92,9 @@
     s_runner:   { s: 'runner',    m: 'mesh',    heel: 'flat',     det: ['lace', 'sole'] },
     s_slipper:  { s: 'slipper',   m: 'fluff',   heel: 'flat',     det: ['fluff'] },
     s_kitten:   { s: 'kitten',    m: 'leather', heel: 'kitten',   det: ['slingback'] },
+    s_loafer_black: { s: 'loafer',    m: 'leather', heel: 'flat',     det: ['saddle', 'penny'] },
+    s_boot_black:   { s: 'ankleboot', m: 'leather', heel: 'block',    det: ['zip', 'seam'] },
+    s_mule:         { s: 'stiletto',  m: 'leather', heel: 'low',      det: ['point', 'backless'] },
 
     /* ---------------- 包 8 ---------------- */
     g_tote:     { s: 'tote',     m: 'straw',   det: ['handle', 'weave'] },
@@ -124,7 +140,11 @@
     h_fishnet: { s: 'fishnet', m: 'mesh' },
     h_knee:    { s: 'knee',    m: 'knit' },
     h_ankle:   { s: 'ankle',   m: 'cotton' },
-    h_legging: { s: 'legging', m: 'knit' }
+    h_legging: { s: 'legging', m: 'knit' },
+    h_sheer_wine:   { s: 'sheer',   m: 'mesh' },
+    h_opaque_black: { s: 'opaque',  m: 'knit' },
+    h_knee_white:   { s: 'knee',    m: 'knit' },
+    h_ankle_black:  { s: 'ankle',   m: 'cotton' }
   };
 
   var FALLBACK = {
