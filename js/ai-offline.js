@@ -119,10 +119,12 @@
     var opacity = 0.9;
     if (id === 'h_sheer' || id === 'h_sheer_wine') { opacity = 0.55; }
     else if (id === 'h_legging') { opacity = 0.94; }
-    else if (kind === 'knee' || kind === 'ankle') { opacity = 0.95; }
+    else if (kind === 'knee' || kind === 'ankle' || kind === 'crew' || kind === 'overknee') { opacity = 0.95; }
     var clip = '';
     if (kind === 'knee') { clip = 'clip-path:inset(38% 0 0 0);-webkit-clip-path:inset(38% 0 0 0);'; }
     if (kind === 'ankle') { clip = 'clip-path:inset(72% 0 0 0);-webkit-clip-path:inset(72% 0 0 0);'; }
+    if (kind === 'crew') { clip = 'clip-path:inset(55% 0 0 0);-webkit-clip-path:inset(55% 0 0 0);'; }
+    if (kind === 'overknee') { clip = 'clip-path:inset(12% 0 0 0);-webkit-clip-path:inset(12% 0 0 0);'; }
     var paint = 'background:' + hex + ';opacity:' + opacity + ';';
     if (kind === 'fishnet') {
       paint = 'opacity:.92;background-image:' +

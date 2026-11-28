@@ -378,6 +378,26 @@
     { id: 's_loafer_brown', name: '棕色便士乐福鞋', cat: 'shoes', shape: 'loafer', style: ['work', 'vintage'], colors: ['cocoa'], color: 'cocoa', formality: 4, warmth: 2, cost: 75, price: 168, fit: ['comfort', 'formal'], desc: '鞋面一道横带，很老派。' },
     { id: 's_hightop_white', name: '白色高帮帆布鞋', cat: 'shoes', shape: 'sneaker', style: ['sporty', 'y2k'], colors: ['white'], color: 'white', formality: 1, warmth: 2, cost: 62, price: 138, fit: ['comfort', 'photo'], desc: '高帮一穿，脚踝就稳了。' },
     /* EXPANSION:END */
+    /* ACCESSORY:PACK:START */
+    { id: 'a_bucket_hat', name: '米色渔夫帽', cat: 'accessory', slot: 'hair', shape: 'bucket', style: ['gorpcore', 'minimal'], colors: ['cream'], color: 'cream', formality: 2, warmth: 2, cost: 25, price: 68, fit: [], desc: '帽檐软软地垂下来，遮太阳也遮一点心事。' },
+    { id: 'a_beanie', name: '灰色针织帽', cat: 'accessory', slot: 'hair', shape: 'beanie', style: ['sporty', 'minimal'], colors: ['grey'], color: 'grey', formality: 1, warmth: 3, cost: 22, price: 58, fit: [], desc: '天一冷，就想把耳朵藏进去。' },
+    { id: 'a_round_glasses', name: '圆框眼镜', cat: 'accessory', slot: 'eyes', shape: 'glasses', style: ['academia', 'vintage'], colors: ['cocoa'], color: 'cocoa', formality: 3, warmth: 1, cost: 28, price: 72, fit: [], desc: '圆圆的，看起来很好说话。' },
+    { id: 'a_cateye_sun', name: '猫眼墨镜', cat: 'accessory', slot: 'eyes', shape: 'sunglasses', style: ['y2k', 'french'], colors: ['black'], color: 'black', formality: 2, warmth: 1, cost: 30, price: 78, fit: [], desc: '眼尾一挑，气场就上来了。' },
+    { id: 'a_aviator_sun', name: '飞行员墨镜', cat: 'accessory', slot: 'eyes', shape: 'sunglasses', style: ['vintage', 'sporty'], colors: ['mustard'], color: 'mustard', formality: 2, warmth: 1, cost: 32, price: 82, fit: [], desc: '金属细边，配什么都像在度假。' },
+    { id: 'g_hobo', name: '软皮流浪包', cat: 'bag', shape: 'bag', style: ['vintage', 'french'], colors: ['cocoa'], color: 'cocoa', formality: 3, warmth: 2, cost: 58, price: 148, fit: [], desc: '软塌塌地挂在肩上，装得下一天。' },
+    { id: 'g_camera', name: '相机包', cat: 'bag', shape: 'bag', style: ['cleanfit', 'y2k'], colors: ['black'], color: 'black', formality: 3, warmth: 1, cost: 52, price: 138, fit: [], desc: '方方正正，出门拍照刚好。' },
+    { id: 'g_tophandle', name: '手提方包', cat: 'bag', shape: 'bag', style: ['work', 'minimal'], colors: ['cream'], color: 'cream', formality: 4, warmth: 2, cost: 65, price: 168, fit: [], desc: '提在手里，开会也有底气。' },
+    { id: 'g_phone', name: '手机包', cat: 'bag', shape: 'bag', style: ['y2k', 'sweet'], colors: ['rose'], color: 'rose', formality: 2, warmth: 1, cost: 35, price: 88, fit: [], desc: '只装手机和口红，轻装出门。' },
+    { id: 'a_huggie', name: '迷你耳圈', cat: 'accessory', slot: 'ear', shape: 'earrings', style: ['minimal', 'cleanfit'], colors: ['silver'], color: 'silver', formality: 3, warmth: 1, cost: 16, price: 48, fit: [], desc: '贴着小耳垂，安安静静地亮。' },
+    { id: 'a_pearl_drop', name: '珍珠坠耳环', cat: 'accessory', slot: 'ear', shape: 'earrings', style: ['french', 'sweet'], colors: ['cream'], color: 'cream', formality: 3, warmth: 1, cost: 22, price: 62, fit: [], desc: '走路的时候，珍珠会轻轻晃。' },
+    { id: 'a_chandelier', name: '水晶枝形耳环', cat: 'accessory', slot: 'ear', shape: 'earrings', style: ['vintage', 'y2k'], colors: ['silver'], color: 'silver', formality: 4, warmth: 1, cost: 28, price: 78, fit: [], desc: '灯一暗，耳边先亮起来。' },
+    { id: 'a_chain_bracelet', name: '细链手链', cat: 'accessory', slot: 'wrist', shape: 'wrist', style: ['cleanfit', 'minimal'], colors: ['mustard'], color: 'mustard', formality: 3, warmth: 1, cost: 18, price: 52, fit: [], desc: '细细一圈，手腕就不空了。' },
+    { id: 'a_cuff_bracelet', name: '宽边手镯', cat: 'accessory', slot: 'wrist', shape: 'wrist', style: ['y2k', 'minimal'], colors: ['silver'], color: 'silver', formality: 3, warmth: 1, cost: 24, price: 68, fit: [], desc: '金属一戴，简单的衣服也有重点。' },
+    { id: 'a_charm_bracelet', name: '吊坠手链', cat: 'accessory', slot: 'wrist', shape: 'wrist', style: ['sweet', 'vintage'], colors: ['rose'], color: 'rose', formality: 2, warmth: 1, cost: 20, price: 58, fit: [], desc: '每走一步，小坠子就碰一下。' },
+    { id: 'h_crew_white', name: '白色中筒袜', cat: 'hosiery', shape: 'crew', style: ['academia', 'sporty'], colors: ['white'], color: 'white', formality: 2, warmth: 2, cost: 10, price: 32, fit: [], desc: '到小腿肚，配乐福鞋刚好。' },
+    { id: 'h_crew_black', name: '黑色中筒袜', cat: 'hosiery', shape: 'crew', style: ['y2k', 'sporty'], colors: ['black'], color: 'black', formality: 2, warmth: 2, cost: 10, price: 32, fit: [], desc: '黑袜子一穿，短裙就酷了一点。' },
+    { id: 'h_overknee', name: '黑色过膝袜', cat: 'hosiery', shape: 'overknee', style: ['y2k', 'academia'], colors: ['black'], color: 'black', formality: 2, warmth: 2, cost: 14, price: 42, fit: [], desc: '刚好卡在膝盖上面，比例很好。' },
+    /* ACCESSORY:PACK:END */
   ];
 
   D.ITEMS_BY_ID = {};
